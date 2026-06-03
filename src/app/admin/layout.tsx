@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
+import ThemeToggle from '@/components/theme-toggle';
 
 export default function AdminLayout({
   children,
@@ -38,6 +39,7 @@ export default function AdminLayout({
         <header className="flex h-12 shrink-0 items-center gap-2 border-b border-border px-4">
           <SidebarTrigger />
           <div className="ml-auto flex items-center gap-2">
+            <ThemeToggle />
           </div>
         </header>
         <main className="flex-1 overflow-auto">

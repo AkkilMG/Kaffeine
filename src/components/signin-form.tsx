@@ -46,6 +46,11 @@ export default function SigninForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (step === "email") {
+      await handleEmailVerification()
+      return
+    }
+
     if (!email || !password) {
       setError("Please fill in all fields")
       return

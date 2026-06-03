@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import emailAniData from "@/assets/lottie/email.json";
 import SignupForm from "@/components/signup-form";
+import ThemeToggle from "@/components/theme-toggle";
 import Link from "next/link";
 import { Coffee } from "lucide-react";
 
@@ -18,6 +19,9 @@ export default function RegisterPage() {
               <span className="text-xl font-bold">Kaffeine</span>
             </div>
           </Link>
+          <div className="absolute top-6 right-6">
+            <ThemeToggle />
+          </div>
 
           <div className="w-full max-w-md">
             <div className="space-y-6">
