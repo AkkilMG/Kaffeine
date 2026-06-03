@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { AuthProvider } from '@/lib/auth-context';
+import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css'
 
 const geist = Geist({ 
@@ -14,8 +15,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Kaffeine',
-  description: 'Kaffeine is a free and open-source website which keeps the database and website active with a shot of our kaffeine with our own log. Monitor your websites and databases with Kaffeine - real-time uptime monitoring and health checks',
+  title: {
+    default: 'Kaffeine - Free & Open Source Uptime Monitoring',
+    template: '%s | Kaffeine',
+  },
+  description: 'Free and open-source uptime monitoring for websites and databases. End-to-end encrypted health checks with real-time alerts, detailed analytics, and Cloudflare-powered distributed monitoring.',
+  keywords: ['uptime monitoring', 'website monitoring', 'database monitoring', 'open source', 'free', 'encrypted', 'health checks', 'status page'],
+  openGraph: {
+    title: 'Kaffeine - Free & Open Source Uptime Monitoring',
+    description: 'Monitor your websites and databases with end-to-end encrypted health checks. Free, open source, and privacy-first.',
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'Kaffeine',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kaffeine - Free & Open Source Uptime Monitoring',
+    description: 'Monitor your websites and databases with end-to-end encrypted health checks. Free, open source, and privacy-first.',
+  },
   icons: {
     icon: [
       {
@@ -38,9 +55,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f0f0f' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0f' },
   ],
-  userScalable: false,
   width: 'device-width',
   initialScale: 1,
 }
@@ -51,11 +67,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased bg-background text-foreground">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

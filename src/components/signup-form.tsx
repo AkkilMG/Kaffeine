@@ -110,7 +110,7 @@ export default function SignupForm() {
             </div>
             <Button
               type="button"
-              className="w-full bg-blue-600 hover:bg-blue-700"
+              className="w-full"
               onClick={handleEmailVerification}
               disabled={isVerifying}
             >
@@ -162,7 +162,7 @@ export default function SignupForm() {
             </div>
             <Button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700"
+              className="w-full"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
