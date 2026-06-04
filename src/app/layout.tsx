@@ -35,27 +35,17 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
+      { url: '/assets/logo/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/assets/logo/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
     ],
-    apple: '/apple-icon.png',
+    apple: '/assets/logo/apple-touch-icon.png',
   },
 }
 
 export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#F5E6D3' },
-    { media: '(prefers-color-scheme: dark)', color: '#1A1A1A' },
+    { media: '(prefers-color-scheme: dark)', color: '#2C1810' },
   ],
   width: 'device-width',
   initialScale: 1,

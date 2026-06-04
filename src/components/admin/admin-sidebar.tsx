@@ -15,6 +15,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import Image from 'next/image';
 import { Coffee, LayoutDashboard, LogOut, UserCircle2 } from 'lucide-react';
 
 const adminNavItems = [
@@ -37,7 +38,7 @@ export function AdminSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <div className="flex items-center gap-2 px-2 py-1">
-          <Coffee className="size-6 text-sidebar-primary" />
+          <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={32} height={32} className="size-9" />
           <div className="flex flex-col leading-tight group-data-[collapsible=icon]:hidden">
             <span className="font-semibold text-sidebar-foreground">Kaffeine</span>
             <span className="text-xs text-sidebar-foreground/60">Admin Panel</span>

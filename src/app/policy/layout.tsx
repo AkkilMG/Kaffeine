@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { Coffee, Sun, Moon } from 'lucide-react';
+import Image from 'next/image';
+import { Sun, Moon } from 'lucide-react';
 
 export default function PolicyLayout({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -16,9 +17,7 @@ export default function PolicyLayout({ children }: { children: React.ReactNode }
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-2xl border-b border-border">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="size-7 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-              <Coffee className="size-3.5 text-primary" />
-            </div>
+            <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={28} height={28} className="size-8" />
             <span className="text-base font-bold text-foreground">Kaffeine</span>
           </Link>
 

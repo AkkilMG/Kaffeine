@@ -6,7 +6,7 @@ import emailAniData from "@/assets/lottie/email.json";
 import SigninForm from "@/components/signin-form";
 import ThemeToggle from "@/components/theme-toggle";
 import Link from "next/link";
-import { Coffee } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
   return (
@@ -15,7 +15,7 @@ export default function LoginPage() {
         <div className="flex-1 flex items-center justify-center p-8 relative">
           <Link href="/" className="absolute top-6 left-6">
             <div className="flex items-center gap-2.5 group">
-              <Coffee className="size-6 text-primary" />
+              <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={32} height={32} className="size-9" />
               <span className="text-xl font-bold">Kaffeine</span>
             </div>
           </Link>
