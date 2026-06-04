@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { ChevronRight, HelpCircle } from 'lucide-react';
 import { fadeInUp, staggerContainer } from '@/components/landing/animations';
 
@@ -41,11 +41,11 @@ export default function FAQSection() {
           variants={staggerContainer}
           className="text-center mb-12"
         >
-          <motion.div variants={fadeInUp} className="text-sm font-medium text-primary font-mono mb-4">
+          <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 text-sm font-medium text-primary font-mono mb-4 px-3 py-1 rounded-full bg-primary/8 border border-primary/15">
             /faq
           </motion.div>
           <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-            Frequently asked <span className="text-primary">questions</span>
+            Frequently asked <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">questions</span>
           </motion.h2>
         </motion.div>
 
@@ -63,7 +63,7 @@ export default function FAQSection() {
               className={`rounded-xl border transition-all duration-300 overflow-hidden ${
                 openIndex === i
                   ? 'border-primary/30 bg-card shadow-md'
-                  : 'border-border bg-card hover:border-primary/20'
+                  : 'border-border/60 bg-card hover:border-primary/20'
               }`}
             >
               <button
@@ -76,29 +76,39 @@ export default function FAQSection() {
                   <HelpCircle
                     size={14}
                     className={`shrink-0 transition-colors duration-300 ${
-                      openIndex === i ? 'text-primary' : 'text-muted-foreground/40'
+                      openIndex === i ? 'text-primary' : 'text-muted-foreground/30'
                     }`}
                   />
                   <span className="font-medium text-sm md:text-base text-foreground">{faq.q}</span>
                 </div>
-                <ChevronRight
-                  size={14}
-                  className={`shrink-0 text-muted-foreground transition-all duration-300 ${
-                    openIndex === i ? 'rotate-90 text-primary' : ''
-                  }`}
-                />
+                <motion.div
+                  animate={{ rotate: openIndex === i ? 90 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronRight
+                    size={14}
+                    className={`shrink-0 transition-colors duration-300 ${
+                      openIndex === i ? 'text-primary' : 'text-muted-foreground/40'
+                    }`}
+                  />
+                </motion.div>
               </button>
-              <div
-                id={`faq-answer-${i}`}
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  openIndex === i ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                }`}
-                aria-hidden={openIndex !== i}
-              >
-                <p className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed pl-12">
-                  {faq.a}
-                </p>
-              </div>
+              <AnimatePresence>
+                {openIndex === i && (
+                  <motion.div
+                    key="answer"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <p className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed pl-12">
+                      {faq.a}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           ))}
         </motion.div>

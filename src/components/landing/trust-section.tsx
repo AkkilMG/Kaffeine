@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Shield, Code, CheckCircle, GitBranch, ArrowRight, Lock, FileCode } from 'lucide-react';
@@ -13,7 +13,7 @@ export default function TrustSection() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 70% 50%, color-mix(in srgb, var(--primary) 4%, transparent), transparent 60%)',
+            'radial-gradient(ellipse at 70% 50%, color-mix(in srgb, var(--primary) 3%, transparent), transparent 60%)',
         }}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,10 +26,12 @@ export default function TrustSection() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
             <motion.div variants={slideInLeft} className="lg:col-span-2">
-              <div className="text-sm font-medium text-primary font-mono mb-4">/trust</div>
+              <div className="inline-flex items-center gap-2 text-sm font-medium text-primary font-mono mb-4 px-3 py-1 rounded-full bg-primary/8 border border-primary/15">
+                /trust
+              </div>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-6 text-foreground">
                 Open source.{' '}
-                <span className="text-primary">Always.</span>
+                <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Always.</span>
               </h2>
               <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
                 <p>
@@ -61,7 +63,10 @@ export default function TrustSection() {
             </motion.div>
 
             <motion.div variants={slideInRight} className="lg:col-span-3 space-y-4">
-              <div className="rounded-xl border border-border bg-card p-6 hover:border-primary/30 hover:shadow-lg transition-all duration-500">
+              <motion.div
+                whileHover={{ y: -4 }}
+                className="rounded-xl border border-border/60 bg-card p-6 hover:border-primary/30 hover:shadow-lg transition-all duration-500"
+              >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-9 h-9 rounded-lg bg-success/10 flex items-center justify-center">
                     <Lock size={16} className="text-success" />
@@ -81,8 +86,11 @@ export default function TrustSection() {
                     </div>
                   ))}
                 </div>
-              </div>
-              <div className="rounded-xl border border-border bg-card p-6 hover:border-primary/30 hover:shadow-lg transition-all duration-500">
+              </motion.div>
+              <motion.div
+                whileHover={{ y: -4 }}
+                className="rounded-xl border border-border/60 bg-card p-6 hover:border-primary/30 hover:shadow-lg transition-all duration-500"
+              >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                     <FileCode size={16} className="text-primary" />
@@ -102,7 +110,7 @@ export default function TrustSection() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
         </motion.div>

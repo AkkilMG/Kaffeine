@@ -1,10 +1,10 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import {
   Globe, Database, Cloud, Shield, Bell, Code, TrendingUp, Sparkles,
 } from 'lucide-react';
-import { fadeInUp, staggerContainer } from '@/components/landing/animations';
+import { fadeInUp, staggerContainer, cardHover } from '@/components/landing/animations';
 
 const spotlightFeatures = [
   {
@@ -79,7 +79,7 @@ export default function FeaturesSection() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 30% 50%, color-mix(in srgb, var(--primary) 5%, transparent), transparent 60%), radial-gradient(ellipse at 70% 80%, color-mix(in srgb, var(--primary) 3%, transparent), transparent 40%)',
+            'radial-gradient(ellipse at 30% 50%, color-mix(in srgb, var(--primary) 4%, transparent), transparent 60%), radial-gradient(ellipse at 70% 80%, color-mix(in srgb, var(--primary) 2%, transparent), transparent 40%)',
         }}
       />
 
@@ -93,7 +93,7 @@ export default function FeaturesSection() {
         >
           <motion.div
             variants={fadeInUp}
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary font-mono mb-4 px-3 py-1 rounded-full bg-primary/5 border border-primary/10"
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary font-mono mb-4 px-3 py-1 rounded-full bg-primary/8 border border-primary/15"
           >
             <Sparkles size={12} />
             /features
@@ -103,7 +103,7 @@ export default function FeaturesSection() {
             className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground"
           >
             Everything you need to{' '}
-            <span className="text-primary">monitor</span>
+            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">monitor</span>
           </motion.h2>
           <motion.p
             variants={fadeInUp}
@@ -120,10 +120,12 @@ export default function FeaturesSection() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/30 transition-all duration-500"
+              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+              whileHover="hover"
+              variants={cardHover}
+              className="group relative overflow-hidden rounded-xl border border-border/60 bg-card hover:border-primary/30 transition-all duration-500"
             >
-              <div className="absolute top-0 right-0 w-80 h-80 bg-primary/[0.04] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+              <div className="absolute top-0 right-0 w-80 h-80 bg-primary/[0.03] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
 
               <div
                 className={`relative p-6 md:p-8 flex flex-col ${
@@ -132,7 +134,7 @@ export default function FeaturesSection() {
               >
                 <div className="flex-1 w-full">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:scale-110 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                       <feature.icon size={22} className="text-primary" />
                     </div>
                     <h3 className="font-semibold text-xl text-foreground">
@@ -146,7 +148,7 @@ export default function FeaturesSection() {
                     {['Always active', 'No setup required', 'Real-time'].map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs text-muted-foreground bg-muted/50 border border-border/50 px-2.5 py-1 rounded-full"
+                        className="text-xs text-muted-foreground bg-muted/30 border border-border/40 px-2.5 py-1 rounded-full"
                       >
                         {tag}
                       </span>
@@ -159,7 +161,7 @@ export default function FeaturesSection() {
                     {feature.metrics.map((m) => (
                       <div
                         key={m.label}
-                        className="rounded-lg border border-border bg-muted/30 px-4 py-3"
+                        className="rounded-lg border border-border/50 bg-muted/20 px-4 py-3"
                       >
                         <div className="font-mono text-lg font-bold text-foreground">
                           {m.value}
@@ -183,15 +185,16 @@ export default function FeaturesSection() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              whileHover={{ y: -4 }}
-              className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/30 transition-all duration-500"
+              transition={{ duration: 0.5, delay: i * 0.05, ease: [0.25, 0.1, 0.25, 1] }}
+              whileHover="hover"
+              variants={cardHover}
+              className="group relative overflow-hidden rounded-xl border border-border/60 bg-card hover:border-primary/30 transition-all duration-500"
             >
               <div
                 className={`absolute inset-0 bg-gradient-to-br ${feature.color} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
               />
               <div className="relative p-6">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 group-hover:scale-110 transition-all duration-300">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                   <feature.icon size={18} className="text-primary" />
                 </div>
                 <h3 className="font-semibold text-lg mb-1.5 text-foreground">
@@ -211,7 +214,7 @@ export default function FeaturesSection() {
           viewport={{ once: true }}
           className="mt-10 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 border border-border">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/30 border border-border/50">
             <Sparkles size={14} className="text-primary" />
             <span className="text-sm text-muted-foreground">
               All features included — no paid tiers, no feature gates

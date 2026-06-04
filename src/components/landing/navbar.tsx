@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Sun, Moon, Menu, X } from 'lucide-react';
+import { ChevronRight, Sun, Moon, Menu, X, Activity } from 'lucide-react';
 
 const navLinks = [
   { href: '#features', label: 'Features' },
@@ -16,8 +16,16 @@ const navLinks = [
 ];
 
 const mobileMenuVariants = {
-  closed: { opacity: 0, height: 0, transition: { duration: 0.3, ease: 'easeInOut' as const } },
-  open: { opacity: 1, height: 'auto' as const, transition: { duration: 0.3, ease: 'easeInOut' as const } },
+  closed: {
+    opacity: 0,
+    height: 0,
+    transition: { duration: 0.3, ease: 'easeInOut' as const },
+  },
+  open: {
+    opacity: 1,
+    height: 'auto' as const,
+    transition: { duration: 0.3, ease: 'easeInOut' as const },
+  },
 };
 
 export default function Navbar() {
@@ -43,9 +51,9 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 z-[60] h-0.5 bg-muted/20">
+      <div className="fixed top-0 left-0 right-0 z-[60] h-[1px] bg-muted/20">
         <motion.div
-          className="h-full bg-primary/70"
+          className="h-full bg-gradient-to-r from-primary/40 via-primary to-primary/40"
           style={{ width: `${scrollProgress}%` }}
           transition={{ duration: 0.1 }}
         />
@@ -53,7 +61,7 @@ export default function Navbar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? 'bg-background/80 backdrop-blur-2xl border-b border-border shadow-sm'
+            ? 'bg-background/70 backdrop-blur-2xl border-b border-border/40 shadow-lg shadow-foreground/2'
             : 'bg-transparent'
         }`}
       >
@@ -61,8 +69,9 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16 md:h-18">
             <Link href="/" className="flex items-center gap-2.5 group">
               <motion.div
-                whileHover={{ rotate: -10 }}
+                whileHover={{ rotate: -10, scale: 1.05 }}
                 transition={{ type: 'spring', stiffness: 300 }}
+                className="relative"
               >
                 <Image
                   src="/assets/logo/logo-nbg.png"
@@ -72,7 +81,7 @@ export default function Navbar() {
                   className="size-9"
                 />
               </motion.div>
-              <span className="text-lg font-bold text-foreground">Kaffeine</span>
+              <span className="text-lg font-bold text-foreground tracking-tight">Kaffeine</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
@@ -83,7 +92,7 @@ export default function Navbar() {
                   className="relative text-sm text-muted-foreground hover:text-foreground transition-colors group/link"
                 >
                   {link.label}
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover/link:w-full" />
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gradient-to-r from-primary/60 to-primary transition-all duration-300 group-hover/link:w-full" />
                 </Link>
               ))}
             </div>
@@ -94,7 +103,7 @@ export default function Navbar() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-all"
                 >
                   {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                 </motion.button>
@@ -102,7 +111,13 @@ export default function Navbar() {
               <div className="hidden md:flex items-center gap-3">
                 {!loading && user ? (
                   <Link href="/dashboard">
-                    <Button size="sm" className="gap-2 group/btn">
+                    <Button size="sm" className="gap-2 group/btn relative overflow-hidden">
+                      <motion.span
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                        initial={{ x: '-100%' }}
+                        whileHover={{ x: '100%' }}
+                        transition={{ duration: 0.6 }}
+                      />
                       Dashboard{' '}
                       <ChevronRight
                         size={14}
@@ -112,7 +127,13 @@ export default function Navbar() {
                   </Link>
                 ) : (
                   <Link href="/register">
-                    <Button size="sm" className="gap-2 group/btn shadow-lg shadow-primary/20">
+                    <Button size="sm" className="gap-2 group/btn shadow-lg shadow-primary/15 relative overflow-hidden">
+                      <motion.span
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                        initial={{ x: '-100%' }}
+                        whileHover={{ x: '100%' }}
+                        transition={{ duration: 0.6 }}
+                      />
                       Get Started{' '}
                       <ChevronRight
                         size={14}
@@ -126,7 +147,7 @@ export default function Navbar() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
+                className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-all"
               >
                 {mobileOpen ? <X size={18} /> : <Menu size={18} />}
               </motion.button>
@@ -141,7 +162,7 @@ export default function Navbar() {
               initial="closed"
               animate="open"
               exit="closed"
-              className="md:hidden border-t border-border bg-background/95 backdrop-blur-2xl overflow-hidden"
+              className="md:hidden border-t border-border/40 bg-background/80 backdrop-blur-2xl overflow-hidden"
             >
               <div className="px-4 py-4 space-y-3">
                 {navLinks.map((link) => (
@@ -154,7 +175,7 @@ export default function Navbar() {
                     {link.label}
                   </Link>
                 ))}
-                <div className="pt-3 border-t border-border flex flex-col gap-2">
+                <div className="pt-3 border-t border-border/40 flex flex-col gap-2">
                   {!loading && user ? (
                     <Link href="/dashboard" onClick={() => setMobileOpen(false)}>
                       <Button className="w-full gap-2">
@@ -164,7 +185,7 @@ export default function Navbar() {
                   ) : (
                     <>
                       <Link href="/register" onClick={() => setMobileOpen(false)}>
-                        <Button className="w-full gap-2 shadow-lg shadow-primary/20">
+                        <Button className="w-full gap-2 shadow-lg shadow-primary/15">
                           Get Started <ChevronRight size={14} />
                         </Button>
                       </Link>
