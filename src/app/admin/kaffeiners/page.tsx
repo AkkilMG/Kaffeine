@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ShimmerTable } from '@/components/ui/shimmer';
-import { Coffee, Globe, Database, Clock, User } from 'lucide-react';
+import { useAdminKaffeiners } from '@/hooks/use-data';
+import { useRealtime } from '@/hooks/use-realtime';
+import { Coffee, Globe, Database, Wifi } from 'lucide-react';
 
 interface AdminKaffeiner {
   _id: string;
@@ -18,25 +20,16 @@ interface AdminKaffeiner {
 }
 
 export default function AdminKaffeinersPage() {
-  const [kaffeiners, setKaffeiners] = useState<AdminKaffeiner[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { kaffeiners, loading, error } = useAdminKaffeiners();
+  const [isLive, setIsLive] = useState(false);
 
-  useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const response = await fetch('/api/admin/kaffeiners', { credentials: 'include' });
-        if (!response.ok) throw new Error('Failed to fetch');
-        const data = await response.json();
-        setKaffeiners(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error');
-      } finally {
-        setLoading(false);
+  useRealtime({
+    onEvent: (event) => {
+      if (event.type === 'connected') {
+        setIsLive(true);
       }
-    };
-    fetchAll();
-  }, []);
+    },
+  });
 
   if (loading) {
     return (
@@ -50,15 +43,26 @@ export default function AdminKaffeinersPage() {
     );
   }
 
-  const activeCount = kaffeiners.filter(k => k.active).length;
+  const activeCount = kaffeiners.filter((k: AdminKaffeiner) => k.active).length;
 
   return (
     <div className="p-8 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">All Kaffeiners</h1>
-        <p className="text-muted-foreground">
-          {kaffeiners.length} total · {activeCount} active
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">All Kaffeiners</h1>
+          <p className="text-muted-foreground">
+            {kaffeiners.length} total · {activeCount} active
+          </p>
+        </div>
+        {isLive && (
+          <span className="flex items-center gap-1.5 text-xs text-green-500 font-medium">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+            </span>
+            LIVE
+          </span>
+        )}
       </div>
 
       {error && (
@@ -66,9 +70,17 @@ export default function AdminKaffeinersPage() {
       )}
 
       <Card>
-        <CardHeader>
-          <CardTitle>Platform Kaffeiners</CardTitle>
-          <CardDescription>All kaffeiners across the platform</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Platform Kaffeiners</CardTitle>
+            <CardDescription>All kaffeiners across the platform</CardDescription>
+          </div>
+          {isLive && (
+            <span className="flex items-center gap-1 text-xs text-green-500">
+              <Wifi size={12} />
+              Auto-refreshing
+            </span>
+          )}
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -91,7 +103,7 @@ export default function AdminKaffeinersPage() {
                     </td>
                   </tr>
                 ) : (
-                  kaffeiners.map((k) => (
+                  kaffeiners.map((k: AdminKaffeiner) => (
                     <tr key={k._id} className="border-b border-border hover:bg-muted/50 transition-colors">
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
@@ -110,7 +122,12 @@ export default function AdminKaffeinersPage() {
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${k.active ? 'bg-green-500' : k.banned ? 'bg-red-500' : 'bg-yellow-500'}`} />
+                          <span className={`relative flex h-2 w-2 ${k.active ? '' : ''}`}>
+                            {k.active && (
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                            )}
+                            <span className={`inline-flex rounded-full h-2 w-2 ${k.active ? 'bg-green-500' : k.banned ? 'bg-red-500' : 'bg-yellow-500'}`} />
+                          </span>
                           <span className="text-xs">
                             {k.active ? 'Active' : k.banned ? 'Banned' : 'Inactive'}
                           </span>

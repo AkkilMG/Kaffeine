@@ -3,6 +3,7 @@ import { getDatabase } from '@/lib/db';
 import { encryptData, decryptData } from '@/lib/encryption';
 import { Kaffeiner } from '@/lib/types';
 import { ObjectId } from 'mongodb';
+import { eventBus } from '@/lib/event-bus';
 
 function getSessionUser(request: NextRequest) {
   const session = request.cookies.get('session')?.value;
@@ -83,6 +84,13 @@ export async function POST(request: NextRequest) {
 
     const result = await kaffeinersCollection.insertOne(kaffeiner);
 
+    eventBus.emit({
+      type: 'kaffeiner-change',
+      action: 'create',
+      userId: user.userId,
+      kaffeinerId: result.insertedId.toString(),
+    });
+
     return NextResponse.json(
       { ...kaffeiner, _id: result.insertedId, uri },
       { status: 201 }
@@ -132,6 +140,13 @@ export async function PATCH(request: NextRequest) {
       { $set: updateData }
     );
 
+    eventBus.emit({
+      type: 'kaffeiner-change',
+      action: 'update',
+      userId: user.userId,
+      kaffeinerId: id,
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('[Kaffeine] Update kaffeiner error:', error);
@@ -167,6 +182,13 @@ export async function DELETE(request: NextRequest) {
 
     const statusCollection = db.collection('status');
     await statusCollection.deleteMany({ kaffeiner_id: new ObjectId(id) });
+
+    eventBus.emit({
+      type: 'kaffeiner-change',
+      action: 'delete',
+      userId: user.userId,
+      kaffeinerId: id,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

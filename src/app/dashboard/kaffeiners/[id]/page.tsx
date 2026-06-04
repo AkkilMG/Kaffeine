@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useMemo } from 'react';
+import { use, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useKaffeinerStats } from '@/hooks/use-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +10,7 @@ import {
   BarChart, Bar,
 } from 'recharts';
 import Link from 'next/link';
-import { ArrowLeft, Activity, CheckCircle2, XCircle, Clock, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Activity, CheckCircle2, XCircle, Clock, TrendingUp, Wifi } from 'lucide-react';
 
 const container = {
   hidden: { opacity: 0 },
@@ -28,6 +28,7 @@ const item = {
 export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { stats, loading } = useKaffeinerStats(id);
+  const [isLive, setIsLive] = useState(false);
 
   const chartData = useMemo(() => {
     if (!stats?.records) return [];
@@ -71,17 +72,28 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
       animate="show"
       className="p-4 md:p-8 space-y-6"
     >
-      <motion.div variants={item} className="flex items-center gap-4">
-        <Link
-          href="/dashboard/kaffeiners"
-          className="text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft size={20} />
-        </Link>
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Kaffeiner Details</h1>
-          <p className="text-muted-foreground text-sm">24-hour monitoring record</p>
+      <motion.div variants={item} className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/dashboard/kaffeiners"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft size={20} />
+          </Link>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Kaffeiner Details</h1>
+            <p className="text-muted-foreground text-sm">24-hour monitoring record</p>
+          </div>
         </div>
+        {isLive && (
+          <span className="flex items-center gap-1.5 text-xs text-green-500 font-medium">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+            </span>
+            LIVE
+          </span>
+        )}
       </motion.div>
 
       <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -91,9 +103,15 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
             <Activity size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl md:text-3xl font-bold ${uptimeColor}`}>
+            <motion.div
+              className={`text-2xl md:text-3xl font-bold ${uptimeColor}`}
+              key={stats?.uptime?.toFixed(2)}
+              initial={{ scale: 1.2, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
               {stats?.uptime?.toFixed(2) || 0}%
-            </div>
+            </motion.div>
             <p className="text-xs text-muted-foreground mt-1">Last 24 hours</p>
           </CardContent>
         </Card>
@@ -107,11 +125,27 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <CheckCircle2 size={16} className="text-green-500" />
-                <span className="text-xl font-bold text-foreground">{totalUp}</span>
+                <motion.span
+                  className="text-xl font-bold text-foreground"
+                  key={totalUp}
+                  initial={{ scale: 1.2, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {totalUp}
+                </motion.span>
               </div>
               <div className="flex items-center gap-2">
                 <XCircle size={16} className="text-red-500" />
-                <span className="text-xl font-bold text-foreground">{totalDown}</span>
+                <motion.span
+                  className="text-xl font-bold text-foreground"
+                  key={totalDown}
+                  initial={{ scale: 1.2, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {totalDown}
+                </motion.span>
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-1">Total checks performed</p>
@@ -124,9 +158,15 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
             <Clock size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl md:text-3xl font-bold text-foreground">
+            <motion.div
+              className="text-2xl md:text-3xl font-bold text-foreground"
+              key={stats?.totalChecks}
+              initial={{ scale: 1.2, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
               {stats?.totalChecks || 0}
-            </div>
+            </motion.div>
             <p className="text-xs text-muted-foreground mt-1">Health checks (24h)</p>
           </CardContent>
         </Card>
@@ -134,9 +174,12 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
 
       <motion.div variants={item} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardHeader>
-            <CardTitle>Status Timeline</CardTitle>
-            <CardDescription>Up/Down status over the last 24 hours</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Status Timeline</CardTitle>
+              <CardDescription>Up/Down status over the last 24 hours</CardDescription>
+            </div>
+            {isLive && <Wifi size={14} className="text-green-500" />}
           </CardHeader>
           <CardContent>
             <div className="h-64">
@@ -175,6 +218,8 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
                       stroke="var(--color-primary)"
                       strokeWidth={2}
                       dot={false}
+                      isAnimationActive={true}
+                      animationDuration={500}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -184,9 +229,12 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle>Status Distribution</CardTitle>
-            <CardDescription>Up vs Down breakdown</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Status Distribution</CardTitle>
+              <CardDescription>Up vs Down breakdown</CardDescription>
+            </div>
+            {isLive && <Wifi size={14} className="text-green-500" />}
           </CardHeader>
           <CardContent>
             <div className="h-64">
@@ -207,7 +255,7 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
                         borderRadius: '8px',
                       }}
                     />
-                    <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                    <Bar dataKey="value" radius={[4, 4, 0, 0]} isAnimationActive={true} animationDuration={500}>
                       {statusDistribution.map((entry: any, index: number) => (
                         <rect key={index} fill={entry.color} />
                       ))}
@@ -222,23 +270,41 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
 
       <motion.div variants={item}>
         <Card>
-          <CardHeader>
-            <CardTitle>Recent Records</CardTitle>
-            <CardDescription>Latest status checks (most recent first)</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Recent Records</CardTitle>
+              <CardDescription>Latest status checks (most recent first)</CardDescription>
+            </div>
+            {isLive && (
+              <span className="flex items-center gap-1 text-xs text-green-500">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                </span>
+                Live
+              </span>
+            )}
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               {stats?.records?.slice(0, 20).map((record: any, index: number) => (
-                <div
+                <motion.div
                   key={record._id || index}
+                  initial={index === 0 ? { opacity: 0, x: -10 } : undefined}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
                   className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-primary/50 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <span
-                      className={`w-2.5 h-2.5 rounded-full ${
-                        record.status ? 'bg-green-500 shadow-sm shadow-green-500/50' : 'bg-red-500 shadow-sm shadow-red-500/50'
-                      }`}
-                    />
+                      className={`relative flex h-2.5 w-2.5 ${index === 0 ? 'animate-pulse' : ''}`}
+                    >
+                      <span
+                        className={`inline-flex rounded-full h-2.5 w-2.5 ${
+                          record.status ? 'bg-green-500 shadow-sm shadow-green-500/50' : 'bg-red-500 shadow-sm shadow-red-500/50'
+                        }`}
+                      />
+                    </span>
                     <div>
                       <p className="text-sm font-medium text-foreground">
                         {record.status ? 'Service Up' : 'Service Down'}
@@ -248,7 +314,7 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
                   <span className="text-xs text-muted-foreground font-mono">
                     {new Date(record.time).toLocaleString()}
                   </span>
-                </div>
+                </motion.div>
               ))}
               {(!stats?.records || stats.records.length === 0) && (
                 <div className="text-center py-8 text-muted-foreground text-sm">

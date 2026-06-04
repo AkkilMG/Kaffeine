@@ -3,6 +3,7 @@ import { getDatabase } from '@/lib/db';
 import { User } from '@/lib/types';
 import { handleApiError, ApiError, getSessionFromRequest } from '@/lib/api-utils';
 import { ObjectId } from 'mongodb';
+import { eventBus } from '@/lib/event-bus';
 
 function getSessionUser(request: NextRequest) {
   const session = request.cookies.get('session')?.value;
@@ -66,6 +67,12 @@ export async function PATCH(request: NextRequest) {
       throw new ApiError(404, 'User not found');
     }
 
+    eventBus.emit({
+      type: 'user-change',
+      action: 'role-change',
+      userId,
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     return handleApiError(error);
@@ -110,6 +117,12 @@ export async function DELETE(request: NextRequest) {
     if (result.deletedCount === 0) {
       throw new ApiError(404, 'User not found');
     }
+
+    eventBus.emit({
+      type: 'user-change',
+      action: 'delete',
+      userId,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

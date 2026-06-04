@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,6 +13,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { useAdminUsers } from '@/hooks/use-data';
+import { useRealtime } from '@/hooks/use-realtime';
+import { Wifi } from 'lucide-react';
 
 interface User {
   _id: string;
@@ -22,33 +26,24 @@ interface User {
 }
 
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { users, loading, error, mutate } = useAdminUsers();
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [actionType, setActionType] = useState<'promote' | 'demote' | 'delete' | null>(null);
+  const [actionError, setActionError] = useState('');
+  const [isLive, setIsLive] = useState(false);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/admin/users', { credentials: 'include' });
-      if (!response.ok) throw new Error('Failed to fetch users');
-      const data = await response.json();
-      setUsers(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error fetching users');
-    } finally {
-      setLoading(false);
-    }
-  };
+  useRealtime({
+    onEvent: (event) => {
+      if (event.type === 'connected') {
+        setIsLive(true);
+      }
+    },
+  });
 
   const handlePromote = async () => {
     if (!selectedUser) return;
     try {
+      setActionError('');
       const response = await fetch('/api/admin/users', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -56,17 +51,18 @@ export default function AdminUsersPage() {
         credentials: 'include',
       });
       if (!response.ok) throw new Error('Failed to promote user');
-      await fetchUsers();
+      await mutate();
       setSelectedUser(null);
       setActionType(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error promoting user');
+      setActionError(err instanceof Error ? err.message : 'Error promoting user');
     }
   };
 
   const handleDemote = async () => {
     if (!selectedUser) return;
     try {
+      setActionError('');
       const response = await fetch('/api/admin/users', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -74,27 +70,28 @@ export default function AdminUsersPage() {
         credentials: 'include',
       });
       if (!response.ok) throw new Error('Failed to demote user');
-      await fetchUsers();
+      await mutate();
       setSelectedUser(null);
       setActionType(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error demoting user');
+      setActionError(err instanceof Error ? err.message : 'Error demoting user');
     }
   };
 
   const handleDelete = async () => {
     if (!selectedUser) return;
     try {
+      setActionError('');
       const response = await fetch(`/api/admin/users?id=${selectedUser._id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
       if (!response.ok) throw new Error('Failed to delete user');
-      await fetchUsers();
+      await mutate();
       setSelectedUser(null);
       setActionType(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error deleting user');
+      setActionError(err instanceof Error ? err.message : 'Error deleting user');
     }
   };
 
@@ -112,23 +109,40 @@ export default function AdminUsersPage() {
 
   return (
     <div className="p-8 space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">User Management</h1>
-        <p className="text-muted-foreground">Manage system users and permissions</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">User Management</h1>
+          <p className="text-muted-foreground">Manage system users and permissions</p>
+        </div>
+        {isLive && (
+          <span className="flex items-center gap-1.5 text-xs text-green-500 font-medium">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+            </span>
+            LIVE
+          </span>
+        )}
       </div>
 
-      {error && (
+      {(error || actionError) && (
         <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm">
-          {error}
+          {error || actionError}
         </div>
       )}
 
-      {/* Users Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>All Users</CardTitle>
-          <CardDescription>Total: {users.length} users</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>All Users</CardTitle>
+            <CardDescription>Total: {users.length} users</CardDescription>
+          </div>
+          {isLive && (
+            <span className="flex items-center gap-1 text-xs text-green-500">
+              <Wifi size={12} />
+              Auto-refreshing
+            </span>
+          )}
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -143,8 +157,8 @@ export default function AdminUsersPage() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
-                  <tr key={user._id} className="border-b border-border hover:bg-muted/50">
+                {users.map((user: User) => (
+                  <tr key={user._id} className="border-b border-border hover:bg-muted/50 transition-colors">
                     <td className="py-3 px-4">{user.name}</td>
                     <td className="py-3 px-4">{user.email}</td>
                     <td className="py-3 px-4">
@@ -205,7 +219,6 @@ export default function AdminUsersPage() {
         </CardContent>
       </Card>
 
-      {/* Action Dialogs */}
       <AlertDialog open={actionType === 'promote'} onOpenChange={(open: any) => !open && setActionType(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>

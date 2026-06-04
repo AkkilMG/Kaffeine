@@ -1,51 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ShimmerCard } from '@/components/ui/shimmer';
-import { Users, Coffee, Activity, ShieldCheck } from 'lucide-react';
-
-interface SystemStats {
-  totalUsers: number;
-  totalKaffeiners: number;
-  activeKaffeiners: number;
-  totalStatusRecords: number;
-}
+import { useAdminStats } from '@/hooks/use-data';
+import { useRealtime } from '@/hooks/use-realtime';
+import { Users, Coffee, Activity, ShieldCheck, Wifi } from 'lucide-react';
 
 export default function AdminDashboardPage() {
-  const [stats, setStats] = useState<SystemStats>({
-    totalUsers: 0,
-    totalKaffeiners: 0,
-    activeKaffeiners: 0,
-    totalStatusRecords: 0,
-  });
-  const [loading, setLoading] = useState(true);
+  const { adminStats, loading } = useAdminStats();
+  const [isLive, setIsLive] = useState(false);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const [usersRes, kaffeinersRes, statusRes] = await Promise.all([
-          fetch('/api/admin/users', { credentials: 'include' }),
-          fetch('/api/admin/kaffeiners', { credentials: 'include' }),
-          fetch('/api/admin/stats', { credentials: 'include' }),
-        ]);
-        const users = usersRes.ok ? await usersRes.json() : [];
-        const kaffeiners = kaffeinersRes.ok ? await kaffeinersRes.json() : [];
-        const adminStats = statusRes.ok ? await statusRes.json() : { totalStatusRecords: 0 };
-        setStats({
-          totalUsers: users.length || 0,
-          totalKaffeiners: kaffeiners.length || 0,
-          activeKaffeiners: kaffeiners.filter((k: any) => k.active).length || 0,
-          totalStatusRecords: adminStats.totalStatusRecords || 0,
-        });
-      } catch (error) {
-        console.error('[Kaffeine] Failed to fetch stats:', error);
-      } finally {
-        setLoading(false);
+  useRealtime({
+    onEvent: (event) => {
+      if (event.type === 'connected') {
+        setIsLive(true);
       }
-    };
-    fetchStats();
-  }, []);
+    },
+  });
 
   if (loading) {
     return (
@@ -60,9 +33,20 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="p-8 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
-        <p className="text-muted-foreground">System overview and management</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
+          <p className="text-muted-foreground">System overview and management</p>
+        </div>
+        {isLive && (
+          <span className="flex items-center gap-1.5 text-xs text-green-500 font-medium">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+            </span>
+            LIVE
+          </span>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -72,7 +56,15 @@ export default function AdminDashboardPage() {
             <Users size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">{stats.totalUsers}</div>
+            <motion.div
+              className="text-3xl font-bold text-foreground"
+              key={adminStats?.totalUsers}
+              initial={{ scale: 1.2, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
+              {adminStats?.totalUsers || 0}
+            </motion.div>
             <p className="text-xs text-muted-foreground mt-1">Registered accounts</p>
           </CardContent>
         </Card>
@@ -83,8 +75,16 @@ export default function AdminDashboardPage() {
             <Coffee size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">{stats.totalKaffeiners}</div>
-            <p className="text-xs text-muted-foreground mt-1">{stats.activeKaffeiners} active</p>
+            <motion.div
+              className="text-3xl font-bold text-foreground"
+              key={adminStats?.totalKaffeiners}
+              initial={{ scale: 1.2, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
+              {adminStats?.totalKaffeiners || 0}
+            </motion.div>
+            <p className="text-xs text-muted-foreground mt-1">{adminStats?.activeKaffeiners || 0} active</p>
           </CardContent>
         </Card>
 
@@ -94,7 +94,15 @@ export default function AdminDashboardPage() {
             <Activity size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">{stats.totalStatusRecords.toLocaleString()}</div>
+            <motion.div
+              className="text-3xl font-bold text-foreground"
+              key={adminStats?.totalStatusRecords}
+              initial={{ scale: 1.2, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
+              {(adminStats?.totalStatusRecords || 0).toLocaleString()}
+            </motion.div>
             <p className="text-xs text-muted-foreground mt-1">Health checks performed</p>
           </CardContent>
         </Card>
@@ -105,16 +113,30 @@ export default function AdminDashboardPage() {
             <ShieldCheck size={16} className="text-muted-foreground group-hover:text-green-500 transition-colors" />
           </CardHeader>
           <CardContent>
-            <div className="text-lg font-bold text-green-600">Operational</div>
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500" />
+              </span>
+              <div className="text-lg font-bold text-green-600">Operational</div>
+            </div>
             <p className="text-xs text-muted-foreground mt-1">All systems running</p>
           </CardContent>
         </Card>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>System Information</CardTitle>
-          <CardDescription>Kaffeine uptime monitoring platform</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>System Information</CardTitle>
+            <CardDescription>Kaffeine uptime monitoring platform</CardDescription>
+          </div>
+          {isLive && (
+            <span className="flex items-center gap-1 text-xs text-green-500">
+              <Wifi size={12} />
+              Auto-refreshing
+            </span>
+          )}
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4 text-sm">

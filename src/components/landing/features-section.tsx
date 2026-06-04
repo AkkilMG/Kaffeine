@@ -6,13 +6,12 @@ import {
 } from 'lucide-react';
 import { fadeInUp, staggerContainer } from '@/components/landing/animations';
 
-const features = [
+const spotlightFeatures = [
   {
     icon: Globe,
     title: 'Website Monitoring',
-    desc: 'HTTP/HTTPS checks every 60s from 350+ global locations.',
+    desc: 'HTTP/HTTPS checks every 60 seconds from 350+ global locations. Monitor any website, API, or endpoint with detailed response time tracking and instant downtime detection.',
     color: 'from-violet-500/15',
-    featured: true,
     metrics: [
       { value: '99.97%', label: 'Uptime' },
       { value: '12,847', label: 'Checks Today' },
@@ -23,9 +22,30 @@ const features = [
   {
     icon: Database,
     title: 'Database Monitoring',
-    desc: 'MongoDB, PostgreSQL, MySQL, Redis — native driver checks.',
+    desc: 'Monitor MongoDB, PostgreSQL, MySQL, and Redis databases with native driver health checks. Get alerted before connection issues cascade into full downtime.',
     color: 'from-blue-500/15',
+    metrics: [
+      { value: '4', label: 'Supported Engines' },
+      { value: '<30s', label: 'Detection Time' },
+      { value: 'AES-256', label: 'Encryption' },
+      { value: 'Native', label: 'Driver Checks' },
+    ],
   },
+  {
+    icon: Bell,
+    title: 'Instant Alerts',
+    desc: 'Real-time downtime alerts via email, Slack, Discord, or webhook. Get instant incident notifications the moment a service goes down with multi-channel delivery.',
+    color: 'from-amber-500/15',
+    metrics: [
+      { value: '<1s', label: 'Alert Latency' },
+      { value: '4+', label: 'Channels' },
+      { value: '99.9%', label: 'Delivery Rate' },
+      { value: '24/7', label: 'Coverage' },
+    ],
+  },
+];
+
+const gridFeatures = [
   {
     icon: Cloud,
     title: 'Edge Infrastructure',
@@ -37,12 +57,6 @@ const features = [
     title: 'Zero-Knowledge Encryption',
     desc: 'AES-256 encrypted at rest. Your credentials stay yours.',
     color: 'from-purple-500/15',
-  },
-  {
-    icon: Bell,
-    title: 'Instant Alerts',
-    desc: 'Real-time notifications the moment a service goes down.',
-    color: 'from-amber-500/15',
   },
   {
     icon: Code,
@@ -59,9 +73,6 @@ const features = [
 ];
 
 export default function FeaturesSection() {
-  const featured = features[0];
-  const rest = features.slice(1);
-
   return (
     <section id="features" className="relative py-24 md:py-32 bg-background">
       <div
@@ -78,88 +89,127 @@ export default function FeaturesSection() {
           whileInView="show"
           viewport={{ once: true, margin: '-100px' }}
           variants={staggerContainer}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 text-sm font-medium text-primary font-mono mb-4 px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
+          <motion.div
+            variants={fadeInUp}
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary font-mono mb-4 px-3 py-1 rounded-full bg-primary/5 border border-primary/10"
+          >
             <Sparkles size={12} />
             /features
           </motion.div>
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
+          <motion.h2
+            variants={fadeInUp}
+            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground"
+          >
             Everything you need to{' '}
             <span className="text-primary">monitor</span>
           </motion.h2>
-          <motion.p variants={fadeInUp} className="text-base text-muted-foreground max-w-xl mx-auto">
+          <motion.p
+            variants={fadeInUp}
+            className="text-base text-muted-foreground max-w-xl mx-auto"
+          >
             No caps, no hidden limits. Every capability is available to every user.
           </motion.p>
         </motion.div>
 
-        <div className="space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/30 transition-all duration-500"
-          >
-            <div className="absolute top-0 right-0 w-80 h-80 bg-primary/[0.04] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
-            <div className="relative p-6 md:p-8">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
-                  <Globe size={22} className="text-primary" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-xl text-foreground">{featured.title}</h3>
-                  <p className="text-sm text-muted-foreground">{featured.desc}</p>
-                </div>
-                <span className="inline-flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full shrink-0">
-                  <span className="relative flex size-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
-                    <span className="relative inline-flex size-2 rounded-full bg-success" />
-                  </span>
-                  All systems operational
-                </span>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {featured.metrics!.map((m) => (
-                  <div key={m.label} className="rounded-lg border border-border bg-muted/30 px-4 py-3">
-                    <div className="font-mono text-lg font-bold text-foreground">{m.value}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{m.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+        <div className="space-y-6 mb-12">
+          {spotlightFeatures.map((feature, i) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/30 transition-all duration-500"
+            >
+              <div className="absolute top-0 right-0 w-80 h-80 bg-primary/[0.04] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {rest.map((feature, i) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-                whileHover={{ y: -4 }}
-                className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/30 transition-all duration-500"
+              <div
+                className={`relative p-6 md:p-8 flex flex-col ${
+                  i % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'
+                } gap-6 md:gap-8 items-center`}
               >
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
-                />
-                <div className="relative p-6">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 group-hover:scale-110 transition-all duration-300">
-                    <feature.icon size={18} className="text-primary" />
+                <div className="flex-1 w-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:scale-110 transition-all duration-300">
+                      <feature.icon size={22} className="text-primary" />
+                    </div>
+                    <h3 className="font-semibold text-xl text-foreground">
+                      {feature.title}
+                    </h3>
                   </div>
-                  <h3 className="font-semibold text-lg mb-1.5 text-foreground">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-lg">
+                    {feature.desc}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {['Always active', 'No setup required', 'Real-time'].map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs text-muted-foreground bg-muted/50 border border-border/50 px-2.5 py-1 rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </motion.div>
-            ))}
-          </div>
+
+                <div className="w-full lg:w-auto shrink-0">
+                  <div className="grid grid-cols-2 gap-2 min-w-[240px]">
+                    {feature.metrics.map((m) => (
+                      <div
+                        key={m.label}
+                        className="rounded-lg border border-border bg-muted/30 px-4 py-3"
+                      >
+                        <div className="font-mono text-lg font-bold text-foreground">
+                          {m.value}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-0.5">
+                          {m.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {gridFeatures.map((feature, i) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.05 }}
+              whileHover={{ y: -4 }}
+              className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/30 transition-all duration-500"
+            >
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${feature.color} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
+              />
+              <div className="relative p-6">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 group-hover:scale-110 transition-all duration-300">
+                  <feature.icon size={18} className="text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-1.5 text-foreground">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {feature.desc}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-8 text-center"
+          className="mt-10 text-center"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 border border-border">
             <Sparkles size={14} className="text-primary" />

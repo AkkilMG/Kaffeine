@@ -22,9 +22,23 @@ export async function GET(request: NextRequest) {
 
     const db = await getDatabase();
     const statusCollection = db.collection('status');
-    const totalStatusRecords = await statusCollection.countDocuments();
+    const usersCollection = db.collection('users');
+    const kaffeinersCollection = db.collection('kaffeiners');
 
-    return NextResponse.json({ totalStatusRecords });
+    const [totalStatusRecords, totalUsers, totalKaffeiners] = await Promise.all([
+      statusCollection.countDocuments(),
+      usersCollection.countDocuments(),
+      kaffeinersCollection.countDocuments(),
+    ]);
+
+    const activeKaffeiners = await kaffeinersCollection.countDocuments({ active: true });
+
+    return NextResponse.json({
+      totalStatusRecords,
+      totalUsers,
+      totalKaffeiners,
+      activeKaffeiners,
+    });
   } catch (error) {
     return handleApiError(error);
   }

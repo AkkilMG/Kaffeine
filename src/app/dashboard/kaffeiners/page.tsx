@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useKaffeiners } from '@/hooks/use-data';
+import { useRealtime } from '@/hooks/use-realtime';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ShimmerCard } from '@/components/ui/shimmer';
@@ -15,7 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Coffee, Globe, Database, PlusCircle, Trash2, ExternalLink, Clock } from 'lucide-react';
+import { Coffee, Globe, Database, PlusCircle, Trash2, ExternalLink, Clock, Wifi } from 'lucide-react';
 import Link from 'next/link';
 
 const container = {
@@ -35,6 +36,15 @@ export default function KaffeinersPage() {
   const { kaffeiners, loading, mutate } = useKaffeiners();
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState('');
+  const [isLive, setIsLive] = useState(false);
+
+  useRealtime({
+    onEvent: (event) => {
+      if (event.type === 'connected') {
+        setIsLive(true);
+      }
+    },
+  });
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -88,9 +98,20 @@ export default function KaffeinersPage() {
       className="p-4 md:p-8 space-y-6"
     >
       <motion.div variants={item} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Kaffeiners</h1>
-          <p className="text-muted-foreground text-sm">Manage your monitored services</p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Kaffeiners</h1>
+            <p className="text-muted-foreground text-sm">Manage your monitored services</p>
+          </div>
+          {isLive && (
+            <span className="flex items-center gap-1.5 text-xs text-green-500 font-medium">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+              </span>
+              LIVE
+            </span>
+          )}
         </div>
         <Link href="/dashboard/kaffeiner">
           <Button className="gap-2 w-full sm:w-auto">
@@ -172,12 +193,23 @@ export default function KaffeinersPage() {
                       </div>
                     </Link>
                     <div className="flex items-center gap-3 flex-shrink-0">
-                      <span
-                        className={`w-2.5 h-2.5 rounded-full ${
-                          k.active ? 'bg-green-500 shadow-sm shadow-green-500/50' : 'bg-red-500'
-                        }`}
-                        title={k.active ? 'Active' : 'Inactive'}
-                      />
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className={`relative flex h-2.5 w-2.5 ${k.active ? '' : ''}`}
+                        >
+                          {k.active && (
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                          )}
+                          <span
+                            className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
+                              k.active ? 'bg-green-500' : 'bg-red-500'
+                            }`}
+                          />
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {k.active ? 'Active' : 'Inactive'}
+                        </span>
+                      </div>
                       <Button
                         size="sm"
                         variant="ghost"

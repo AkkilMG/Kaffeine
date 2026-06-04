@@ -6,8 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { ShimmerCard, ShimmerChart } from '@/components/ui/shimmer';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { Coffee, Activity, Timer, CheckCircle2, TrendingUp, PlusCircle } from 'lucide-react';
+import { Coffee, Activity, Timer, CheckCircle2, TrendingUp, PlusCircle, Wifi, Zap } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRealtime } from '@/hooks/use-realtime';
 
 const container = {
   hidden: { opacity: 0 },
@@ -25,6 +27,19 @@ const item = {
 export default function DashboardPage() {
   const { metrics, loading } = useDashboardMetrics();
   const { kaffeiners } = useKaffeiners();
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+  const [isLive, setIsLive] = useState(false);
+
+  useRealtime({
+    onStatusUpdate: () => {
+      setLastUpdate(new Date());
+    },
+    onEvent: (event) => {
+      if (event.type === 'connected') {
+        setIsLive(true);
+      }
+    },
+  });
 
   if (loading) {
     return (
@@ -60,54 +75,104 @@ export default function DashboardPage() {
       animate="show"
       className="p-4 md:p-8 space-y-6"
     >
-      <motion.div variants={item}>
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-muted-foreground text-sm">Overview of your monitored services</p>
+      <motion.div variants={item} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground text-sm">Overview of your monitored services</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {isLive && (
+            <span className="flex items-center gap-1.5 text-xs text-green-500 font-medium">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+              </span>
+              LIVE
+            </span>
+          )}
+          <span className="text-xs text-muted-foreground">
+            Updated {lastUpdate.toLocaleTimeString()}
+          </span>
+        </div>
       </motion.div>
 
       <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="group hover:shadow-lg transition-all duration-300">
+        <Card className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Kaffeiners</CardTitle>
             <Coffee size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl md:text-3xl font-bold text-foreground">{metrics?.totalKaffeiner || 0}</div>
+            <motion.div
+              className="text-2xl md:text-3xl font-bold text-foreground"
+              key={metrics?.totalKaffeiner}
+              initial={{ scale: 1.3, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
+              {metrics?.totalKaffeiner || 0}
+            </motion.div>
             <p className="text-xs text-muted-foreground mt-1">{metrics?.activeKaffeiner || 0} active</p>
           </CardContent>
         </Card>
 
-        <Card className="group hover:shadow-lg transition-all duration-300">
+        <Card className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-medium text-muted-foreground">Average Uptime</CardTitle>
             <Activity size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl md:text-3xl font-bold text-foreground">
+            <motion.div
+              className="text-2xl md:text-3xl font-bold text-foreground"
+              key={metrics?.uptime?.toFixed(1)}
+              initial={{ scale: 1.3, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
               {metrics?.uptime?.toFixed(1) || 0}%
-            </div>
+            </motion.div>
             <p className="text-xs text-muted-foreground mt-1">Last 24 hours</p>
           </CardContent>
         </Card>
 
-        <Card className="group hover:shadow-lg transition-all duration-300">
+        <Card className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-medium text-muted-foreground">Active Services</CardTitle>
-            <CheckCircle2 size={16} className="text-muted-foreground group-hover:text-green-500 transition-colors" />
+            <Zap size={16} className="text-muted-foreground group-hover:text-green-500 transition-colors" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl md:text-3xl font-bold text-foreground">{activeKaffeiners.length}</div>
+            <motion.div
+              className="text-2xl md:text-3xl font-bold text-foreground"
+              key={activeKaffeiners.length}
+              initial={{ scale: 1.3, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
+              {activeKaffeiners.length}
+            </motion.div>
             <p className="text-xs text-muted-foreground mt-1">Monitoring now</p>
           </CardContent>
         </Card>
 
-        <Card className="group hover:shadow-lg transition-all duration-300">
+        <Card className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-medium text-muted-foreground">Last Check</CardTitle>
             <Timer size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
           </CardHeader>
           <CardContent>
-            <div className="text-lg md:text-xl font-mono font-bold text-foreground">{lastKaffeinerTime}</div>
+            <motion.div
+              className="text-lg md:text-xl font-mono font-bold text-foreground"
+              key={lastKaffeinerTime}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {lastKaffeinerTime}
+            </motion.div>
             <p className="text-xs text-muted-foreground mt-1">Most recent kaffeine</p>
           </CardContent>
         </Card>
@@ -115,9 +180,17 @@ export default function DashboardPage() {
 
       <motion.div variants={item} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardHeader>
-            <CardTitle>Overall Uptime</CardTitle>
-            <CardDescription>24-hour service availability across all kaffeiners</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Overall Uptime</CardTitle>
+              <CardDescription>24-hour service availability across all kaffeiners</CardDescription>
+            </div>
+            {isLive && (
+              <span className="flex items-center gap-1 text-xs text-green-500">
+                <Wifi size={12} />
+                Auto-refreshing
+              </span>
+            )}
           </CardHeader>
           <CardContent>
             <div className="h-64 flex items-center justify-center">
@@ -131,6 +204,8 @@ export default function DashboardPage() {
                     outerRadius={120}
                     paddingAngle={5}
                     dataKey="value"
+                    isAnimationActive={true}
+                    animationDuration={750}
                   >
                     {uptimeData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -149,7 +224,10 @@ export default function DashboardPage() {
             <div className="flex gap-4 justify-center mt-4">
               {uptimeData.map((entry) => (
                 <div key={entry.name} className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: entry.color }}
+                  />
                   <span className="text-sm text-muted-foreground">
                     {entry.name}: {entry.value.toFixed(1)}%
                   </span>
@@ -160,9 +238,17 @@ export default function DashboardPage() {
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle>Service Status</CardTitle>
-            <CardDescription>Current health of your kaffeiners</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Service Status</CardTitle>
+              <CardDescription>Current health of your kaffeiners</CardDescription>
+            </div>
+            {isLive && (
+              <span className="flex items-center gap-1 text-xs text-green-500">
+                <Wifi size={12} />
+                Live
+              </span>
+            )}
           </CardHeader>
           <CardContent>
             {activeKaffeiners.length === 0 ? (
@@ -188,7 +274,10 @@ export default function DashboardPage() {
                     className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-primary transition-colors group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                      </span>
                       <div>
                         <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
                           {k.title}

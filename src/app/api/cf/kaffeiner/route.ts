@@ -3,6 +3,7 @@ import { getDatabase } from '@/lib/db';
 import { Kaffeiner, Status } from '@/lib/types';
 import { decryptData } from '@/lib/encryption';
 import { ObjectId } from 'mongodb';
+import { eventBus } from '@/lib/event-bus';
 import {
   verifyJWT,
   getAuthHeader,
@@ -130,6 +131,14 @@ export async function POST(request: NextRequest) {
       { _id: new ObjectId(kaffeiner_id) },
       { $set: { recentKaffeiner: now } }
     );
+
+    eventBus.emit({
+      type: 'status-update',
+      kaffeinerId: kaffeiner_id,
+      userId: kaffeiner.userId.toString(),
+      status: isUp,
+      time: now.toISOString(),
+    });
 
     const recordCount = await statusCollection.countDocuments({
       kaffeiner_id: new ObjectId(kaffeiner_id),
