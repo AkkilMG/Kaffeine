@@ -120,7 +120,7 @@ export default function HeroSection() {
                 Cloudflare-powered monitoring
               </motion.div>
 
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.88] mb-6 text-foreground">
+              <h1 className="text-[2.5rem] sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.88] mb-6 text-foreground">
                 Keep Your<br />
                 Services{' '}
                 <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">

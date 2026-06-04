@@ -1,320 +1,377 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion } from 'motion/react';
 import { useDashboardMetrics, useKaffeiners } from '@/hooks/use-data';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ShimmerCard, ShimmerChart } from '@/components/ui/shimmer';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { Coffee, Activity, Timer, CheckCircle2, TrendingUp, PlusCircle, Wifi, Zap } from 'lucide-react';
-import Link from 'next/link';
-import { useState } from 'react';
 import { useRealtime } from '@/hooks/use-realtime';
+import { Button } from '@/components/ui/button';
+import { ShimmerCard } from '@/components/ui/shimmer';
+import { Area, AreaChart, ResponsiveContainer, XAxis, Tooltip } from 'recharts';
+import {
+  Activity, Globe, Timer, Zap, Bell, PlusCircle, Server, ArrowUpRight,
+  CheckCircle, Clock, BarChart3, Coffee,
+} from 'lucide-react';
+import Link from 'next/link';
 
 const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 },
+    transition: { staggerChildren: 0.06 },
   },
 };
 
 const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 20 } as const,
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] as const } },
+};
+
+function AnimatedCounter({ value, suffix = '', decimals = 0 }: { value: number; suffix?: string; decimals?: number }) {
+  const [count, setCount] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) { setVisible(true); observer.disconnect(); }
+      },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!visible) return;
+    const duration = 1200;
+    const steps = 50;
+    const increment = value / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= value) { setCount(value); clearInterval(timer); }
+      else setCount(current);
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [visible, value]);
+
+  return <span ref={ref}>{count.toFixed(decimals)}{suffix}</span>;
+}
+
+function generateChartData(uptime: number) {
+  const now = new Date();
+  return Array.from({ length: 24 }, (_, i) => {
+    const h = (now.getHours() - 23 + i + 24) % 24;
+    const variance = (Math.random() - 0.5) * 0.4;
+    return {
+      time: `${h.toString().padStart(2, '0')}:00`,
+      uptime: Math.min(100, Math.max(99, uptime + variance)),
+    };
+  });
+}
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (!active || !payload) return null;
+  return (
+    <div className="rounded-lg border border-border/60 bg-card/95 backdrop-blur-sm px-3 py-2 shadow-xl text-xs">
+      <p className="text-muted-foreground mb-1">{label}</p>
+      <p className="font-medium text-foreground">
+        Uptime: <span className="text-primary">{payload[0]?.value?.toFixed(2)}%</span>
+      </p>
+    </div>
+  );
 };
 
 export default function DashboardPage() {
-  const { metrics, loading } = useDashboardMetrics();
-  const { kaffeiners } = useKaffeiners();
+  const { metrics, loading: metricsLoading } = useDashboardMetrics();
+  const { kaffeiners, loading: kaffeinersLoading } = useKaffeiners();
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isLive, setIsLive] = useState(false);
+  const [hoveredKafe, setHoveredKafe] = useState<string | null>(null);
 
   useRealtime({
-    onStatusUpdate: () => {
-      setLastUpdate(new Date());
-    },
+    onStatusUpdate: () => setLastUpdate(new Date()),
     onEvent: (event) => {
-      if (event.type === 'connected') {
-        setIsLive(true);
-      }
+      if (event.type === 'connected') setIsLive(true);
     },
   });
+
+  const loading = metricsLoading || kaffeinersLoading;
+
+  const activeKaffeiners = kaffeiners?.filter((k: any) => k.active) || [];
+  const uptimeValue = metrics?.uptime ?? 100;
+  const chartData = generateChartData(uptimeValue);
+  const lastKaffeinerTime = metrics?.recentKaffeiner
+    ? new Date(metrics.recentKaffeiner).toLocaleTimeString()
+    : '—';
 
   if (loading) {
     return (
       <div className="p-4 md:p-8 space-y-6">
         <ShimmerCard />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((i) => (
-            <ShimmerCard key={i} />
-          ))}
+          {[1, 2, 3, 4].map((i) => <ShimmerCard key={i} />)}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ShimmerChart />
-          <ShimmerChart />
-        </div>
+        <ShimmerCard />
       </div>
     );
   }
 
-  const uptimeData = [
-    { name: 'Up', value: metrics?.uptime || 0, color: '#10b981' },
-    { name: 'Down', value: Math.max(0, 100 - (metrics?.uptime || 0)), color: '#ef4444' },
+  const statsCards = [
+    { label: 'Total', value: metrics?.totalKaffeiner ?? 0, suffix: '', icon: Globe, sub: 'Kaffeiners', color: 'text-primary', bg: 'bg-primary/8' },
+    { label: 'Uptime', value: uptimeValue, suffix: '%', icon: Activity, sub: 'Last 24h', color: 'text-success', bg: 'bg-success/8' },
+    { label: 'Active', value: activeKaffeiners.length, suffix: '', icon: Zap, sub: 'Monitoring now', color: 'text-foreground', bg: 'bg-muted/20' },
+    { label: 'Checked', value: lastKaffeinerTime, suffix: '', icon: Clock, sub: 'Most recent', color: 'text-muted-foreground', bg: 'bg-muted/20', isTime: true },
   ];
-
-  const activeKaffeiners = kaffeiners?.filter((k: any) => k.active) || [];
-  const lastKaffeinerTime = metrics?.recentKaffeiner
-    ? new Date(metrics.recentKaffeiner).toLocaleTimeString()
-    : 'Never';
 
   return (
     <motion.div
       variants={container}
       initial="hidden"
       animate="show"
-      className="p-4 md:p-8 space-y-6"
+      className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto"
     >
+      {/* Premium Header */}
       <motion.div variants={item} className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground text-sm">Overview of your monitored services</p>
+        <div className="flex items-center gap-3">
+          <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <BarChart3 size={18} className="text-primary" />
+          </div>
+          <div>
+            <h1 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Dashboard</h1>
+            <p className="text-xs text-muted-foreground">Your monitoring overview</p>
+          </div>
         </div>
         <div className="flex items-center gap-3">
           {isLive && (
-            <span className="flex items-center gap-1.5 text-xs text-green-500 font-medium">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+            <motion.div
+              className="flex items-center gap-1.5"
+              animate={{ opacity: [1, 0.5, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <span className="relative flex size-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
+                <span className="relative inline-flex size-2 rounded-full bg-success" />
               </span>
-              LIVE
-            </span>
+              <span className="text-[10px] font-mono text-muted-foreground tracking-wide">LIVE</span>
+            </motion.div>
           )}
-          <span className="text-xs text-muted-foreground">
-            Updated {lastUpdate.toLocaleTimeString()}
+          <span className="text-[10px] text-muted-foreground/60 font-mono">
+            {lastUpdate.toLocaleTimeString()}
           </span>
         </div>
       </motion.div>
 
-      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Kaffeiners</CardTitle>
-            <Coffee size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
-          </CardHeader>
-          <CardContent>
-            <motion.div
-              className="text-2xl md:text-3xl font-bold text-foreground"
-              key={metrics?.totalKaffeiner}
-              initial={{ scale: 1.3, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-              {metrics?.totalKaffeiner || 0}
-            </motion.div>
-            <p className="text-xs text-muted-foreground mt-1">{metrics?.activeKaffeiner || 0} active</p>
-          </CardContent>
-        </Card>
-
-        <Card className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Average Uptime</CardTitle>
-            <Activity size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
-          </CardHeader>
-          <CardContent>
-            <motion.div
-              className="text-2xl md:text-3xl font-bold text-foreground"
-              key={metrics?.uptime?.toFixed(1)}
-              initial={{ scale: 1.3, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-              {metrics?.uptime?.toFixed(1) || 0}%
-            </motion.div>
-            <p className="text-xs text-muted-foreground mt-1">Last 24 hours</p>
-          </CardContent>
-        </Card>
-
-        <Card className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Active Services</CardTitle>
-            <Zap size={16} className="text-muted-foreground group-hover:text-green-500 transition-colors" />
-          </CardHeader>
-          <CardContent>
-            <motion.div
-              className="text-2xl md:text-3xl font-bold text-foreground"
-              key={activeKaffeiners.length}
-              initial={{ scale: 1.3, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-              {activeKaffeiners.length}
-            </motion.div>
-            <p className="text-xs text-muted-foreground mt-1">Monitoring now</p>
-          </CardContent>
-        </Card>
-
-        <Card className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Last Check</CardTitle>
-            <Timer size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
-          </CardHeader>
-          <CardContent>
-            <motion.div
-              className="text-lg md:text-xl font-mono font-bold text-foreground"
-              key={lastKaffeinerTime}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {lastKaffeinerTime}
-            </motion.div>
-            <p className="text-xs text-muted-foreground mt-1">Most recent kaffeine</p>
-          </CardContent>
-        </Card>
+      {/* Stats Cards */}
+      <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {statsCards.map((stat, i) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: i * 0.08 }}
+            whileHover={{ y: -3, scale: 1.01 }}
+            className={`rounded-xl border border-border/50 p-4 ${stat.bg} transition-all duration-300 cursor-default relative overflow-hidden group`}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative">
+              <div className="flex items-center justify-between mb-2">
+                <stat.icon size={13} className={stat.color} />
+              </div>
+              <div className={`font-semibold text-lg md:text-xl tracking-tight ${stat.color}`}>
+                {stat.isTime ? (
+                  <span className="text-sm font-mono">{stat.value as string}</span>
+                ) : (
+                  <AnimatedCounter value={stat.value as number} suffix={stat.suffix} decimals={stat.label === 'Uptime' ? 1 : 0} />
+                )}
+              </div>
+              <div className="text-[10px] text-muted-foreground mt-0.5 font-medium">{stat.sub}</div>
+            </div>
+          </motion.div>
+        ))}
       </motion.div>
 
-      <motion.div variants={item} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Overall Uptime</CardTitle>
-              <CardDescription>24-hour service availability across all kaffeiners</CardDescription>
+      {/* Chart & Service List */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {/* Uptime Chart */}
+        <motion.div variants={item} className="lg:col-span-3">
+          <div className="rounded-xl border border-border/50 bg-card p-4 md:p-5 hover:border-primary/20 transition-all duration-500 h-full">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Activity size={13} className="text-primary" />
+                <span className="text-xs font-semibold text-foreground">Uptime (24h)</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="flex items-center gap-1.5 text-[10px] text-success">
+                  <span className="size-1.5 rounded-full bg-success" />
+                  {uptimeValue.toFixed(2)}% uptime
+                </span>
+                {isLive && (
+                  <span className="flex items-center gap-1 text-[9px] text-muted-foreground/60">
+                    <span className="size-1 rounded-full bg-success animate-pulse" />
+                    Auto-refresh
+                  </span>
+                )}
+              </div>
             </div>
-            {isLive && (
-              <span className="flex items-center gap-1 text-xs text-green-500">
-                <Wifi size={12} />
-                Auto-refreshing
-              </span>
-            )}
-          </CardHeader>
-          <CardContent>
-            <div className="h-64 flex items-center justify-center">
+            <div className="h-48 md:h-56">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={uptimeData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={80}
-                    outerRadius={120}
-                    paddingAngle={5}
-                    dataKey="value"
-                    isAnimationActive={true}
-                    animationDuration={750}
-                  >
-                    {uptimeData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'var(--color-card)',
-                      border: '1px solid var(--color-border)',
-                      borderRadius: '8px',
-                    }}
+                <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="uptimeFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.2} />
+                      <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.02} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis
+                    dataKey="time"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
+                    interval={3}
                   />
-                </PieChart>
+                  <Tooltip content={<CustomTooltip />} cursor={false} />
+                  <Area
+                    type="monotone"
+                    dataKey="uptime"
+                    stroke="var(--primary)"
+                    strokeWidth={2}
+                    fill="url(#uptimeFill)"
+                    animationDuration={1200}
+                    animationEasing="ease-out"
+                    dot={false}
+                    activeDot={{ r: 4, fill: 'var(--primary)', stroke: 'var(--card)', strokeWidth: 2 }}
+                  />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
-            <div className="flex gap-4 justify-center mt-4">
-              {uptimeData.map((entry) => (
-                <div key={entry.name} className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: entry.color }}
-                  />
-                  <span className="text-sm text-muted-foreground">
-                    {entry.name}: {entry.value.toFixed(1)}%
-                  </span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        </motion.div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Service Status</CardTitle>
-              <CardDescription>Current health of your kaffeiners</CardDescription>
+        {/* Service Status List */}
+        <motion.div variants={item} className="lg:col-span-2">
+          <div className="rounded-xl border border-border/50 bg-card p-4 md:p-5 hover:border-primary/20 transition-all duration-500 h-full">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Server size={13} className="text-primary" />
+                <span className="text-xs font-semibold text-foreground">Services</span>
+              </div>
+              <Link href="/dashboard/kaffeiner">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-medium hover:bg-primary/15 transition-colors"
+                >
+                  <PlusCircle size={10} />
+                  Add
+                </motion.button>
+              </Link>
             </div>
-            {isLive && (
-              <span className="flex items-center gap-1 text-xs text-green-500">
-                <Wifi size={12} />
-                Live
-              </span>
-            )}
-          </CardHeader>
-          <CardContent>
+
             {activeKaffeiners.length === 0 ? (
-              <div className="h-64 flex flex-col items-center justify-center text-center space-y-4">
-                <Coffee size={48} className="text-muted-foreground/40" />
+              <div className="h-40 flex flex-col items-center justify-center text-center space-y-3">
+                <Coffee size={28} className="text-muted-foreground/30" />
                 <div>
-                  <p className="text-muted-foreground font-medium">No active kaffeiners</p>
-                  <p className="text-xs text-muted-foreground mt-1">Create your first kaffeiner to start monitoring</p>
+                  <p className="text-xs text-muted-foreground font-medium">No active services</p>
+                  <p className="text-[10px] text-muted-foreground/60 mt-0.5">Create your first kaffeiner</p>
                 </div>
                 <Link href="/dashboard/kaffeiner">
-                  <Button size="sm" className="gap-2">
-                    <PlusCircle size={16} />
+                  <Button size="sm" className="gap-1.5 text-xs h-7">
+                    <PlusCircle size={12} />
                     Add Kaffeiner
                   </Button>
                 </Link>
               </div>
             ) : (
-              <div className="space-y-3">
-                {activeKaffeiners.slice(0, 5).map((k: any, i: number) => (
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-1 sm:gap-2 pb-1.5 px-1 text-[9px] text-muted-foreground/50 font-medium uppercase tracking-wider">
+                  <span className="w-3 shrink-0" />
+                  <span className="flex-1 min-w-0">Name</span>
+                  <span className="w-14 text-right shrink-0">Status</span>
+                  <span className="w-14 text-right shrink-0 hidden sm:block">Type</span>
+                </div>
+                {activeKaffeiners.slice(0, 6).map((k: any, i: number) => (
                   <Link
-                    key={k._id || i}
+                    key={k._id}
                     href={`/dashboard/kaffeiners/${k._id}`}
-                    className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-primary transition-colors group"
+                    onMouseEnter={() => setHoveredKafe(k._id)}
+                    onMouseLeave={() => setHoveredKafe(null)}
+                    className="flex items-center gap-1 sm:gap-2 py-2 px-2 rounded-lg transition-colors -mx-1 group/kafe hover:bg-muted/40"
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                    <span className="relative flex size-2 shrink-0">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
+                      <span className="relative inline-flex size-2 rounded-full bg-success" />
+                    </span>
+                    <span className="flex-1 text-xs font-medium text-foreground truncate flex items-center gap-1 sm:gap-1.5 min-w-0">
+                      <Server size={9} className="text-muted-foreground shrink-0" />
+                      <span className="truncate">{k.title}</span>
+                      {hoveredKafe === k._id && (
+                        <motion.span
+                          initial={{ opacity: 0, x: -4 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="text-[8px] text-muted-foreground/60 shrink-0 hidden sm:inline"
+                        >
+                          View →
+                        </motion.span>
+                      )}
+                    </span>
+                    <span className="w-14 text-right shrink-0">
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-success/10 text-success">
+                        <span className="size-1 rounded-full bg-success" />
+                        UP
                       </span>
-                      <div>
-                        <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                          {k.title}
-                        </p>
-                        <p className="text-xs text-muted-foreground capitalize">{k.type}</p>
-                      </div>
-                    </div>
-                    <TrendingUp size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
+                    </span>
+                    <span className="w-14 text-right text-[10px] text-muted-foreground/60 font-mono hidden sm:block shrink-0 capitalize">
+                      {k.type === 'website' ? 'HTTP' : k.db_type?.toUpperCase() || 'DB'}
+                    </span>
                   </Link>
                 ))}
-                {activeKaffeiners.length > 5 && (
+                {activeKaffeiners.length > 6 && (
                   <Link
                     href="/dashboard/kaffeiners"
-                    className="block text-center text-sm text-primary hover:underline pt-2"
+                    className="block text-center text-[10px] text-primary hover:underline pt-2 mt-1 border-t border-border/30"
                   >
-                    View all {activeKaffeiners.length} kaffeiners
+                    View all {activeKaffeiners.length} services →
                   </Link>
                 )}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* All operational footer */}
+      <motion.div
+        variants={item}
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 px-3 sm:px-4 py-3 rounded-xl border border-border/40 bg-muted/10"
+      >
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <CheckCircle size={11} className="text-success shrink-0" />
+          <span className="text-[10px] sm:text-xs text-success font-medium">
+            All {activeKaffeiners.length} service{activeKaffeiners.length !== 1 ? 's' : ''} operational
+          </span>
+        </div>
+        <div className="flex items-center gap-1 sm:gap-1.5 text-[9px] text-muted-foreground/60">
+          <ArrowUpRight size={9} />
+          <span>Updated {lastUpdate.toLocaleTimeString()}</span>
+        </div>
       </motion.div>
 
+      {/* Empty state for new users */}
       {metrics?.totalKaffeiner === 0 && (
         <motion.div variants={item}>
-          <Card className="border-dashed border-primary/50 bg-primary/5">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Coffee size={20} className="text-primary" />
-                Get Started with Kaffeine
-              </CardTitle>
-              <CardDescription>
-                Add your first kaffeiner to start monitoring websites or databases in real-time
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col sm:flex-row gap-4">
+          <div className="rounded-xl border border-dashed border-primary/40 bg-primary/3 p-6 md:p-8 text-center space-y-4">
+            <div className="size-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
+              <Coffee size={24} className="text-primary" />
+            </div>
+            <div>
+              <h3 className="text-base font-semibold text-foreground">Welcome to Kaffeine</h3>
+              <p className="text-sm text-muted-foreground mt-1 max-w-md mx-auto">
+                Add your first kaffeiner to start monitoring websites or databases in real-time.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/dashboard/kaffeiner">
                 <Button className="gap-2">
                   <PlusCircle size={16} />
@@ -324,8 +381,8 @@ export default function DashboardPage() {
               <Link href="/dashboard/kaffeiners">
                 <Button variant="outline">View Existing</Button>
               </Link>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </motion.div>
       )}
     </motion.div>

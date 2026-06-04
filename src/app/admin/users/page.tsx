@@ -97,7 +97,7 @@ export default function AdminUsersPage() {
 
   if (loading) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-16 bg-muted rounded-lg animate-pulse" />
@@ -108,11 +108,11 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">User Management</h1>
-          <p className="text-muted-foreground">Manage system users and permissions</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">User Management</h1>
+          <p className="text-sm text-muted-foreground">Manage system users and permissions</p>
         </div>
         {isLive && (
           <span className="flex items-center gap-1.5 text-xs text-green-500 font-medium">
@@ -148,20 +148,20 @@ export default function AdminUsersPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="border-b border-border">
-                <tr>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Name</th>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Email</th>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Role</th>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Joined</th>
-                  <th className="text-right py-3 px-4 font-medium text-foreground">Actions</th>
-                </tr>
+                  <tr>
+                    <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm">Name</th>
+                    <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm hidden sm:table-cell">Email</th>
+                    <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm">Role</th>
+                    <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm hidden sm:table-cell">Joined</th>
+                    <th className="text-right py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm">Actions</th>
+                  </tr>
               </thead>
               <tbody>
-                {users.map((user: User) => (
-                  <tr key={user._id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                    <td className="py-3 px-4">{user.name}</td>
-                    <td className="py-3 px-4">{user.email}</td>
-                    <td className="py-3 px-4">
+                  {users.map((user: User) => (
+                    <tr key={user._id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                      <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm">{user.name}</td>
+                      <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm hidden sm:table-cell">{user.email}</td>
+                      <td className="py-3 px-2 sm:px-4">
                       <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
                         user.role === 'admin'
                           ? 'bg-primary/20 text-primary'
@@ -170,15 +170,16 @@ export default function AdminUsersPage() {
                         {user.role}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-muted-foreground">
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <div className="flex gap-2 justify-end">
+                      <td className="py-3 px-2 sm:px-4 text-muted-foreground text-xs sm:text-sm hidden sm:table-cell">
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </td>
+                    <td className="py-3 px-2 sm:px-4 text-right">
+                      <div className="flex gap-1.5 sm:gap-2 justify-end">
                         {user.role === 'user' ? (
                           <Button
                             size="sm"
                             variant="outline"
+                            className="text-xs px-2 sm:px-3"
                             onClick={() => {
                               setSelectedUser(user);
                               setActionType('promote');
@@ -190,6 +191,7 @@ export default function AdminUsersPage() {
                           <Button
                             size="sm"
                             variant="outline"
+                            className="text-xs px-2 sm:px-3"
                             onClick={() => {
                               setSelectedUser(user);
                               setActionType('demote');
@@ -201,7 +203,7 @@ export default function AdminUsersPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="text-destructive hover:text-destructive"
+                          className="text-destructive hover:text-destructive text-xs px-2 sm:px-3"
                           onClick={() => {
                             setSelectedUser(user);
                             setActionType('delete');

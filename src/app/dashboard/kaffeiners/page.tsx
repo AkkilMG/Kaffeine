@@ -155,68 +155,70 @@ export default function KaffeinersPage() {
           {kaffeiners.map((k: any) => (
             <motion.div key={k._id} variants={item}>
               <Card className="group hover:border-primary/50 transition-all duration-200 hover:shadow-md">
-                <CardContent className="py-4 px-6">
-                  <div className="flex items-center gap-4">
-                    <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-lg bg-muted">
+                <CardContent className="py-3 sm:py-4 px-4 sm:px-6">
+                  <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-lg bg-muted shrink-0">
                       {getTypeIcon(k.type, k.db_type)}
                     </div>
                     <Link
                       href={`/dashboard/kaffeiners/${k._id}`}
                       className="flex-1 min-w-0"
                     >
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <h3 className="font-semibold text-sm sm:text-base text-foreground truncate group-hover:text-primary transition-colors">
                           {k.title}
                         </h3>
-                        <ExternalLink size={14} className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                        <ExternalLink size={14} className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0 hidden sm:block" />
                       </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="inline-block bg-muted text-muted-foreground px-2 py-0.5 rounded text-xs font-medium">
+                      <div className="flex items-center gap-1.5 sm:gap-2 mt-1 flex-wrap">
+                        <span className="inline-block bg-muted text-muted-foreground px-2 py-0.5 rounded text-[10px] sm:text-xs font-medium">
                           {getTypeLabel(k)}
                         </span>
                         {k.type === 'database' && k.db_type && (
-                          <span className="text-xs text-muted-foreground">•</span>
+                          <span className="text-[10px] sm:text-xs text-muted-foreground">•</span>
                         )}
                         {k.type === 'database' && k.collection_or_table && (
-                          <span className="text-xs text-muted-foreground font-mono">
+                          <span className="text-[10px] sm:text-xs text-muted-foreground font-mono truncate max-w-[100px] sm:max-w-none">
                             {k.collection_or_table}
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-3 mt-1.5">
-                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Clock size={12} />
-                          {k.recentKaffeiner
-                            ? new Date(k.recentKaffeiner).toLocaleString()
-                            : 'Never checked'}
+                      <div className="flex items-center gap-2 sm:gap-3 mt-1">
+                        <span className="flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">
+                          <Clock size={10} className="sm:size-3" />
+                          <span className="truncate max-w-[100px] sm:max-w-none">
+                            {k.recentKaffeiner
+                              ? new Date(k.recentKaffeiner).toLocaleString()
+                              : 'Never checked'}
+                          </span>
                         </span>
                       </div>
                     </Link>
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+                      <div className="flex items-center gap-1 sm:gap-1.5">
                         <span
-                          className={`relative flex h-2.5 w-2.5 ${k.active ? '' : ''}`}
+                          className={`relative flex h-2 w-2 sm:h-2.5 sm:w-2.5 ${k.active ? '' : ''}`}
                         >
                           {k.active && (
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                           )}
                           <span
-                            className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
+                            className={`relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 ${
                               k.active ? 'bg-green-500' : 'bg-red-500'
                             }`}
                           />
                         </span>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-[10px] sm:text-xs text-muted-foreground hidden sm:inline">
                           {k.active ? 'Active' : 'Inactive'}
                         </span>
                       </div>
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="text-muted-foreground hover:text-destructive"
+                        className="text-muted-foreground hover:text-destructive h-8 w-8 sm:h-9 sm:w-auto"
                         onClick={() => setDeleteId(k._id)}
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={14} className="sm:size-4" />
                       </Button>
                     </div>
                   </div>

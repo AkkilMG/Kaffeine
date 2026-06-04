@@ -33,7 +33,7 @@ export default function AdminKaffeinersPage() {
 
   if (loading) {
     return (
-      <div className="p-8 space-y-8">
+      <div className="p-4 md:p-8 space-y-6 md:space-y-8">
         <div>
           <div className="h-8 w-48 bg-muted rounded animate-pulse" />
           <div className="h-4 w-32 bg-muted rounded animate-pulse mt-2" />
@@ -46,11 +46,11 @@ export default function AdminKaffeinersPage() {
   const activeCount = kaffeiners.filter((k: AdminKaffeiner) => k.active).length;
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">All Kaffeiners</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">All Kaffeiners</h1>
+          <p className="text-sm text-muted-foreground">
             {kaffeiners.length} total · {activeCount} active
           </p>
         </div>
@@ -86,13 +86,13 @@ export default function AdminKaffeinersPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="border-b border-border">
-                <tr>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Title</th>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Type</th>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Status</th>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Recent Check</th>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Created</th>
-                </tr>
+                  <tr>
+                    <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm">Title</th>
+                    <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm hidden sm:table-cell">Type</th>
+                    <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm">Status</th>
+                    <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm hidden md:table-cell">Recent Check</th>
+                    <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm hidden md:table-cell">Created</th>
+                  </tr>
               </thead>
               <tbody>
                 {kaffeiners.length === 0 ? (
@@ -105,38 +105,38 @@ export default function AdminKaffeinersPage() {
                 ) : (
                   kaffeiners.map((k: AdminKaffeiner) => (
                     <tr key={k._id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-2 sm:px-4">
                         <div className="flex items-center gap-2">
                           {k.type === 'website' ? (
-                            <Globe size={14} className="text-blue-500" />
+                            <Globe size={14} className="text-blue-500 shrink-0" />
                           ) : (
-                            <Database size={14} className="text-green-500" />
+                            <Database size={14} className="text-green-500 shrink-0" />
                           )}
-                          <span className="font-medium text-foreground">{k.title}</span>
+                          <span className="font-medium text-foreground text-xs sm:text-sm truncate max-w-[120px] sm:max-w-none">{k.title}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-4">
-                        <span className="capitalize text-muted-foreground">
+                      <td className="py-3 px-2 sm:px-4 hidden sm:table-cell">
+                        <span className="capitalize text-muted-foreground text-xs sm:text-sm">
                           {k.type}{k.db_type ? ` · ${k.db_type}` : ''}
                         </span>
                       </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
-                          <span className={`relative flex h-2 w-2 ${k.active ? '' : ''}`}>
+                      <td className="py-3 px-2 sm:px-4">
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                          <span className={`relative flex h-2 w-2 shrink-0 ${k.active ? '' : ''}`}>
                             {k.active && (
                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                             )}
                             <span className={`inline-flex rounded-full h-2 w-2 ${k.active ? 'bg-green-500' : k.banned ? 'bg-red-500' : 'bg-yellow-500'}`} />
                           </span>
-                          <span className="text-xs">
+                          <span className="text-[10px] sm:text-xs whitespace-nowrap">
                             {k.active ? 'Active' : k.banned ? 'Banned' : 'Inactive'}
                           </span>
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-muted-foreground text-xs">
+                      <td className="py-3 px-2 sm:px-4 text-muted-foreground text-[10px] sm:text-xs hidden md:table-cell">
                         {k.recentKaffeiner ? new Date(k.recentKaffeiner).toLocaleString() : 'Never'}
                       </td>
-                      <td className="py-3 px-4 text-muted-foreground text-xs">
+                      <td className="py-3 px-2 sm:px-4 text-muted-foreground text-[10px] sm:text-xs hidden md:table-cell">
                         {new Date(k.createdKaffeiner).toLocaleDateString()}
                       </td>
                     </tr>

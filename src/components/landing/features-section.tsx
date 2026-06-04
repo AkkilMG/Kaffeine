@@ -128,9 +128,9 @@ export default function FeaturesSection() {
               <div className="absolute top-0 right-0 w-80 h-80 bg-primary/[0.03] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
 
               <div
-                className={`relative p-6 md:p-8 flex flex-col ${
+                className={`relative p-5 sm:p-6 md:p-8 flex flex-col ${
                   i % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'
-                } gap-6 md:gap-8 items-center`}
+                } gap-4 sm:gap-6 md:gap-8 items-center`}
               >
                 <div className="flex-1 w-full">
                   <div className="flex items-center gap-3 mb-4">
@@ -157,7 +157,7 @@ export default function FeaturesSection() {
                 </div>
 
                 <div className="w-full lg:w-auto shrink-0">
-                  <div className="grid grid-cols-2 gap-2 min-w-[240px]">
+                  <div className="grid grid-cols-2 gap-2 min-w-0 sm:min-w-[200px] lg:min-w-[240px]">
                     {feature.metrics.map((m) => (
                       <div
                         key={m.label}

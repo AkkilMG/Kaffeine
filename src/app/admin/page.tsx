@@ -22,7 +22,7 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <div className="p-8 space-y-6">
+      <div className="p-4 md:p-8 space-y-6">
         <ShimmerCard />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => <ShimmerCard key={i} />)}
@@ -32,11 +32,11 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
-          <p className="text-muted-foreground">System overview and management</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Admin Dashboard</h1>
+          <p className="text-sm text-muted-foreground">System overview and management</p>
         </div>
         {isLive && (
           <span className="flex items-center gap-1.5 text-xs text-green-500 font-medium">

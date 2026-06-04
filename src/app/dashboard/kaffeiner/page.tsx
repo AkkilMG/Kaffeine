@@ -91,11 +91,11 @@ export default function CreateKaffeinerPage() {
       </motion.div>
 
       {/* Step indicator */}
-      <div className="flex items-center gap-2 text-sm">
+      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm overflow-x-auto pb-1">
         {['type', 'details', 'review'].map((s, i) => (
-          <div key={s} className="flex items-center gap-2">
+          <div key={s} className="flex items-center gap-1 sm:gap-2 shrink-0">
             <span
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-colors ${
+              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-medium transition-colors ${
                 step === s
                   ? 'bg-primary text-primary-foreground'
                   : ['type', 'details'].includes(step) && s !== step
@@ -105,10 +105,10 @@ export default function CreateKaffeinerPage() {
             >
               {['type', 'details', 'review'].indexOf(step) > i ? '✓' : i + 1}
             </span>
-            <span className={step === s ? 'text-foreground font-medium' : 'text-muted-foreground'}>
+            <span className={`hidden sm:inline ${step === s ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
               {s === 'type' ? 'Type' : s === 'details' ? 'Details' : 'Review'}
             </span>
-            {i < 2 && <div className="w-8 h-px bg-border" />}
+            {i < 2 && <div className="w-4 sm:w-8 h-px bg-border" />}
           </div>
         ))}
       </div>
@@ -250,11 +250,11 @@ export default function CreateKaffeinerPage() {
                   </div>
                 )}
 
-                <div className="flex gap-3 pt-4">
-                  <Button type="submit" disabled={type === 'database' && !dbType}>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4">
+                  <Button type="submit" disabled={type === 'database' && !dbType} className="w-full sm:w-auto">
                     Continue to Review
                   </Button>
-                  <Button type="button" variant="outline" onClick={handleBack}>
+                  <Button type="button" variant="outline" onClick={handleBack} className="w-full sm:w-auto">
                     Back
                   </Button>
                 </div>
@@ -271,7 +271,7 @@ export default function CreateKaffeinerPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4 p-4 rounded-lg bg-muted/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg bg-muted/50">
                   <div>
                     <p className="text-xs text-muted-foreground uppercase tracking-wider">Title</p>
                     <p className="text-sm font-medium text-foreground mt-1">{title}</p>
@@ -294,7 +294,7 @@ export default function CreateKaffeinerPage() {
                       </div>
                     </>
                   )}
-                  <div className={type === 'website' ? 'col-span-2' : ''}>
+                  <div className="col-span-1 sm:col-span-2">
                     <p className="text-xs text-muted-foreground uppercase tracking-wider">
                       {type === 'website' ? 'URL' : 'Connection URI'}
                     </p>
@@ -302,12 +302,12 @@ export default function CreateKaffeinerPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-3 pt-2">
-                  <Button onClick={handleSubmit} disabled={submitting} className="gap-2">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
+                  <Button onClick={handleSubmit} disabled={submitting} className="gap-2 w-full sm:w-auto">
                     <Coffee size={16} />
                     {submitting ? 'Creating...' : 'Create Kaffeiner'}
                   </Button>
-                  <Button type="button" variant="outline" onClick={handleBack}>
+                  <Button type="button" variant="outline" onClick={handleBack} className="w-full sm:w-auto">
                     Edit
                   </Button>
                 </div>

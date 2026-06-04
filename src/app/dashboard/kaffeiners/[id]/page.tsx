@@ -72,17 +72,17 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
       animate="show"
       className="p-4 md:p-8 space-y-6"
     >
-      <motion.div variants={item} className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <motion.div variants={item} className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
           <Link
             href="/dashboard/kaffeiners"
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
           >
             <ArrowLeft size={20} />
           </Link>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Kaffeiner Details</h1>
-            <p className="text-muted-foreground text-sm">24-hour monitoring record</p>
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground truncate">Kaffeiner Details</h1>
+            <p className="text-muted-foreground text-xs sm:text-sm truncate">24-hour monitoring record</p>
           </div>
         </div>
         {isLive && (
@@ -287,31 +287,31 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {stats?.records?.slice(0, 20).map((record: any, index: number) => (
+                  {stats?.records?.slice(0, 20).map((record: any, index: number) => (
                 <motion.div
                   key={record._id || index}
                   initial={index === 0 ? { opacity: 0, x: -10 } : undefined}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-primary/50 transition-colors"
+                  className="flex items-center justify-between p-2 sm:p-3 rounded-lg border border-border hover:border-primary/50 transition-colors gap-2"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                     <span
-                      className={`relative flex h-2.5 w-2.5 ${index === 0 ? 'animate-pulse' : ''}`}
+                      className={`relative flex h-2 w-2 sm:h-2.5 sm:w-2.5 shrink-0 ${index === 0 ? 'animate-pulse' : ''}`}
                     >
                       <span
-                        className={`inline-flex rounded-full h-2.5 w-2.5 ${
+                        className={`inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 ${
                           record.status ? 'bg-green-500 shadow-sm shadow-green-500/50' : 'bg-red-500 shadow-sm shadow-red-500/50'
                         }`}
                       />
                     </span>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">
+                    <div className="min-w-0">
+                      <p className="text-xs sm:text-sm font-medium text-foreground truncate">
                         {record.status ? 'Service Up' : 'Service Down'}
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs text-muted-foreground font-mono">
+                  <span className="text-[10px] sm:text-xs text-muted-foreground font-mono shrink-0">
                     {new Date(record.time).toLocaleString()}
                   </span>
                 </motion.div>

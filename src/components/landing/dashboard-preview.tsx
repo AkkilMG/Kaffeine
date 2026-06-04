@@ -22,8 +22,6 @@ const chartData = [
 
 const servicesData = [
   { name: 'example.com', uptime: '99.97%', latency: '12ms', status: 'up' as const, checks: '12,847' },
-  { name: 'api.example.com', uptime: '99.94%', latency: '45ms', status: 'up' as const, checks: '12,841' },
-  { name: 'db-primary', uptime: '100%', latency: '3ms', status: 'up' as const, checks: '12,850' },
   { name: 'app-staging', uptime: '98.21%', latency: '108ms', status: 'degraded' as const, checks: '12,802' },
 ];
 
@@ -116,7 +114,7 @@ export default function DashboardPreview() {
   }, []);
 
   return (
-    <div ref={ref} className="w-full max-w-xl mx-auto">
+    <div ref={ref} className="w-full max-w-lg lg:max-w-xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -124,7 +122,7 @@ export default function DashboardPreview() {
         className="rounded-2xl border border-border/60 bg-card shadow-2xl shadow-foreground/5 overflow-hidden backdrop-blur-sm"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/60 bg-muted/20">
+        <div className="flex items-center justify-between px-3 sm:px-5 py-3 sm:py-3.5 border-b border-border/60 bg-muted/20">
           <div className="flex items-center gap-2.5">
             <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <Activity size={14} className="text-primary" />
@@ -180,18 +178,18 @@ export default function DashboardPreview() {
           </motion.div>
 
           {/* Main Content */}
-          <div className="flex-1 p-4 sm:p-5 space-y-4">
+          <div className="flex-1 p-3 sm:p-5 space-y-3 sm:space-y-4">
             {/* Welcome */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.4 }}
-              className="flex items-center justify-between"
-            >
-              <div>
-                <h3 className="text-sm font-semibold text-foreground">Overview</h3>
-                <p className="text-[10px] text-muted-foreground mt-0.5">Your monitoring summary</p>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.4 }}
+                className="flex items-center justify-between"
+              >
+                <div className="min-w-0">
+                  <h3 className="text-xs sm:text-sm font-semibold text-foreground">Overview</h3>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 truncate">Your monitoring summary</p>
+                </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -207,7 +205,7 @@ export default function DashboardPreview() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className="grid grid-cols-4 gap-2"
+              className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2"
             >
               {[
                 { label: 'Total', value: 4, suffix: '', icon: Globe, color: 'text-primary', bg: 'bg-primary/8' },
@@ -221,7 +219,7 @@ export default function DashboardPreview() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.5 + i * 0.1 }}
                   whileHover={{ y: -2, scale: 1.02 }}
-                  className={`rounded-xl border border-border/50 p-2.5 ${stat.bg} transition-all duration-300 cursor-default`}
+                  className={`rounded-xl border border-border/50 p-2 sm:p-2.5 ${stat.bg} transition-all duration-300 cursor-default`}
                 >
                   <div className="flex items-center gap-1.5 mb-1.5">
                     <stat.icon size={9} className={stat.color} />
@@ -304,12 +302,12 @@ export default function DashboardPreview() {
               transition={{ duration: 0.5, delay: 0.9 }}
               className="space-y-1"
             >
-              <div className="flex items-center gap-3 pb-1.5 px-1 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
+              <div className="flex items-center gap-1 sm:gap-3 pb-1.5 px-1 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
                 <span className="w-4 shrink-0" />
-                <span className="flex-1">Service</span>
-                <span className="w-14 text-right">Uptime</span>
-                <span className="w-12 text-right">Status</span>
-                <span className="w-14 text-right hidden sm:block">Latency</span>
+                <span className="flex-1 min-w-0">Service</span>
+                <span className="w-14 sm:w-12 text-right shrink-0">Uptime</span>
+                <span className="w-14 text-right shrink-0">Status</span>
+                <span className="w-14 text-right shrink-0 hidden sm:block">Latency</span>
               </div>
 
               <AnimatePresence>
@@ -322,9 +320,9 @@ export default function DashboardPreview() {
                     onHoverStart={() => setHoveredService(svc.name)}
                     onHoverEnd={() => setHoveredService(null)}
                     whileHover={{ backgroundColor: 'var(--muted)', transition: { duration: 0.2 } }}
-                    className="flex items-center gap-3 py-2 px-2 rounded-lg transition-colors -mx-1 cursor-default"
+                    className="flex items-center gap-1 sm:gap-3 py-2 px-2 rounded-lg transition-colors -mx-1 cursor-default"
                   >
-                    <span className="relative flex size-2 shrink-0">
+                    <span className="relative flex size-2 shrink-0 self-center">
                       <span
                         className={`absolute inline-flex h-full w-full rounded-full ${
                           svc.status === 'up' ? 'bg-success' : 'bg-warning'
@@ -336,21 +334,21 @@ export default function DashboardPreview() {
                         }`}
                       />
                     </span>
-                    <span className="flex-1 text-xs font-medium text-foreground truncate flex items-center gap-1.5">
+                    <span className="flex-1 text-xs font-medium text-foreground truncate flex items-center gap-1.5 min-w-0">
                       <Server size={10} className="text-muted-foreground shrink-0" />
                       {svc.name}
                       {hoveredService === svc.name && (
                         <motion.span
                           initial={{ opacity: 0, x: -5 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className="text-[8px] text-muted-foreground font-mono"
+                          className="text-[8px] text-muted-foreground font-mono hidden sm:inline"
                         >
                           {svc.checks} checks
                         </motion.span>
                       )}
                     </span>
-                    <span className="w-14 text-right text-xs font-mono text-foreground">{svc.uptime}</span>
-                    <span className="w-12 text-right">
+                    <span className="w-14 sm:w-12 text-right text-xs font-mono text-foreground shrink-0">{svc.uptime}</span>
+                    <span className="w-14 text-right shrink-0">
                       <span
                         className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-semibold ${
                           svc.status === 'up'
@@ -366,7 +364,7 @@ export default function DashboardPreview() {
                         {svc.status === 'up' ? 'UP' : 'WARN'}
                       </span>
                     </span>
-                    <span className="w-14 text-right text-xs font-mono text-muted-foreground hidden sm:block">{svc.latency}</span>
+                    <span className="w-14 text-right text-xs font-mono text-muted-foreground hidden sm:block shrink-0">{svc.latency}</span>
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -377,11 +375,11 @@ export default function DashboardPreview() {
               initial={{ opacity: 0 }}
               animate={{ opacity: animateComplete ? 1 : 0 }}
               transition={{ duration: 0.5 }}
-              className="pt-3 border-t border-border/40 flex items-center justify-between"
+              className="pt-3 border-t border-border/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5"
             >
               <div className="flex items-center gap-1.5">
-                <CheckCircle size={11} className="text-success" />
-                <span className="text-[10px] text-success font-medium">All 4 services operational</span>
+                <CheckCircle size={11} className="text-success shrink-0" />
+                <span className="text-[10px] text-success font-medium">All 2 services operational</span>
               </div>
               <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
                 <ArrowUpRight size={9} />
