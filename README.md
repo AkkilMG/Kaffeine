@@ -33,10 +33,11 @@
 <br/>
 
 <div align="center">
-  <!--gh-dark-mode-only-->
-  <img src="./public/assets/logo/company-nbg-dark.png" alt="Arkynox" height="72" />
-  <!--gh-light-mode-only-->
-  <img src="./public/assets/logo/company-nbg-light.png" alt="Arkynox" height="72" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./public/assets/logo/company-nbg-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="./public/assets/logo/company-nbg-light.png">
+    <img src="./public/assets/logo/company-nbg-light.png" alt="Arkynox" height="72" />
+  </picture>
   <br/>
   <sub>built by Arkynox</sub>
 </div>
@@ -132,10 +133,11 @@ Released under the [Apache License 2.0](LICENSE) by [Arkynox](https://arkynox.co
 ---
 
 <div align="center">
-  <!--gh-dark-mode-only-->
-  <img src="./public/assets/logo/company-nbg-dark.png" alt="Arkynox" height="24" />
-  <!--gh-light-mode-only-->
-  <img src="./public/assets/logo/company-nbg-light.png" alt="Arkynox" height="24" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./public/assets/logo/company-nbg-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="./public/assets/logo/company-nbg-light.png">
+    <img src="./public/assets/logo/company-nbg-light.png" alt="Arkynox" height="24" />
+  </picture>
   <br/>
   <sub>Built with ❤️ by <a href="https://arkynox.com">Arkynox</a> — <a href="CONTRIBUTING.md">contributions welcome</a>!</sub>
 </div>
