@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { AuthProvider } from '@/lib/auth-context';
 import { ThemeProvider } from '@/components/theme-provider';
+import CookieConsentBanner from '@/components/cookie-consent-banner';
 import './globals.css'
 
 const geist = Geist({ 
@@ -22,24 +23,24 @@ export const metadata: Metadata = {
     default: 'Kaffeine - Free & Open Source Uptime Monitoring',
     template: '%s | Kaffeine',
   },
-  description: 'Free and open-source uptime monitoring for websites and databases. End-to-end encrypted health checks with real-time alerts, detailed analytics, and Cloudflare-powered distributed monitoring.',
-  keywords: ['uptime monitoring', 'website monitoring', 'free monitoring tool', 'open source monitoring', 'database monitoring', 'health checks', 'status page', 'downtime alerts'],
+  description: 'Free and open-source uptime monitoring by Arkynox. End-to-end encrypted health checks with real-time alerts, detailed analytics, and Cloudflare-powered distributed monitoring.',
+  keywords: ['uptime monitoring', 'website monitoring', 'free monitoring tool', 'open source monitoring', 'database monitoring', 'health checks', 'status page', 'downtime alerts', 'arkynox'],
   alternates: {
     canonical: baseUrl,
   },
   openGraph: {
     title: 'Kaffeine - Free & Open Source Uptime Monitoring',
-    description: 'Monitor your websites and databases with end-to-end encrypted health checks. Free, open source, and privacy-first.',
+    description: 'Monitor your websites and databases with end-to-end encrypted health checks. Free, open source, and privacy-first — by Arkynox.',
     type: 'website',
     locale: 'en_US',
-    siteName: 'Kaffeine',
+    siteName: 'Kaffeine by Arkynox',
     url: baseUrl,
     images: [{ url: `${baseUrl}/assets/logo/logo.png`, width: 512, height: 512 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Kaffeine - Free & Open Source Uptime Monitoring',
-    description: 'Monitor your websites and databases with end-to-end encrypted health checks. Free, open source, and privacy-first.',
+    description: 'Monitor your websites and databases with end-to-end encrypted health checks. Free, open source, and privacy-first — by Arkynox.',
     images: [`${baseUrl}/assets/logo/logo.png`],
   },
   icons: {
@@ -65,22 +66,11 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'Organization',
-      name: 'Kaffeine',
-      url: baseUrl,
-      description: 'Free and open-source uptime monitoring for websites and databases.',
-      logo: `${baseUrl}/assets/logo/logo.png`,
-      sameAs: ['https://github.com/akkilmg/kaffeine'],
-    },
-    {
-      '@type': 'WebSite',
-      name: 'Kaffeine',
-      url: baseUrl,
-      description: 'Free and open-source uptime monitoring. HTTP/HTTPS checks, database monitoring, real-time alerts, and detailed analytics.',
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: { '@type': 'EntryPoint', urlTemplate: `${baseUrl}/search?q={search_term_string}` },
-        'query-input': 'required name=search_term_string',
-      },
+      name: 'Arkynox',
+      url: 'https://arkynox.com',
+      description: 'Building open-source tools for developers.',
+      logo: `${baseUrl}/assets/logo/company.png`,
+      sameAs: ['https://github.com/akkilmg'],
     },
     {
       '@type': 'SoftwareApplication',
@@ -89,6 +79,19 @@ const jsonLd = {
       applicationCategory: 'WebApplication',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
       description: 'Free, open-source uptime monitoring for websites and databases. End-to-end encrypted health checks with real-time alerts.',
+      author: { '@type': 'Organization', name: 'Arkynox', url: 'https://arkynox.com' },
+    },
+    {
+      '@type': 'WebSite',
+      name: 'Kaffeine',
+      url: baseUrl,
+      description: 'Free and open-source uptime monitoring by Arkynox. HTTP/HTTPS checks, database monitoring, real-time alerts, and detailed analytics.',
+      publisher: { '@type': 'Organization', name: 'Arkynox', url: 'https://arkynox.com' },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: { '@type': 'EntryPoint', urlTemplate: `${baseUrl}/search?q={search_term_string}` },
+        'query-input': 'required name=search_term_string',
+      },
     },
   ],
 };
@@ -109,6 +112,7 @@ export default function RootLayout({
           <AuthProvider>
             {children}
           </AuthProvider>
+          <CookieConsentBanner />
         </ThemeProvider>
       </body>
     </html>

@@ -1,17 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/db';
 import { DashboardMetrics, Status } from '@/lib/types';
-import { ObjectId } from 'mongodb';
-
-function getSessionUser(request: NextRequest) {
-  const session = request.cookies.get('session')?.value;
-  if (!session) return null;
-  try {
-    return JSON.parse(session);
-  } catch {
-    return null;
-  }
-}
+import { getSessionUser, handleApiError, requireValidObjectId } from '@/lib/api-utils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,12 +14,14 @@ export async function GET(request: NextRequest) {
     const kaffeinersCollection = db.collection('kaffeiners');
     const statusCollection = db.collection<Status>('status');
 
+    const userId = requireValidObjectId(user.userId);
+
     const kaffeiners = await kaffeinersCollection
-      .find({ userId: new ObjectId(user.userId) })
+      .find({ userId })
       .toArray();
 
     const totalKaffeiner = kaffeiners.length;
-    const activeKaffeiner = kaffeiners.filter((k: any) => k.active).length;
+    const activeKaffeiner = kaffeiners.filter(k => k.active).length;
 
     const now = new Date();
     const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -58,7 +50,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(metrics);
   } catch (error) {
-    console.error('[Kaffeine] Dashboard metrics error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return handleApiError(error);
   }
 }

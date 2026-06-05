@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Sun, Moon, Menu, X, Activity } from 'lucide-react';
+import { ChevronRight, Sun, Moon, Menu, X } from 'lucide-react';
 
 const navLinks = [
   { href: '#features', label: 'Features' },
@@ -81,7 +81,10 @@ export default function Navbar() {
                   className="size-9"
                 />
               </motion.div>
-              <span className="text-lg font-bold text-foreground tracking-tight">Kaffeine</span>
+              <div className="flex flex-col">
+                <span className="text-lg font-bold text-foreground tracking-tight leading-tight">Kaffeine</span>
+                <span className="text-[9px] text-muted-foreground/40 leading-tight hidden sm:block">by Arkynox</span>
+              </div>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">

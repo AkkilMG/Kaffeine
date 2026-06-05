@@ -1,24 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/db';
-import { handleApiError, ApiError } from '@/lib/api-utils';
-
-function getSessionUser(request: NextRequest) {
-  const session = request.cookies.get('session')?.value;
-  if (!session) return null;
-  try {
-    const data = JSON.parse(session);
-    return data.role === 'admin' ? data : null;
-  } catch {
-    return null;
-  }
-}
+import { getAdminUser, handleApiError } from '@/lib/api-utils';
 
 export async function GET(request: NextRequest) {
   try {
-    const user = getSessionUser(request);
-    if (!user) {
-      throw new ApiError(403, 'Admin access required');
-    }
+    getAdminUser(request);
 
     const db = await getDatabase();
     const statusCollection = db.collection('status');

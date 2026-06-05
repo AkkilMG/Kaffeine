@@ -1,17 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/db';
 import { Status } from '@/lib/types';
-import { ObjectId } from 'mongodb';
-
-function getSessionUser(request: NextRequest) {
-  const session = request.cookies.get('session')?.value;
-  if (!session) return null;
-  try {
-    return JSON.parse(session);
-  } catch {
-    return null;
-  }
-}
+import { getSessionUser, handleApiError, requireValidObjectId } from '@/lib/api-utils';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -20,13 +10,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    const { id: kaffeinerId } = await params;
+    const { id: kaffeinerIdParam } = await params;
+    const kaffeinerId = requireValidObjectId(kaffeinerIdParam);
     const db = await getDatabase();
 
     const kaffeinersCollection = db.collection('kaffeiners');
+    const userId = requireValidObjectId(user.userId);
     const kaffeiner = await kaffeinersCollection.findOne({
-      _id: new ObjectId(kaffeinerId),
-      userId: new ObjectId(user.userId),
+      _id: kaffeinerId,
+      userId,
     });
 
     if (!kaffeiner) {
@@ -39,7 +31,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     const records = await statusCollection
       .find({
-        kaffeiner_id: new ObjectId(kaffeinerId),
+        kaffeiner_id: kaffeinerId,
         time: { $gte: oneDayAgo },
       })
       .sort({ time: -1 })
@@ -55,7 +47,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       totalChecks: totalCount,
     });
   } catch (error) {
-    console.error('[Kaffeine] Get kaffeiner stats error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return handleApiError(error);
   }
 }

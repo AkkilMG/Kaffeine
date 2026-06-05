@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 interface User {
   userId: string;
@@ -23,26 +23,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if user is authenticated on mount
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const response = await fetch('/api/auth');
       if (response.ok) {
         const data = await response.json();
-        if (data.authenticated) {
-          setUser(data.user);
+        if (data.authenticated && data.user) {
+          setUser({
+            userId: data.user.userId,
+            email: data.user.email,
+            name: data.user.name || '',
+            role: data.user.role,
+          });
+          return;
         }
       }
-    } catch (error) {
-      console.error('[Kaffeine] Auth check failed:', error);
+    } catch {
+      // Not authenticated
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const login = async (email: string, password: string) => {
     const response = await fetch('/api/auth', {
@@ -58,7 +63,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const data = await response.json();
-    setUser(data);
+    setUser({
+      userId: data.userId,
+      email: data.email,
+      name: data.name,
+      role: data.role,
+    });
   };
 
   const register = async (email: string, password: string, name: string) => {
@@ -75,7 +85,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const data = await response.json();
-    setUser(data);
+    setUser({
+      userId: data.userId,
+      email: data.email,
+      name: data.name,
+      role: data.role,
+    });
   };
 
   const logout = async () => {

@@ -3,7 +3,6 @@ import {
   verifyJWT,
   getAuthHeader,
   handleApiError,
-  ApiError,
 } from '@/lib/api-utils';
 
 export async function POST(request: NextRequest) {
@@ -13,9 +12,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       valid: true,
-      userId: decoded.sub,
-      type: decoded.type,
-      expiresAt: new Date(decoded.exp * 1000),
+      userId: decoded.sub as string | undefined,
+      type: decoded.type as string | undefined,
+      expiresAt: new Date((decoded.exp as number) * 1000),
     });
   } catch (error) {
     return handleApiError(error);

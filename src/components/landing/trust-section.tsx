@@ -3,7 +3,7 @@
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Shield, Code, CheckCircle, GitBranch, ArrowRight, Lock, FileCode } from 'lucide-react';
+import { Shield, Code, CheckCircle, GitBranch, ArrowRight, Lock, FileCode, Heart, ExternalLink } from 'lucide-react';
 import { fadeInUp, staggerContainer, slideInLeft, slideInRight } from '@/components/landing/animations';
 
 export default function TrustSection() {
@@ -35,8 +35,11 @@ export default function TrustSection() {
               </h2>
               <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
                 <p>
-                  Kaffeine is 100% open source under the MIT license. Every line of code is available
-                  for you to inspect, contribute to, or self-host.
+                  Kaffeine is 100% open source under the Apache License 2.0 — crafted by{' '}
+                  <Link href="https://arkynox.com" target="_blank" className="text-primary hover:underline font-medium">
+                    Arkynox <ExternalLink size={10} className="inline" />
+                  </Link>
+                  . Every line of code is available for you to inspect, contribute to, or self-host.
                 </p>
                 <p>
                   Your connection URIs and sensitive data are AES-256 encrypted before they ever touch
@@ -48,6 +51,12 @@ export default function TrustSection() {
                   <Button className="gap-2 group/btn">
                     <GitBranch size={16} />
                     View Source
+                  </Button>
+                </Link>
+                <Link href="https://github.com/akkilmg/kaffeine/issues" target="_blank">
+                  <Button variant="outline" className="gap-2 group/btn border-primary/30 hover:border-primary/50">
+                    <Heart size={16} />
+                    Contribute
                   </Button>
                 </Link>
                 <Link href="/register">
@@ -99,7 +108,8 @@ export default function TrustSection() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                   {[
-                    'MIT Licensed — free to use, modify, distribute',
+                    'Apache 2.0 — free to use, modify, distribute',
+                    'Built by Arkynox — contributions welcome',
                     'Next.js + TypeScript + Tailwind CSS',
                     'Cloudflare Workers for distributed checks',
                     'MongoDB for scalable data storage',

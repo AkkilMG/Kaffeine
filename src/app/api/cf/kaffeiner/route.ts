@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
     const token = getAuthHeader(request);
     const decoded = verifyJWT(token);
 
-    if (decoded.type !== 'cf-worker') {
+    if ((decoded.type as string) !== 'cf-worker') {
       throw new ApiError(401, 'Invalid token type', 'INVALID_TOKEN_TYPE');
     }
 

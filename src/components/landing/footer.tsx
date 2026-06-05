@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { GitBranch, ExternalLink, Heart, Activity } from 'lucide-react';
+import { GitBranch, ExternalLink, Heart, Users, ArrowUpRight } from 'lucide-react';
 
 const year = new Date().getFullYear();
 
@@ -16,17 +16,37 @@ export default function Footer() {
               <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={28} height={28} className="size-6" />
               <span className="text-base font-bold text-foreground">Kaffeine</span>
             </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-4 max-w-xs">
+            <p className="text-sm text-muted-foreground leading-relaxed mb-2 max-w-xs">
               Free and open-source uptime monitoring. Keep your services awake with Kaffeine.
             </p>
-            <Link
-              href="https://github.com/akkilmg/kaffeine"
-              target="_blank"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group"
-            >
-              <GitBranch size={14} className="transition-transform duration-300 group-hover:scale-110" />
-              GitHub
-            </Link>
+            <p className="text-xs text-muted-foreground/60 mb-4 flex items-center gap-1">
+              by{' '}
+              <Link
+                href="https://arkynox.com"
+                target="_blank"
+                className="inline-flex items-center gap-0.5 text-foreground/80 hover:text-primary transition-colors font-medium"
+              >
+                Arkynox <ArrowUpRight size={10} />
+              </Link>
+            </p>
+            <div className="flex items-center gap-3">
+              <Link
+                href="https://github.com/akkilmg/kaffeine"
+                target="_blank"
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                <GitBranch size={14} className="transition-transform duration-300 group-hover:scale-110" />
+                GitHub
+              </Link>
+              <Link
+                href="https://github.com/akkilmg/kaffeine/issues"
+                target="_blank"
+                className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                <Users size={14} className="transition-transform duration-300 group-hover:scale-110" />
+                Contribute
+              </Link>
+            </div>
           </div>
 
           <div>
@@ -72,7 +92,7 @@ export default function Footer() {
                   target="_blank"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
                 >
-                  MIT License <ExternalLink size={10} />
+                  Apache 2.0 <ExternalLink size={10} />
                 </Link>
               </li>
             </ul>
@@ -102,18 +122,22 @@ export default function Footer() {
 
         <div className="mt-12 pt-8 border-t border-border/40 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground flex items-center gap-1">
-            &copy; {year} Kaffeine. Released under the{' '}
-            <Link
-              href="https://github.com/akkilmg/kaffeine/blob/main/LICENSE"
-              target="_blank"
-              className="text-primary hover:underline"
-            >
-              MIT License
-            </Link>
-            .
+              &copy; {year} Kaffeine. Licensed under{' '}
+              <Link
+                href="https://github.com/akkilmg/kaffeine/blob/main/LICENSE"
+                target="_blank"
+                className="text-primary hover:underline"
+              >
+                Apache 2.0
+              </Link>
+              .
           </p>
           <p className="text-xs text-muted-foreground/40 flex items-center gap-1">
-            Built with <Heart size={10} className="text-destructive" /> for the open source community
+            Built with <Heart size={10} className="text-destructive" /> by{' '}
+            <Link href="https://arkynox.com" target="_blank" className="hover:text-primary transition-colors">
+              Arkynox
+            </Link>{' '}
+            — contributions welcome
           </p>
         </div>
       </div>

@@ -2,18 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/db';
 import { encryptData, decryptData } from '@/lib/encryption';
 import { Kaffeiner } from '@/lib/types';
-import { ObjectId } from 'mongodb';
 import { eventBus } from '@/lib/event-bus';
-
-function getSessionUser(request: NextRequest) {
-  const session = request.cookies.get('session')?.value;
-  if (!session) return null;
-  try {
-    return JSON.parse(session);
-  } catch {
-    return null;
-  }
-}
+import { getSessionUser, handleApiError, ApiError, requireValidObjectId, rateLimit } from '@/lib/api-utils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -25,8 +15,10 @@ export async function GET(request: NextRequest) {
     const db = await getDatabase();
     const kaffeinersCollection = db.collection<Kaffeiner>('kaffeiners');
 
+    const userId = requireValidObjectId(user.userId);
+
     const kaffeiners = await kaffeinersCollection
-      .find({ userId: new ObjectId(user.userId) })
+      .find({ userId })
       .sort({ createdKaffeiner: -1 })
       .toArray();
 
@@ -37,10 +29,12 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(decrypted);
   } catch (error) {
-    console.error('[Kaffeine] Get kaffeiners error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return handleApiError(error);
   }
 }
+
+const ALLOWED_TYPES = ['website', 'database'] as const;
+const ALLOWED_DB_TYPES = ['sql', 'mongodb'] as const;
 
 export async function POST(request: NextRequest) {
   try {
@@ -49,19 +43,37 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const rateKey = `create-kaffeiner:${user.userId}:${ip}`;
+    const check = rateLimit(rateKey, 30, 60000);
+    if (!check.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please slow down.' },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
-    const { title, type, db_type, uri, collection_or_table } = body;
+    const { title, type, db_type, uri, collection_or_table } = body as Record<string, string | undefined>;
 
-    if (!title || !type || !uri) {
-      return NextResponse.json({ error: 'Missing required fields: title, type, uri' }, { status: 400 });
+    if (!title || typeof title !== 'string' || title.length > 200) {
+      throw new ApiError(400, 'Title is required and must not exceed 200 characters');
     }
 
-    if (type === 'database' && !db_type) {
-      return NextResponse.json({ error: 'Database type required (sql or mongodb)' }, { status: 400 });
+    if (!type || !ALLOWED_TYPES.includes(type as typeof ALLOWED_TYPES[number])) {
+      throw new ApiError(400, 'Type must be "website" or "database"');
     }
 
-    if (type === 'database' && !collection_or_table) {
-      return NextResponse.json({ error: 'Collection or table name required' }, { status: 400 });
+    if (!uri || typeof uri !== 'string' || uri.length > 2000) {
+      throw new ApiError(400, 'URI is required and must not exceed 2000 characters');
+    }
+
+    if (type === 'database' && (!db_type || !ALLOWED_DB_TYPES.includes(db_type as typeof ALLOWED_DB_TYPES[number]))) {
+      throw new ApiError(400, 'Database type must be "sql" or "mongodb"');
+    }
+
+    if (type === 'database' && (!collection_or_table || typeof collection_or_table !== 'string')) {
+      throw new ApiError(400, 'Collection or table name is required');
     }
 
     const now = new Date();
@@ -69,10 +81,10 @@ export async function POST(request: NextRequest) {
     const kaffeinersCollection = db.collection<Kaffeiner>('kaffeiners');
 
     const kaffeiner: Kaffeiner = {
-      userId: new ObjectId(user.userId),
+      userId: requireValidObjectId(user.userId),
       title,
-      type,
-      db_type: type === 'database' ? db_type : undefined,
+      type: type as 'website' | 'database',
+      db_type: type === 'database' ? db_type as 'sql' | 'mongodb' : undefined,
       uri: encryptData(uri),
       collection_or_table: type === 'database' ? collection_or_table : undefined,
       recentUpdated: now,
@@ -96,8 +108,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('[Kaffeine] Create kaffeiner error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return handleApiError(error);
   }
 }
 
@@ -109,18 +120,21 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { id, title, type, db_type, uri, collection_or_table, active } = body;
+    const { id, title, type, db_type, uri, collection_or_table, active } = body as Record<string, unknown>;
 
-    if (!id) {
-      return NextResponse.json({ error: 'Missing kaffeiner ID' }, { status: 400 });
+    if (!id || typeof id !== 'string') {
+      throw new ApiError(400, 'Missing kaffeiner ID');
     }
 
+    const kaffeinerId = requireValidObjectId(id);
     const db = await getDatabase();
     const kaffeinersCollection = db.collection<Kaffeiner>('kaffeiners');
 
+    const userId = requireValidObjectId(user.userId);
+
     const kaffeiner = await kaffeinersCollection.findOne({
-      _id: new ObjectId(id),
-      userId: new ObjectId(user.userId),
+      _id: kaffeinerId,
+      userId,
     });
 
     if (!kaffeiner) {
@@ -128,15 +142,15 @@ export async function PATCH(request: NextRequest) {
     }
 
     const updateData: Record<string, unknown> = { recentUpdated: new Date() };
-    if (title) updateData.title = title;
-    if (type) updateData.type = type;
-    if (db_type) updateData.db_type = db_type;
-    if (uri) updateData.uri = encryptData(uri);
-    if (collection_or_table) updateData.collection_or_table = collection_or_table;
+    if (title && typeof title === 'string') updateData.title = title;
+    if (type && typeof type === 'string') updateData.type = type;
+    if (db_type && typeof db_type === 'string') updateData.db_type = db_type;
+    if (uri && typeof uri === 'string') updateData.uri = encryptData(uri);
+    if (collection_or_table && typeof collection_or_table === 'string') updateData.collection_or_table = collection_or_table;
     if (typeof active === 'boolean') updateData.active = active;
 
     await kaffeinersCollection.updateOne(
-      { _id: new ObjectId(id) },
+      { _id: kaffeinerId },
       { $set: updateData }
     );
 
@@ -149,8 +163,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('[Kaffeine] Update kaffeiner error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return handleApiError(error);
   }
 }
 
@@ -165,15 +178,18 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'Missing kaffeiner ID' }, { status: 400 });
+      throw new ApiError(400, 'Missing kaffeiner ID');
     }
 
+    const kaffeinerId = requireValidObjectId(id);
     const db = await getDatabase();
     const kaffeinersCollection = db.collection<Kaffeiner>('kaffeiners');
 
+    const userId = requireValidObjectId(user.userId);
+
     const result = await kaffeinersCollection.deleteOne({
-      _id: new ObjectId(id),
-      userId: new ObjectId(user.userId),
+      _id: kaffeinerId,
+      userId,
     });
 
     if (result.deletedCount === 0) {
@@ -181,7 +197,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const statusCollection = db.collection('status');
-    await statusCollection.deleteMany({ kaffeiner_id: new ObjectId(id) });
+    await statusCollection.deleteMany({ kaffeiner_id: kaffeinerId });
 
     eventBus.emit({
       type: 'kaffeiner-change',
@@ -192,7 +208,6 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('[Kaffeine] Delete kaffeiner error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return handleApiError(error);
   }
 }

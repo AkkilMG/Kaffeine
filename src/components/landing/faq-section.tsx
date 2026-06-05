@@ -9,7 +9,7 @@ const faqs = [
   { q: 'What is Kaffeine?', a: 'Free and open-source uptime monitoring. Kaffeine periodically checks your websites and databases from 350+ global locations, alerting you immediately if something goes wrong.' },
   { q: 'Is Kaffeine really free?', a: 'Yes — completely free. No paid tiers, no hidden costs, no feature limitations. Every monitoring capability is available to every user.' },
   { q: 'How is my data encrypted?', a: 'All sensitive data, including database connection URIs and credentials, are AES-256 encrypted before storage. Zero-knowledge architecture ensures your data stays yours.' },
-  { q: 'Can I self-host Kaffeine?', a: 'Absolutely. Kaffeine is 100% open source under the MIT license. You can inspect every line of code, contribute, or deploy on your own infrastructure anytime.' },
+  { q: 'Can I self-host Kaffeine?', a: 'Absolutely. Kaffeine is 100% open source under the Apache License 2.0. You can inspect every line of code, contribute, or deploy on your own infrastructure anytime.' },
   { q: 'What services can I monitor?', a: 'Monitor any website via HTTP/HTTPS and databases — MongoDB, PostgreSQL, MySQL, Redis, and more. Native driver checks ensure accurate health status.' },
   { q: 'Do I need a credit card?', a: 'No. Sign up with your email and start monitoring immediately. No payment information required, ever.' },
 ];

@@ -61,7 +61,7 @@ const gridFeatures = [
   {
     icon: Code,
     title: '100% Open Source',
-    desc: 'MIT licensed. Self-host anytime. Full transparency.',
+    desc: 'Apache 2.0 licensed. Self-host anytime. Full transparency.',
     color: 'from-emerald-500/15',
   },
   {

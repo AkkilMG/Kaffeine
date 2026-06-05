@@ -7,6 +7,7 @@ import SigninForm from "@/components/signin-form";
 import ThemeToggle from "@/components/theme-toggle";
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 
 export default function LoginPage() {
   return (
@@ -14,9 +15,14 @@ export default function LoginPage() {
       <div className="flex flex-1">
         <div className="flex-1 flex items-center justify-center p-8 relative">
           <Link href="/" className="absolute top-6 left-6">
-            <div className="flex items-center gap-2.5 group">
-              <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={32} height={32} className="size-9" />
-              <span className="text-xl font-bold">Kaffeine</span>
+            <div className="flex flex-col group">
+              <div className="flex items-center gap-2.5">
+                <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={32} height={32} className="size-9" />
+                <span className="text-xl font-bold">Kaffeine</span>
+              </div>
+              <span className="text-[10px] text-muted-foreground/50 mt-0.5 ml-0.5 flex items-center gap-0.5">
+                by Arkynox <ArrowUpRight size={8} />
+              </span>
             </div>
           </Link>
           <div className="absolute top-6 right-6">
@@ -44,7 +50,7 @@ export default function LoginPage() {
                   <span className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Free & Open Source</span>
+                  <span className="bg-background px-2 text-muted-foreground">Free & Open Source — by Arkynox</span>
                 </div>
               </div>
 

@@ -13,7 +13,7 @@ const pricingItems = [
   'Cloudflare distributed monitoring',
   'AES-256 encrypted storage',
   'Detailed analytics & charts',
-  'Open source (MIT license)',
+  'Open source (Apache 2.0)',
   'Community support',
 ];
 

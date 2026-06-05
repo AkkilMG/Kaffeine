@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   const response = NextResponse.json({ message: 'Logged out successfully' });
-  
-  // Clear session cookie
+
   response.cookies.set('session', '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
+    path: '/',
     maxAge: 0,
   });
 

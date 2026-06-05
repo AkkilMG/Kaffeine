@@ -3,7 +3,8 @@ import { type NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const publicRoutes = ['/', '/login', '/register'];
+  const publicRoutes = ['/', '/login', '/register', '/policy'];
+  const isPolicyRoute = pathname.startsWith('/policy');
   const apiPrefix = '/api';
   const staticPrefixes = ['/_next/static', '/_next/image', '/favicon.ico'];
 
@@ -12,7 +13,7 @@ export function middleware(request: NextRequest) {
   const isStatic = staticPrefixes.some(prefix => pathname.startsWith(prefix));
   const isCfRoute = pathname.startsWith('/api/cf');
 
-  if (isStatic || isPublicRoute) {
+  if (isStatic || isPublicRoute || isPolicyRoute) {
     return NextResponse.next();
   }
 

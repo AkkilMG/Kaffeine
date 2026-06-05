@@ -1,38 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/db';
-import { encryptData, decryptData, hashPassword, verifyPassword } from '@/lib/encryption';
+import { hashPassword, verifyPassword } from '@/lib/encryption';
 import { User } from '@/lib/types';
-import { ObjectId } from 'mongodb';
+import { createSessionToken, handleApiError, ApiError, normalizeEmail, rateLimit } from '@/lib/api-utils';
+
+function getClientIp(request: NextRequest): string {
+  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const { action, email, password, name } = await request.json();
+    const body = await request.json();
+    const { action, email, password, name } = body as Record<string, string | undefined>;
+
+    if (!email || !password) {
+      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
+    }
+
+    const normalizedEmail = normalizeEmail(email);
 
     if (action === 'register') {
-      return handleRegister(email, password, name);
+      return handleRegister(normalizedEmail, password, name || '');
     } else if (action === 'login') {
-      return handleLogin(email, password);
+      const ip = getClientIp(request);
+      const rateKey = `login:${normalizedEmail}:${ip}`;
+      const check = rateLimit(rateKey, 5, 60000);
+      if (!check.allowed) {
+        return NextResponse.json(
+          { error: 'Too many login attempts. Please try again later.' },
+          { status: 429 }
+        );
+      }
+      return handleLogin(normalizedEmail, password);
     } else {
       return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
   } catch (error) {
-    console.error('[Kaffeine] Auth error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return handleApiError(error);
   }
 }
 
 async function handleRegister(email: string, password: string, name: string) {
+  if (password.length < 8) {
+    throw new ApiError(400, 'Password must be at least 8 characters');
+  }
+
+  if (password.length > 128) {
+    throw new ApiError(400, 'Password must not exceed 128 characters');
+  }
+
+  if (!name || name.length < 1 || name.length > 100) {
+    throw new ApiError(400, 'Name is required and must not exceed 100 characters');
+  }
+
   const db = await getDatabase();
   const usersCollection = db.collection<User>('users');
 
-  // Check if user exists
   const existingUser = await usersCollection.findOne({ email });
   if (existingUser) {
-    return NextResponse.json({ error: 'User already exists' }, { status: 400 });
+    return NextResponse.json({ error: 'An account with this email already exists' }, { status: 409 });
   }
 
-  // Create new user
-  const passwordHash = hashPassword(password);
+  const passwordHash = await hashPassword(password);
   const newUser: User = {
     email,
     passwordHash,
@@ -44,7 +73,13 @@ async function handleRegister(email: string, password: string, name: string) {
 
   const result = await usersCollection.insertOne(newUser);
 
-  return NextResponse.json(
+  const token = createSessionToken({
+    userId: result.insertedId.toString(),
+    email,
+    role: 'user',
+  });
+
+  const response = NextResponse.json(
     {
       userId: result.insertedId.toString(),
       email,
@@ -53,6 +88,10 @@ async function handleRegister(email: string, password: string, name: string) {
     },
     { status: 201 }
   );
+
+  setSessionCookie(response, token);
+
+  return response;
 }
 
 async function handleLogin(email: string, password: string) {
@@ -60,9 +99,20 @@ async function handleLogin(email: string, password: string) {
   const usersCollection = db.collection<User>('users');
 
   const user = await usersCollection.findOne({ email });
-  if (!user || !verifyPassword(password, user.passwordHash)) {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+  if (!user) {
+    return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
   }
+
+  const isValid = await verifyPassword(password, user.passwordHash);
+  if (!isValid) {
+    return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
+  }
+
+  const token = createSessionToken({
+    userId: user._id!.toString(),
+    email: user.email,
+    role: user.role,
+  });
 
   const response = NextResponse.json({
     userId: user._id!.toString(),
@@ -71,32 +121,42 @@ async function handleLogin(email: string, password: string) {
     role: user.role,
   });
 
-  // Set session cookie
-  response.cookies.set('session', JSON.stringify({
-    userId: user._id!.toString(),
-    email: user.email,
-    role: user.role,
-  }), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-  });
+  setSessionCookie(response, token);
+
+  await db.collection<User>('users').updateOne(
+    { _id: user._id },
+    { $set: { updatedAt: new Date() } }
+  );
 
   return response;
+}
+
+function setSessionCookie(response: NextResponse, token: string) {
+  response.cookies.set('session', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+  });
 }
 
 export async function GET(request: NextRequest) {
   try {
     const session = request.cookies.get('session')?.value;
-    
     if (!session) {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 
-    const sessionData = JSON.parse(session);
+    const { verifySessionToken } = await import('@/lib/api-utils');
+    const sessionData = verifySessionToken(session);
+
+    if (!sessionData) {
+      return NextResponse.json({ authenticated: false }, { status: 401 });
+    }
+
     return NextResponse.json({ authenticated: true, user: sessionData });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ authenticated: false }, { status: 401 });
   }
 }
