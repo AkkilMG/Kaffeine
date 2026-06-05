@@ -1,7 +1,7 @@
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./public/assets/logo/company-nbg.png">
-    <img src="./public/assets/logo/company-nbg.png" alt="Arkynox" height="48" />
+    <source media="(prefers-color-scheme: dark)" srcset="./public/assets/logo/logo-nbg.png">
+    <img src="./public/assets/logo/logo-nbg.png" alt="Kaffeine" height="96" />
   </picture>
   <br/>
   <h1 align="center">Kaffeine</h1>
@@ -11,21 +11,37 @@
     <a href="https://kaffeine.dev"><strong>kaffeine.dev »</strong></a>
   </p>
   <p align="center">
-    <a href="#features">Features</a> •
-    <a href="#tech-stack">Tech Stack</a> •
-    <a href="#getting-started">Getting Started</a> •
-    <a href="CONTRIBUTING.md">Contributing</a> •
-    <a href="SECURITY.md">Security</a> •
-    <a href="#license">License</a>
-  </p>
-  <p align="center">
     <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="Apache 2.0" />
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" />
     <img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" alt="Code of Conduct" />
   </p>
 </div>
 
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#tech-stack">Tech Stack</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="CONTRIBUTING.md">Contributing</a> •
+  <a href="SECURITY.md">Security</a> •
+  <a href="#license">License</a>
+</p>
+
+<br/>
+
 **Kaffeine** is a free, open-source uptime monitoring platform by [Arkynox](https://arkynox.com). Monitor websites and databases with real-time health checks, AES-256 encrypted storage, Cloudflare-powered distributed monitoring, and role-based dashboards — all 100% free.
+
+<br/>
+
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./public/assets/logo/company-nbg.png">
+    <img src="./public/assets/logo/company-nbg.png" alt="Arkynox" height="72" />
+  </picture>
+  <br/>
+  <sub>built by Arkynox</sub>
+</div>
+
+<br/>
 
 ## Features
 
@@ -116,5 +132,10 @@ Released under the [Apache License 2.0](LICENSE) by [Arkynox](https://arkynox.co
 ---
 
 <div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./public/assets/logo/company-nbg.png">
+    <img src="./public/assets/logo/company-nbg.png" alt="Arkynox" height="24" />
+  </picture>
+  <br/>
   <sub>Built with ❤️ by <a href="https://arkynox.com">Arkynox</a> — <a href="CONTRIBUTING.md">contributions welcome</a>!</sub>
 </div>
