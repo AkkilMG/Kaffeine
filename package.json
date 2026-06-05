@@ -2,6 +2,32 @@
   "name": "kaffeine",
   "version": "0.1.0",
   "private": true,
+  "description": "Free, open-source uptime monitoring platform with health checks for websites and databases (MongoDB, PostgreSQL, MySQL). Real-time alerts via SSE, AES-256 encrypted secrets, distributed monitoring via Cloudflare Workers, and role-based dashboards.",
+  "keywords": [
+    "uptime-monitoring",
+    "health-checks",
+    "nextjs",
+    "react",
+    "typescript",
+    "mongodb",
+    "cloudflare-workers",
+    "server-sent-events",
+    "real-time",
+    "encryption",
+    "monitoring",
+    "open-source",
+    "dashboard",
+    "tailwind-css",
+    "shadcn-ui",
+    "jwt-auth",
+    "distributed-monitoring",
+    "website-monitor",
+    "database-monitor"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arkynox/Kaffeine.git"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
