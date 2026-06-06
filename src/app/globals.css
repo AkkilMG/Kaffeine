@@ -179,6 +179,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Optimize below-fold rendering - defer offscreen content */
+section[id],
+footer {
+  content-visibility: auto;
+  contain-intrinsic-size: 600px;
+}
+
+/* First section always visible for LCP */
+section:first-of-type {
+  content-visibility: visible;
+  contain: none;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }

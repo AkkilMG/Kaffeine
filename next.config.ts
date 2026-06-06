@@ -32,6 +32,18 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
+
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'recharts', 'framer-motion', 'date-fns'],
+    scrollRestoration: true,
+    webpackBuildWorker: true,
+    parallelServerBuildTraces: true,
+    parallelServerCompiles: true,
+  },
+
   async headers() {
     return [
       {

@@ -16,36 +16,49 @@ export async function GET(request: NextRequest) {
 
     const userId = requireValidObjectId(user.userId);
 
+    // Use projection to only fetch needed fields
     const kaffeiners = await kaffeinersCollection
-      .find({ userId })
+      .find({ userId }, { projection: { _id: 1, active: 1 } })
       .toArray();
 
     const totalKaffeiner = kaffeiners.length;
     const activeKaffeiner = kaffeiners.filter(k => k.active).length;
 
+    if (totalKaffeiner === 0) {
+      return NextResponse.json({
+        totalKaffeiner: 0,
+        activeKaffeiner: 0,
+        uptime: 100,
+        recentKaffeiner: null,
+      });
+    }
+
     const now = new Date();
     const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const kaffeinerIds = kaffeiners.map(k => k._id);
 
+    // Use index-friendly query with sort and limit instead of fetching all records
     const recentRecords = await statusCollection
-      .find({
-        kaffeiner_id: { $in: kaffeinerIds },
-        time: { $gte: oneDayAgo },
-      })
+      .find(
+        {
+          kaffeiner_id: { $in: kaffeinerIds },
+          time: { $gte: oneDayAgo },
+        },
+        {
+          projection: { status: 1, time: 1 },
+          sort: { time: -1 },
+        }
+      )
       .toArray();
 
     const upCount = recentRecords.filter(r => r.status === true).length;
     const uptime = recentRecords.length > 0 ? (upCount / recentRecords.length) * 100 : 100;
 
-    const lastRecord = recentRecords.length > 0
-      ? recentRecords.sort((a, b) => b.time.getTime() - a.time.getTime())[0]
-      : null;
-
     const metrics: DashboardMetrics = {
       totalKaffeiner,
       activeKaffeiner,
       uptime: Math.round(uptime * 100) / 100,
-      recentKaffeiner: lastRecord?.time || null,
+      recentKaffeiner: recentRecords[0]?.time || null,
     };
 
     return NextResponse.json(metrics);

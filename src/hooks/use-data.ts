@@ -1,8 +1,8 @@
 'use client';
 
 import useSWR from 'swr';
-import { useRealtime, type StatusUpdateEvent, type KaffeinerChangeEvent } from './use-realtime';
-import { useCallback, useRef } from 'react';
+import { useRealtime, type StatusUpdateEvent } from './use-realtime';
+import { useCallback, useRef, useEffect } from 'react';
 
 const fetcher = (url: string) => fetch(url, { credentials: 'include' }).then(res => res.json());
 
@@ -13,7 +13,7 @@ export function useDashboardMetrics() {
   });
 
   const mutateRef = useRef(mutate);
-  mutateRef.current = mutate;
+  useEffect(() => { mutateRef.current = mutate; }, [mutate]);
 
   useRealtime({
     onStatusUpdate: useCallback(() => {
@@ -33,7 +33,7 @@ export function useKaffeiners() {
   });
 
   const mutateRef = useRef(mutate);
-  mutateRef.current = mutate;
+  useEffect(() => { mutateRef.current = mutate; }, [mutate]);
 
   useRealtime({
     onStatusUpdate: useCallback(() => {
@@ -55,7 +55,7 @@ export function useKaffeinerStats(kaffeinerId: string) {
   );
 
   const mutateRef = useRef(mutate);
-  mutateRef.current = mutate;
+  useEffect(() => { mutateRef.current = mutate; }, [mutate]);
 
   useRealtime({
     kaffeinerId,
@@ -75,7 +75,7 @@ export function useAdminUsers() {
   });
 
   const mutateRef = useRef(mutate);
-  mutateRef.current = mutate;
+  useEffect(() => { mutateRef.current = mutate; }, [mutate]);
 
   useRealtime({
     onUserChange: useCallback(() => {
@@ -92,7 +92,7 @@ export function useAdminKaffeiners() {
   });
 
   const mutateRef = useRef(mutate);
-  mutateRef.current = mutate;
+  useEffect(() => { mutateRef.current = mutate; }, [mutate]);
 
   useRealtime({
     onStatusUpdate: useCallback(() => {
@@ -112,7 +112,7 @@ export function useAdminStats() {
   });
 
   const mutateRef = useRef(mutate);
-  mutateRef.current = mutate;
+  useEffect(() => { mutateRef.current = mutate; }, [mutate]);
 
   useRealtime({
     onStatusUpdate: useCallback(() => {

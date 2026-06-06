@@ -5,14 +5,18 @@ import { ThemeProvider } from '@/components/theme-provider';
 import CookieConsentBanner from '@/components/cookie-consent-banner';
 import './globals.css'
 
-const geist = Geist({ 
+const geist = Geist({
   subsets: ["latin"],
   variable: '--font-geist-sans',
+  display: 'swap',
+  preload: true,
 });
 
-const geistMono = Geist_Mono({ 
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: '--font-geist-mono',
+  display: 'swap',
+  preload: false,
 });
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://kaffeine.dev';
@@ -103,6 +107,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+      </head>
       <body className="font-sans antialiased bg-background text-foreground">
         <script
           type="application/ld+json"

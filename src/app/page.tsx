@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useAuth } from '@/lib/auth-context';
 import Navbar from '@/components/landing/navbar';
 import HeroSection from '@/components/landing/hero-section';
@@ -9,6 +10,12 @@ import TrustSection from '@/components/landing/trust-section';
 import PricingSection from '@/components/landing/pricing-section';
 import FAQSection from '@/components/landing/faq-section';
 import Footer from '@/components/landing/footer';
+import SectionDivider from '@/components/landing/section-divider';
+
+const CustomCursor = dynamic(() => import('@/components/landing/custom-cursor'), { ssr: false });
+const AmbientBackground = dynamic(() => import('@/components/landing/ambient-background'), { ssr: false });
+const ScrollProgress = dynamic(() => import('@/components/landing/scroll-progress'), { ssr: false });
+const BackToTop = dynamic(() => import('@/components/landing/back-to-top'), { ssr: false });
 
 export default function LandingPage() {
   const { loading } = useAuth();
@@ -29,13 +36,22 @@ export default function LandingPage() {
 
   return (
     <main className="bg-background">
+      <CustomCursor />
+      <AmbientBackground />
+      <ScrollProgress />
       <Navbar />
       <HeroSection />
+      <SectionDivider />
       <FeaturesSection />
+      <SectionDivider />
       <HowItWorksSection />
+      <SectionDivider />
       <TrustSection />
+      <SectionDivider />
       <PricingSection />
+      <SectionDivider />
       <FAQSection />
+      <BackToTop />
       <Footer />
     </main>
   );

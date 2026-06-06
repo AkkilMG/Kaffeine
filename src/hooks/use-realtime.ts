@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 
 export type StatusUpdateEvent = {
   type: 'status-update';
@@ -55,72 +55,79 @@ export function useRealtime(options: UseRealtimeOptions) {
   const onUserChangeRef = useRef(onUserChange);
   const onEventRef = useRef(onEvent);
 
-  onStatusUpdateRef.current = onStatusUpdate;
-  onKaffeinerChangeRef.current = onKaffeinerChange;
-  onUserChangeRef.current = onUserChange;
-  onEventRef.current = onEvent;
+  useEffect(() => { onStatusUpdateRef.current = onStatusUpdate; }, [onStatusUpdate]);
+  useEffect(() => { onKaffeinerChangeRef.current = onKaffeinerChange; }, [onKaffeinerChange]);
+  useEffect(() => { onUserChangeRef.current = onUserChange; }, [onUserChange]);
+  useEffect(() => { onEventRef.current = onEvent; }, [onEvent]);
 
   const eventSourceRef = useRef<EventSource | null>(null);
   const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const reconnectAttempts = useRef(0);
 
-  const connect = useCallback(() => {
-    if (!enabled) return;
+  const connectRef = useRef<(() => void) | null>(null);
+  const enabledRef = useRef(enabled);
+  const kaffeinerIdRef = useRef(kaffeinerId);
 
-    const params = new URLSearchParams();
-    if (kaffeinerId) {
-      params.set('kaffeinerId', kaffeinerId);
-    }
-    const query = params.toString();
-    const url = `/api/realtime${query ? `?${query}` : ''}`;
-
-    const es = new EventSource(url, { withCredentials: true });
-    eventSourceRef.current = es;
-
-    es.onmessage = (event) => {
-      try {
-        const data: RealtimeEvent = JSON.parse(event.data);
-        if (data.type === 'heartbeat' || data.type === 'connected') return;
-
-        onEventRef.current?.(data);
-
-        switch (data.type) {
-          case 'status-update':
-            onStatusUpdateRef.current?.(data);
-            break;
-          case 'kaffeiner-change':
-            onKaffeinerChangeRef.current?.(data);
-            break;
-          case 'user-change':
-            onUserChangeRef.current?.(data);
-            break;
-        }
-      } catch {
-        // Ignore parse errors
-      }
-    };
-
-    es.onerror = () => {
-      es.close();
-      eventSourceRef.current = null;
-
-      const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
-      reconnectAttempts.current += 1;
-
-      reconnectTimeoutRef.current = setTimeout(() => {
-        connect();
-      }, delay);
-    };
-
-    es.onopen = () => {
-      reconnectAttempts.current = 0;
-    };
-  }, [kaffeinerId, enabled]);
+  useEffect(() => { enabledRef.current = enabled; }, [enabled]);
+  useEffect(() => { kaffeinerIdRef.current = kaffeinerId; }, [kaffeinerId]);
 
   useEffect(() => {
-    connect();
+    connectRef.current = () => {
+      if (!enabledRef.current) return;
 
-    return () => {
+      const params = new URLSearchParams();
+      if (kaffeinerIdRef.current) {
+        params.set('kaffeinerId', kaffeinerIdRef.current);
+      }
+      const query = params.toString();
+      const url = `/api/realtime${query ? `?${query}` : ''}`;
+
+      const es = new EventSource(url, { withCredentials: true });
+      eventSourceRef.current = es;
+
+      es.onmessage = (event) => {
+        try {
+          const data: RealtimeEvent = JSON.parse(event.data);
+          if (data.type === 'heartbeat' || data.type === 'connected') return;
+
+          onEventRef.current?.(data);
+
+          switch (data.type) {
+            case 'status-update':
+              onStatusUpdateRef.current?.(data);
+              break;
+            case 'kaffeiner-change':
+              onKaffeinerChangeRef.current?.(data);
+              break;
+            case 'user-change':
+              onUserChangeRef.current?.(data);
+              break;
+          }
+        } catch {
+          // Ignore parse errors
+        }
+      };
+
+      es.onerror = () => {
+        es.close();
+        eventSourceRef.current = null;
+
+        const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
+        reconnectAttempts.current += 1;
+
+        reconnectTimeoutRef.current = setTimeout(() => {
+          connectRef.current?.();
+        }, delay);
+      };
+
+      es.onopen = () => {
+        reconnectAttempts.current = 0;
+      };
+    };
+  }, []);
+
+  useEffect(() => {
+    const cleanup = () => {
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
         eventSourceRef.current = null;
@@ -129,5 +136,10 @@ export function useRealtime(options: UseRealtimeOptions) {
         clearTimeout(reconnectTimeoutRef.current);
       }
     };
-  }, [connect]);
+
+    cleanup();
+    connectRef.current?.();
+
+    return cleanup;
+  }, [enabled, kaffeinerId]);
 }

@@ -1,17 +1,18 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { motion } from 'motion/react';
 import { useDashboardMetrics, useKaffeiners } from '@/hooks/use-data';
 import { useRealtime } from '@/hooks/use-realtime';
 import { Button } from '@/components/ui/button';
 import { ShimmerCard } from '@/components/ui/shimmer';
-import { Area, AreaChart, ResponsiveContainer, XAxis, Tooltip } from 'recharts';
 import {
-  Activity, Globe, Timer, Zap, Bell, PlusCircle, Server, ArrowUpRight,
+  Activity, Globe, Zap, PlusCircle, Server, ArrowUpRight,
   CheckCircle, Clock, BarChart3, Coffee,
 } from 'lucide-react';
 import Link from 'next/link';
+
+const UptimeChart = lazy(() => import('@/components/dashboard/uptime-chart'));
 
 const container = {
   hidden: { opacity: 0 },
@@ -56,32 +57,8 @@ function AnimatedCounter({ value, suffix = '', decimals = 0 }: { value: number; 
     return () => clearInterval(timer);
   }, [visible, value]);
 
-  return <span ref={ref}>{count.toFixed(decimals)}{suffix}</span>;
+  return <span ref={ref} className="tabular-nums">{count.toFixed(decimals)}{suffix}</span>;
 }
-
-function generateChartData(uptime: number) {
-  const now = new Date();
-  return Array.from({ length: 24 }, (_, i) => {
-    const h = (now.getHours() - 23 + i + 24) % 24;
-    const variance = (Math.random() - 0.5) * 0.4;
-    return {
-      time: `${h.toString().padStart(2, '0')}:00`,
-      uptime: Math.min(100, Math.max(99, uptime + variance)),
-    };
-  });
-}
-
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (!active || !payload) return null;
-  return (
-    <div className="rounded-lg border border-border/60 bg-card/95 backdrop-blur-sm px-3 py-2 shadow-xl text-xs">
-      <p className="text-muted-foreground mb-1">{label}</p>
-      <p className="font-medium text-foreground">
-        Uptime: <span className="text-primary">{payload[0]?.value?.toFixed(2)}%</span>
-      </p>
-    </div>
-  );
-};
 
 export default function DashboardPage() {
   const { metrics, loading: metricsLoading } = useDashboardMetrics();
@@ -101,7 +78,6 @@ export default function DashboardPage() {
 
   const activeKaffeiners = kaffeiners?.filter((k: any) => k.active) || [];
   const uptimeValue = metrics?.uptime ?? 100;
-  const chartData = generateChartData(uptimeValue);
   const lastKaffeinerTime = metrics?.recentKaffeiner
     ? new Date(metrics.recentKaffeiner).toLocaleTimeString()
     : '—';
@@ -209,42 +185,16 @@ export default function DashboardPage() {
                 </span>
                 {isLive && (
                   <span className="flex items-center gap-1 text-[9px] text-muted-foreground/60">
-                    <span className="size-1 rounded-full bg-success animate-pulse" />
+                    <span className="size-1 rounded-full bg-success" />
                     Auto-refresh
                   </span>
                 )}
               </div>
             </div>
             <div className="h-48 md:h-56">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="uptimeFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.2} />
-                      <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.02} />
-                    </linearGradient>
-                  </defs>
-                  <XAxis
-                    dataKey="time"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
-                    interval={3}
-                  />
-                  <Tooltip content={<CustomTooltip />} cursor={false} />
-                  <Area
-                    type="monotone"
-                    dataKey="uptime"
-                    stroke="var(--primary)"
-                    strokeWidth={2}
-                    fill="url(#uptimeFill)"
-                    animationDuration={1200}
-                    animationEasing="ease-out"
-                    dot={false}
-                    activeDot={{ r: 4, fill: 'var(--primary)', stroke: 'var(--card)', strokeWidth: 2 }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              <Suspense fallback={<div className="h-full flex items-center justify-center"><div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary" /></div>}>
+                <UptimeChart uptimeValue={uptimeValue} />
+              </Suspense>
             </div>
           </div>
         </motion.div>
@@ -291,7 +241,7 @@ export default function DashboardPage() {
                   <span className="w-14 text-right shrink-0">Status</span>
                   <span className="w-14 text-right shrink-0 hidden sm:block">Type</span>
                 </div>
-                {activeKaffeiners.slice(0, 6).map((k: any, i: number) => (
+                {activeKaffeiners.slice(0, 6).map((k: any) => (
                   <Link
                     key={k._id}
                     href={`/dashboard/kaffeiners/${k._id}`}
