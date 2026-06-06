@@ -100,10 +100,10 @@ export default function HeroSection() {
       />
 
       <motion.div
-        className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8"
+        className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
         style={{ opacity, scale }}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
           <div className="text-center lg:text-left">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -120,9 +120,8 @@ export default function HeroSection() {
                 Cloudflare-powered monitoring
               </motion.div>
 
-              <h1 className="text-[2.5rem] sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.88] mb-6 text-foreground">
-                Keep Your<br />
-                Services{' '}
+              <h1 className="text-[2rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[0.9] mb-6 text-foreground">
+                Keep Your Services{' '}
                 <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                   Awake
                 </span>

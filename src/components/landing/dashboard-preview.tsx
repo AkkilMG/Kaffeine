@@ -114,7 +114,7 @@ export default function DashboardPreview() {
   }, []);
 
   return (
-    <div ref={ref} className="w-full max-w-lg lg:max-w-xl mx-auto">
+    <div ref={ref} className="w-full max-w-xl lg:max-w-2xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -151,7 +151,7 @@ export default function DashboardPreview() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="hidden sm:flex flex-col gap-1 p-3 border-r border-border/40 bg-muted/10 min-w-[130px]"
+            className="hidden sm:flex flex-col gap-1 p-3 border-r border-border/40 bg-muted/10 min-w-[140px]"
           >
             {sidebarItems.map((item) => (
               <motion.button
@@ -178,7 +178,7 @@ export default function DashboardPreview() {
           </motion.div>
 
           {/* Main Content */}
-          <div className="flex-1 p-3 sm:p-5 space-y-3 sm:space-y-4">
+          <div className="flex-1 p-3 sm:p-5 lg:p-6 space-y-3 sm:space-y-4 lg:space-y-5">
             {/* Welcome */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -205,7 +205,7 @@ export default function DashboardPreview() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2"
+              className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3"
             >
               {[
                 { label: 'Total', value: 4, suffix: '', icon: Globe, color: 'text-primary', bg: 'bg-primary/8' },
@@ -219,7 +219,7 @@ export default function DashboardPreview() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.5 + i * 0.1 }}
                   whileHover={{ y: -2, scale: 1.02 }}
-                  className={`rounded-xl border border-border/50 p-2 sm:p-2.5 ${stat.bg} transition-all duration-300 cursor-default`}
+                  className={`rounded-xl border border-border/50 p-2.5 sm:p-3 ${stat.bg} transition-all duration-300 cursor-default`}
                 >
                   <div className="flex items-center gap-1.5 mb-1.5">
                     <stat.icon size={9} className={stat.color} />
@@ -239,7 +239,7 @@ export default function DashboardPreview() {
             {/* Chart */}
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 100 }}
+              animate={{ opacity: 1, height: 110 }}
               transition={{ duration: 0.6, delay: 0.7 }}
               className="overflow-hidden"
             >
@@ -302,11 +302,11 @@ export default function DashboardPreview() {
               transition={{ duration: 0.5, delay: 0.9 }}
               className="space-y-1"
             >
-              <div className="flex items-center gap-1 sm:gap-3 pb-1.5 px-1 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
-                <span className="w-4 shrink-0" />
+              <div className="flex items-center gap-2 sm:gap-4 pb-1.5 px-1 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
+                <span className="w-6 shrink-0" />
                 <span className="flex-1 min-w-0">Service</span>
-                <span className="w-14 sm:w-12 text-right shrink-0">Uptime</span>
-                <span className="w-14 text-right shrink-0">Status</span>
+                <span className="w-14 sm:w-14 text-right shrink-0">Uptime</span>
+                <span className="w-[52px] text-right shrink-0">Status</span>
                 <span className="w-14 text-right shrink-0 hidden sm:block">Latency</span>
               </div>
 
@@ -320,7 +320,7 @@ export default function DashboardPreview() {
                     onHoverStart={() => setHoveredService(svc.name)}
                     onHoverEnd={() => setHoveredService(null)}
                     whileHover={{ backgroundColor: 'var(--muted)', transition: { duration: 0.2 } }}
-                    className="flex items-center gap-1 sm:gap-3 py-2 px-2 rounded-lg transition-colors -mx-1 cursor-default"
+                    className="flex items-center gap-2 sm:gap-4 py-2.5 px-2 rounded-lg transition-colors -mx-1 cursor-default"
                   >
                     <span className="relative flex size-2 shrink-0 self-center">
                       <span
@@ -375,7 +375,7 @@ export default function DashboardPreview() {
               initial={{ opacity: 0 }}
               animate={{ opacity: animateComplete ? 1 : 0 }}
               transition={{ duration: 0.5 }}
-              className="pt-3 border-t border-border/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5"
+              className="pt-3 sm:pt-4 border-t border-border/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5"
             >
               <div className="flex items-center gap-1.5">
                 <CheckCircle size={11} className="text-success shrink-0" />
