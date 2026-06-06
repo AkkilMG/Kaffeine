@@ -9,7 +9,8 @@ export function middleware(request: NextRequest) {
     pathname === '/register' ||
     pathname.startsWith('/policy') ||
     pathname.startsWith('/api') ||
-    pathname.startsWith('/_next')
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/assets')
   ) {
     return NextResponse.next();
   }
@@ -26,5 +27,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|assets).*)'],
 };

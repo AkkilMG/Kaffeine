@@ -366,7 +366,7 @@ Nothing in these Terms shall be deemed to create a partnership, joint venture, a
   },
   {
     title: '21. Entire Agreement',
-    content: `These Terms, together with our Privacy Policy (https://kaffeine.dev/policy/privacy) and Cookie Policy (https://kaffeine.dev/policy/cookies), constitute the entire and exclusive agreement between you and Arkynox regarding your use of the Service, superseding and extinguishing all prior agreements, understandings, representations, and communications, whether written or oral.
+    content: `These Terms, together with our Privacy Policy (https://kaffeine.arkynox.com/policy/privacy) and Cookie Policy (https://kaffeine.arkynox.com/policy/cookies), constitute the entire and exclusive agreement between you and Arkynox regarding your use of the Service, superseding and extinguishing all prior agreements, understandings, representations, and communications, whether written or oral.
 
 In the event of any conflict or inconsistency between these documents, the following order of precedence shall apply:
 1. These Terms of Service

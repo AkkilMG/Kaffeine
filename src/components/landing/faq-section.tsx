@@ -228,7 +228,7 @@ export default function FAQSection() {
             <span className="text-sm text-muted-foreground">
               Still have questions?{' '}
               <Link
-                href="mailto:support@kaffeine.com"
+                href="mailto:support@arkynox.com"
                 className="text-primary hover:underline font-medium inline-flex items-center gap-1"
               >
                 Get in touch{' '}

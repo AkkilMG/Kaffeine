@@ -3,17 +3,40 @@ import { getDatabase } from '@/lib/db';
 import { encryptData, decryptData } from '@/lib/encryption';
 import { Kaffeiner } from '@/lib/types';
 import { eventBus } from '@/lib/event-bus';
-import { getSessionUser, handleApiError, ApiError, requireValidObjectId, rateLimit } from '@/lib/api-utils';
+import { getSessionUser, verifyJWT, handleApiError, ApiError, requireValidObjectId, rateLimit } from '@/lib/api-utils';
 
 export async function GET(request: NextRequest) {
   try {
+    const db = await getDatabase();
+    const kaffeinersCollection = db.collection<Kaffeiner>('kaffeiners');
+
+    // Support Bearer token auth for Cloudflare Worker (cf-worker type)
+    const authHeader = request.headers.get('authorization');
+    if (authHeader?.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      const decoded = verifyJWT(token);
+      if ((decoded.type as string) === 'cf-worker') {
+        const kaffeiners = await kaffeinersCollection
+          .find({ active: true, banned: false })
+          .project<Pick<Kaffeiner, '_id' | 'type' | 'db_type'>>({ _id: 1, type: 1, db_type: 1 })
+          .sort({ createdKaffeiner: -1 })
+          .toArray();
+
+        const result = kaffeiners.map(k => ({
+          _id: k._id?.toString(),
+          type: k.type,
+          db_type: k.db_type,
+        }));
+
+        return NextResponse.json(result);
+      }
+    }
+
+    // Default session cookie auth for dashboard users
     const user = getSessionUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
-
-    const db = await getDatabase();
-    const kaffeinersCollection = db.collection<Kaffeiner>('kaffeiners');
 
     const userId = requireValidObjectId(user.userId);
 

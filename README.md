@@ -8,7 +8,7 @@
   <p align="center">
     Free &amp; Open Source Uptime Monitoring
     <br />
-    <a href="https://kaffeine.dev"><strong>kaffeine.dev »</strong></a>
+    <a href="https://kaffeine.arkynox.com"><strong>kaffeine.arkynox.com »</strong></a>
   </p>
   <p align="center">
     <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="Apache 2.0" />

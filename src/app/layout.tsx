@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://kaffeine.dev';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://kaffeine.arkynox.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
