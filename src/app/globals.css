@@ -177,6 +177,19 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent text resize on orientation change (iOS) */
+body {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Reduce section padding on very small screens */
+@media (max-width: 380px) {
+  section[id], footer {
+    contain-intrinsic-size: 400px;
+  }
 }
 
 /* Optimize below-fold rendering - defer offscreen content */

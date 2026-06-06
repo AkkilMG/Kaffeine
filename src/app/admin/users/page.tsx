@@ -174,12 +174,12 @@ export default function AdminUsersPage() {
                         {new Date(user.createdAt).toLocaleDateString()}
                       </td>
                     <td className="py-3 px-2 sm:px-4 text-right">
-                      <div className="flex gap-1.5 sm:gap-2 justify-end">
+                      <div className="flex gap-1 sm:gap-2 justify-end">
                         {user.role === 'user' ? (
                           <Button
                             size="sm"
                             variant="outline"
-                            className="text-xs px-2 sm:px-3"
+                            className="text-[10px] sm:text-xs px-2 sm:px-3 min-h-[32px] sm:min-h-0"
                             onClick={() => {
                               setSelectedUser(user);
                               setActionType('promote');
@@ -191,7 +191,7 @@ export default function AdminUsersPage() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="text-xs px-2 sm:px-3"
+                            className="text-[10px] sm:text-xs px-2 sm:px-3 min-h-[32px] sm:min-h-0"
                             onClick={() => {
                               setSelectedUser(user);
                               setActionType('demote');
@@ -203,7 +203,7 @@ export default function AdminUsersPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="text-destructive hover:text-destructive text-xs px-2 sm:px-3"
+                          className="text-destructive hover:text-destructive text-[10px] sm:text-xs px-2 sm:px-3 min-h-[32px] sm:min-h-0"
                           onClick={() => {
                             setSelectedUser(user);
                             setActionType('delete');

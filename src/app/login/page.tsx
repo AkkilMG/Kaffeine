@@ -13,27 +13,27 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen">
       <div className="flex flex-1">
-        <div className="flex-1 flex items-center justify-center p-8 relative">
-          <Link href="/" className="absolute top-6 left-6">
-            <div className="flex flex-col group">
-              <div className="flex items-center gap-2.5">
-                <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={32} height={32} className="size-9" />
-                <span className="text-xl font-bold">Kaffeine</span>
+        <div className="flex-1 flex items-center justify-center p-4 sm:p-8 relative">
+          <div className="absolute top-4 sm:top-6 left-4 sm:left-6 right-4 sm:right-6 flex items-center justify-between">
+            <Link href="/">
+              <div className="flex flex-col group">
+                <div className="flex items-center gap-2.5">
+                  <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={32} height={32} className="size-8 sm:size-9" />
+                  <span className="text-lg sm:text-xl font-bold">Kaffeine</span>
+                </div>
+                <span className="text-[10px] text-muted-foreground/50 mt-0.5 ml-0.5 flex items-center gap-0.5">
+                  by Arkynox <ArrowUpRight size={8} />
+                </span>
               </div>
-              <span className="text-[10px] text-muted-foreground/50 mt-0.5 ml-0.5 flex items-center gap-0.5">
-                by Arkynox <ArrowUpRight size={8} />
-              </span>
-            </div>
-          </Link>
-          <div className="absolute top-6 right-6">
+            </Link>
             <ThemeToggle />
           </div>
 
-          <div className="w-full max-w-md">
-            <div className="space-y-6">
+          <div className="w-full max-w-md pt-16 sm:pt-0">
+            <div className="space-y-5 sm:space-y-6">
               <div className="text-left">
-                <h1 className="text-3xl font-bold tracking-tight">Welcome Back</h1>
-                <p className="text-muted-foreground mt-2">Sign in to continue monitoring your services</p>
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Welcome Back</h1>
+                <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Sign in to continue monitoring your services</p>
               </div>
 
               <SigninForm />

@@ -91,15 +91,13 @@ export default function CreateKaffeinerPage() {
       </motion.div>
 
       {/* Step indicator */}
-      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm overflow-x-auto pb-1">
+      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm overflow-x-auto pb-1 scrollbar-none">
         {['type', 'details', 'review'].map((s, i) => (
           <div key={s} className="flex items-center gap-1 sm:gap-2 shrink-0">
             <span
               className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-medium transition-colors ${
                 step === s
                   ? 'bg-primary text-primary-foreground'
-                  : ['type', 'details'].includes(step) && s !== step
-                  ? 'bg-muted text-muted-foreground'
                   : 'bg-muted text-muted-foreground'
               }`}
             >

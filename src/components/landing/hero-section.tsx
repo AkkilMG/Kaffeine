@@ -130,23 +130,23 @@ export default function HeroSection() {
   ];
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex items-center overflow-hidden pt-20 md:pt-14 bg-background">
+    <section ref={sectionRef} className="relative min-h-screen flex items-center overflow-hidden pt-16 md:pt-14 bg-background">
       <GradientMesh />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
-          <div className="text-center lg:text-left">
+          <div className="text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="inline-flex items-center gap-2 text-xs font-medium text-primary font-mono mb-6 px-3 py-1.5 rounded-full bg-primary/8 border border-primary/15"
+              className="inline-flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-medium text-primary font-mono mb-4 sm:mb-6 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-primary/8 border border-primary/15"
             >
-              <Activity size={10} />
-              Cloudflare-powered monitoring
+              <Activity size={9} />
+              <span>Cloudflare-powered monitoring</span>
             </motion.div>
 
-            <h1 className="text-[2rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[0.9] mb-6 text-foreground">
+            <h1 className="text-[1.6rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.15] sm:leading-[1] mb-4 sm:mb-6 text-foreground">
               {titleWords.map((word, i) => (
                 <motion.span
                   key={word}
@@ -157,7 +157,7 @@ export default function HeroSection() {
                     delay: 0.3 + i * 0.14,
                     ease: [0.25, 0.4, 0.25, 1],
                   }}
-                  className={`inline-block mr-[0.3em] ${word === 'Awake' ? 'bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent' : ''}`}
+                  className={`inline-block mr-[0.25em] sm:mr-[0.3em] ${word === 'Awake' ? 'bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent' : ''}`}
                 >
                   {word}
                 </motion.span>
@@ -168,7 +168,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.6, delay: 0.9, ease: [0.25, 0.4, 0.25, 1] }}
-              className="text-base md:text-lg text-muted-foreground max-w-xl mb-8 leading-relaxed"
+              className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2 sm:px-0"
             >
               Free, open-source uptime monitoring.{' '}
               <span className="text-foreground/70">Powered by Cloudflare, secured with AES-256 encryption.</span>
@@ -178,13 +178,13 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 1.0, ease: 'easeOut' }}
-              className="flex flex-col sm:flex-row items-center lg:items-start gap-4 mb-8"
+              className="flex flex-row items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8"
             >
               {!loading && user ? (
                 <MagneticButton href="/dashboard">
                   <Button
                     size="lg"
-                    className="gap-2 text-base px-8 h-12 shadow-lg shadow-primary/25 group/btn relative overflow-hidden cursor-pointer"
+                    className="gap-2 text-sm sm:text-base px-5 sm:px-8 h-11 sm:h-12 w-full sm:w-auto shadow-lg shadow-primary/25 group/btn relative overflow-hidden cursor-pointer"
                   >
                     <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-600" />
                     Go to Dashboard{' '}
@@ -196,7 +196,7 @@ export default function HeroSection() {
                   <MagneticButton href="/register">
                     <Button
                       size="lg"
-                      className="gap-2 text-base px-8 h-12 shadow-lg shadow-primary/25 group/btn relative overflow-hidden cursor-pointer"
+                      className="gap-2 text-sm sm:text-base px-5 sm:px-8 h-11 sm:h-12 w-full sm:w-auto shadow-lg shadow-primary/25 group/btn relative overflow-hidden cursor-pointer"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-600" />
                       Start Monitoring Free{' '}
@@ -204,7 +204,7 @@ export default function HeroSection() {
                     </Button>
                   </MagneticButton>
                   <MagneticButton href="https://github.com/akkilmg/kaffeine" target="_blank">
-                    <Button size="lg" className="gap-2 text-base px-8 h-12 group/btn cursor-pointer bg-transparent dark:bg-transparent border border-foreground/30 dark:border-foreground/30 text-foreground/85 hover:bg-foreground/[0.06] dark:hover:bg-foreground/[0.1] hover:text-foreground transition-all">
+                    <Button size="lg" className="gap-2 text-sm sm:text-base px-5 sm:px-8 h-11 sm:h-12 w-full sm:w-auto group/btn cursor-pointer bg-transparent dark:bg-transparent border border-foreground/30 dark:border-foreground/30 text-foreground/85 hover:bg-foreground/[0.06] dark:hover:bg-foreground/[0.1] hover:text-foreground transition-all">
                       <GitBranch size={16} />
                       View on GitHub
                     </Button>
@@ -217,9 +217,9 @@ export default function HeroSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.3 }}
-              className="flex items-center justify-center lg:justify-start gap-1.5 text-xs text-muted-foreground/50"
+              className="flex items-center justify-center gap-1.5 text-[10px] sm:text-xs text-muted-foreground/50"
             >
-              <Sparkles size={10} />
+              <Sparkles size={9} />
               <span>No credit card. No hidden limits. Just monitoring.</span>
             </motion.div>
           </div>

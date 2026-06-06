@@ -65,7 +65,7 @@ export default function TrustSection() {
   const bgTranslateY = useTransform(scrollYProgress, [0, 1], ['0px', '20px']);
 
   return (
-    <section ref={sectionRef} className="relative py-24 md:py-32 bg-background">
+    <section ref={sectionRef} className="relative py-16 sm:py-24 md:py-32 bg-background">
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{

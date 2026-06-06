@@ -37,7 +37,7 @@ export default function HowItWorksSection() {
   ];
 
   return (
-    <section id="how-it-works" ref={sectionRef} className="relative py-24 md:py-32 bg-muted/20">
+    <section id="how-it-works" ref={sectionRef} className="relative py-16 sm:py-24 md:py-32 bg-muted/20">
       <div className="absolute inset-0 pointer-events-none">
         <div
           className="absolute inset-0"

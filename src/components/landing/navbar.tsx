@@ -167,33 +167,33 @@ export default function Navbar() {
               exit="closed"
               className="md:hidden border-t border-border/40 bg-background/80 backdrop-blur-2xl overflow-hidden"
             >
-              <div className="px-4 py-4 space-y-3">
+              <div className="px-4 py-4 sm:py-6 space-y-1">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="block py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="block py-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {link.label}
                   </Link>
                 ))}
-                <div className="pt-3 border-t border-border/40 flex flex-col gap-2">
+                <div className="pt-4 mt-2 border-t border-border/40 flex flex-col gap-2.5">
                   {!loading && user ? (
                     <Link href="/dashboard" onClick={() => setMobileOpen(false)}>
-                      <Button className="w-full gap-2">
+                      <Button className="w-full gap-2 py-2.5">
                         Dashboard <ChevronRight size={14} />
                       </Button>
                     </Link>
                   ) : (
                     <>
                       <Link href="/register" onClick={() => setMobileOpen(false)}>
-                        <Button className="w-full gap-2 shadow-lg shadow-primary/15">
+                        <Button className="w-full gap-2 py-2.5 shadow-lg shadow-primary/15">
                           Get Started <ChevronRight size={14} />
                         </Button>
                       </Link>
                       <Link href="/login" onClick={() => setMobileOpen(false)}>
-                        <Button variant="outline" className="w-full">
+                        <Button variant="outline" className="w-full py-2.5">
                           Sign In
                         </Button>
                       </Link>

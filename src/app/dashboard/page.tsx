@@ -139,8 +139,8 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
-      {/* Stats Cards */}
-      <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {/* Stats Cards */}
+      <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
         {statsCards.map((stat, i) => (
           <motion.div
             key={stat.label}
@@ -148,16 +148,16 @@ export default function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: i * 0.08 }}
             whileHover={{ y: -3, scale: 1.01 }}
-            className={`rounded-xl border border-border/50 p-4 ${stat.bg} transition-all duration-300 cursor-default relative overflow-hidden group`}
+            className={`rounded-xl border border-border/50 p-3 sm:p-4 ${stat.bg} transition-all duration-300 cursor-default relative overflow-hidden group`}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative">
-              <div className="flex items-center justify-between mb-2">
-                <stat.icon size={13} className={stat.color} />
+              <div className="flex items-center justify-between mb-1 sm:mb-2">
+                <stat.icon size={11} className={stat.color} />
               </div>
-              <div className={`font-semibold text-lg md:text-xl tracking-tight ${stat.color}`}>
+              <div className={`font-semibold text-base sm:text-lg md:text-xl tracking-tight ${stat.color}`}>
                 {stat.isTime ? (
-                  <span className="text-sm font-mono">{stat.value as string}</span>
+                  <span className="text-[10px] sm:text-sm font-mono">{stat.value as string}</span>
                 ) : (
                   <AnimatedCounter value={stat.value as number} suffix={stat.suffix} decimals={stat.label === 'Uptime' ? 1 : 0} />
                 )}
@@ -247,7 +247,7 @@ export default function DashboardPage() {
                     href={`/dashboard/kaffeiners/${k._id}`}
                     onMouseEnter={() => setHoveredKafe(k._id)}
                     onMouseLeave={() => setHoveredKafe(null)}
-                    className="flex items-center gap-1 sm:gap-2 py-2 px-2 rounded-lg transition-colors -mx-1 group/kafe hover:bg-muted/40"
+                    className="flex items-center gap-1 sm:gap-2 py-2.5 sm:py-2 px-2 rounded-lg transition-colors -mx-1 group/kafe hover:bg-muted/40 min-h-[36px] sm:min-h-0"
                   >
                     <span className="relative flex size-2 shrink-0">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />

@@ -151,7 +151,7 @@ export default function FeaturesSection() {
   const cardScrollY = [card1Y, card2Y, card3Y];
 
   return (
-    <section id="features" ref={sectionRef} className="relative py-24 md:py-32 bg-background">
+    <section id="features" ref={sectionRef} className="relative py-16 sm:py-24 md:py-32 bg-background">
       {/* Scroll progress bar */}
       <div className="sticky top-0 left-0 right-0 h-0.5 z-40 bg-foreground/5">
         <motion.div

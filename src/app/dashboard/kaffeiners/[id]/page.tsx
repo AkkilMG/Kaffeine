@@ -293,14 +293,14 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
                   initial={index === 0 ? { opacity: 0, x: -10 } : undefined}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="flex items-center justify-between p-2 sm:p-3 rounded-lg border border-border hover:border-primary/50 transition-colors gap-2"
+                  className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg border border-border hover:border-primary/50 transition-colors gap-2"
                 >
                   <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                     <span
-                      className={`relative flex h-2 w-2 sm:h-2.5 sm:w-2.5 shrink-0 ${index === 0 ? 'animate-pulse' : ''}`}
+                      className={`relative flex h-2.5 w-2.5 sm:h-3 sm:w-3 shrink-0 ${index === 0 ? 'animate-pulse' : ''}`}
                     >
                       <span
-                        className={`inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 ${
+                        className={`inline-flex rounded-full h-2.5 w-2.5 sm:h-3 sm:w-3 ${
                           record.status ? 'bg-green-500 shadow-sm shadow-green-500/50' : 'bg-red-500 shadow-sm shadow-red-500/50'
                         }`}
                       />
@@ -311,7 +311,7 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
                       </p>
                     </div>
                   </div>
-                  <span className="text-[10px] sm:text-xs text-muted-foreground font-mono shrink-0">
+                  <span className="text-[10px] sm:text-xs text-muted-foreground font-mono shrink-0 whitespace-nowrap">
                     {new Date(record.time).toLocaleString()}
                   </span>
                 </motion.div>

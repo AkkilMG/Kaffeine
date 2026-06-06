@@ -38,7 +38,7 @@ export default function FAQSection() {
     activeCategory === 'All' ? faqs : faqs.filter((f) => f.category === activeCategory);
 
   return (
-    <section id="faq" ref={sectionRef} className="relative py-24 md:py-32 bg-background">
+    <section id="faq" ref={sectionRef} className="relative py-16 sm:py-24 md:py-32 bg-background">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

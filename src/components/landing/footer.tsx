@@ -10,8 +10,8 @@ export default function Footer() {
   return (
     <footer className="border-t border-border/60 bg-card">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div className="col-span-2 md:col-span-1">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+          <div className="col-span-2 sm:col-span-4 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-4">
               <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={28} height={28} className="size-6" />
               <span className="text-base font-bold text-foreground">Kaffeine</span>
@@ -50,13 +50,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-sm mb-4 text-foreground">Product</h4>
-            <ul className="space-y-2.5">
+            <h4 className="font-semibold text-sm mb-3 sm:mb-4 text-foreground">Product</h4>
+            <ul className="space-y-3 sm:space-y-2.5">
               {['Features', 'How It Works', 'Pricing', 'FAQ'].map((item) => (
                 <li key={item}>
                   <Link
                     href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors block py-0.5 sm:py-0"
                   >
                     {item}
                   </Link>
@@ -66,13 +66,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-sm mb-4 text-foreground">Resources</h4>
-            <ul className="space-y-2.5">
+            <h4 className="font-semibold text-sm mb-3 sm:mb-4 text-foreground">Resources</h4>
+            <ul className="space-y-3 sm:space-y-2.5">
               <li>
                 <Link
                   href="https://github.com/akkilmg/kaffeine"
                   target="_blank"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 py-0.5 sm:py-0"
                 >
                   GitHub <ExternalLink size={10} />
                 </Link>
@@ -81,7 +81,7 @@ export default function Footer() {
                 <Link
                   href="https://github.com/akkilmg/kaffeine/issues"
                   target="_blank"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 py-0.5 sm:py-0"
                 >
                   Report Issue <ExternalLink size={10} />
                 </Link>
@@ -90,7 +90,7 @@ export default function Footer() {
                 <Link
                   href="https://github.com/akkilmg/kaffeine/blob/main/LICENSE"
                   target="_blank"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 py-0.5 sm:py-0"
                 >
                   Apache 2.0 <ExternalLink size={10} />
                 </Link>
@@ -99,20 +99,20 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-sm mb-4 text-foreground">Legal</h4>
-            <ul className="space-y-2.5">
+            <h4 className="font-semibold text-sm mb-3 sm:mb-4 text-foreground">Legal</h4>
+            <ul className="space-y-3 sm:space-y-2.5">
               <li>
-                <Link href="/policy/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/policy/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors block py-0.5 sm:py-0">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/policy/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/policy/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors block py-0.5 sm:py-0">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/policy/cookies" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/policy/cookies" className="text-sm text-muted-foreground hover:text-foreground transition-colors block py-0.5 sm:py-0">
                   Cookie Policy
                 </Link>
               </li>
@@ -120,8 +120,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-border/40 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground flex items-center gap-1">
+        <div className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/40 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
+          <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
               &copy; {year} Kaffeine. Licensed under{' '}
               <Link
                 href="https://github.com/akkilmg/kaffeine/blob/main/LICENSE"
@@ -132,7 +132,7 @@ export default function Footer() {
               </Link>
               .
           </p>
-          <p className="text-xs text-muted-foreground/40 flex items-center gap-1">
+          <p className="text-[10px] sm:text-xs text-muted-foreground/40 flex items-center gap-1">
             Built with <Heart size={10} className="text-destructive" /> by{' '}
             <Link href="https://arkynox.com" target="_blank" className="hover:text-primary transition-colors">
               Arkynox
