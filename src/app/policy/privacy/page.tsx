@@ -3,6 +3,7 @@
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { PolicyContent } from '@/components/policy-content';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -230,7 +231,7 @@ Transfer Safeguards by Region:
 From the European Union / EEA:
 If you are located in the EU/EEA, your data may be transferred to India for processing. Such transfers are safeguarded by:
 • Standard Contractual Clauses (SCCs) approved by the European Commission (Commission Implementing Decision (EU) 2021/914), in the absence of an adequacy decision for India
-• The SCCs are available for review upon request at privacy@arkynox.com
+• The SCCs are available for review upon request at support@arkynox.com
 • Where SCCs are insufficient, supplementary measures may be applied as required by the Court of Justice of the European Union's "Schrems II" decision (Case C-311/18)
 
 From the United Kingdom:
@@ -251,7 +252,7 @@ By using the Service, you acknowledge that your data may be transferred to and p
     content: `If you are a user in India, the Digital Personal Data Protection Act, 2023 grants you the following rights:
 
 Right to Information (Section 11):
-You have the right to know whether we hold your personal data, a summary of the data held, and how it has been processed, used, shared, and stored. Submit your request to privacy@arkynox.com.
+You have the right to know whether we hold your personal data, a summary of the data held, and how it has been processed, used, shared, and stored. Submit your request to support@arkynox.com.
 
 Right to Correction (Section 12):
 You have the right to request correction of inaccurate or misleading personal data, and to update incomplete data. You can also update your data through your account dashboard.
@@ -260,7 +261,7 @@ Right to Erasure (Section 12):
 You have the right to request deletion of your personal data, subject to legal retention obligations. You can delete your account at any time through your dashboard settings.
 
 Right of Nomination (Section 14):
-You have the right to nominate a person to manage your personal data in the event of your death or incapacity. This nomination must be made in writing. Contact us at privacy@arkynox.com for the nomination form.
+You have the right to nominate a person to manage your personal data in the event of your death or incapacity. This nomination must be made in writing. Contact us at support@arkynox.com for the nomination form.
 
 Right to Grievance Redressal (Section 13):
 You have the right to lodge a grievance regarding the handling of your personal data. Our Grievance Officer will acknowledge your grievance within 24 hours and resolve it within 15 calendar days.
@@ -298,7 +299,7 @@ You have the right not to be subject to a decision based solely on automated pro
 Right to Lodge a Complaint (Article 77 GDPR):
 You have the right to lodge a complaint with your local data protection supervisory authority. Relevant authorities include the CNIL (France), ICO (UK), DPC (Ireland), BfDI (Germany), and Autoriteit Persoonsgegevens (Netherlands).
 
-To exercise any of these rights, contact our Data Protection Officer at dpo@arkynox.com. We will respond to all legitimate requests within 30 days (Article 12(3) GDPR). We may extend this period by a further 60 days for complex or high-volume requests, with notice to you.`,
+To exercise any of these rights, contact our Data Protection Officer at support@arkynox.com. We will respond to all legitimate requests within 30 days (Article 12(3) GDPR). We may extend this period by a further 60 days for complex or high-volume requests, with notice to you.`,
   },
   {
     title: '11. Your Rights — United States (CCPA & State Laws)',
@@ -331,14 +332,14 @@ For residents of other US states with comprehensive privacy laws, the following 
 • Utah (UCPA): Right to access, delete, and opt out of sale and targeted advertising
 • Texas (TDPSA), Oregon (OCPA), Iowa (ICDPA), Tennessee (TIPA), Montana (MCDPA), Delaware (DPDPA): Comparable rights under each state's respective privacy law
 
-To exercise your rights under US privacy laws, contact us at privacy@arkynox.com. We will verify your identity before processing your request, consistent with CCPA requirements.`,
+To exercise your rights under US privacy laws, contact us at support@arkynox.com. We will verify your identity before processing your request, consistent with CCPA requirements.`,
   },
   {
     title: '12. Your Rights — Japan (APPI)',
     content: `If you are a user in Japan, the Act on the Protection of Personal Information (APPI) grants you the following rights:
 
 Right to Disclosure (Article 28 APPI):
-You have the right to request disclosure of retained personal data, including the purpose of use, categories of data, and the identity of the data handler. Submit your request to privacy@arkynox.com.
+You have the right to request disclosure of retained personal data, including the purpose of use, categories of data, and the identity of the data handler. Submit your request to support@arkynox.com.
 
 Right to Correction (Article 29 APPI):
 You have the right to request correction, addition, or deletion of retained personal data that is inaccurate or outdated. We will respond within 30 days.
@@ -391,7 +392,7 @@ You have the right not to be subject to a decision based solely on automated pro
 Right to Lodge a Complaint:
 You have the right to lodge a complaint with the Information Commissioner's Office (ICO), the UK's independent supervisory authority for data protection. Visit https://ico.org.uk for more information.
 
-To exercise any of these rights, contact our Data Protection Officer at dpo@arkynox.com. We will respond to all legitimate requests within 30 days.`,
+To exercise any of these rights, contact our Data Protection Officer at support@arkynox.com. We will respond to all legitimate requests within 30 days.`,
   },
   {
     title: '14. Your Rights — Australia (Privacy Act 1988)',
@@ -407,12 +408,12 @@ Right to Correction (APP 13):
 You have the right to request correction of personal information we hold about you if it is inaccurate, out of date, incomplete, irrelevant, or misleading. We will take reasonable steps to correct the information and notify any third parties to whom the information was disclosed.
 
 Right to Complain (APP 1):
-You have the right to lodge a complaint about our handling of your personal information. Complaints should be directed to privacy@arkynox.com. If you are not satisfied with our response, you may lodge a complaint with the Office of the Australian Information Commissioner (OAIC) at https://www.oaic.gov.au.
+You have the right to lodge a complaint about our handling of your personal information. Complaints should be directed to support@arkynox.com. If you are not satisfied with our response, you may lodge a complaint with the Office of the Australian Information Commissioner (OAIC) at https://www.oaic.gov.au.
 
 Notifiable Data Breaches (NDB) Scheme:
 Under Part IIIC of the Privacy Act, we are required to notify the OAIC and affected individuals of any eligible data breach that is likely to result in serious harm to the affected individuals. We will do so as soon as practicable after becoming aware of the breach.
 
-To exercise these rights, contact us at privacy@arkynox.com.`,
+To exercise these rights, contact us at support@arkynox.com.`,
   },
   {
     title: '15. Your Rights — Brazil (LGPD)',
@@ -445,7 +446,7 @@ You have the right to request review of decisions made solely on the basis of au
 Right to Complain (Article 18(X) LGPD):
 You have the right to lodge a complaint with the National Data Protection Authority (ANPD — Autoridade Nacional de Proteção de Dados) regarding our processing of your personal data. The ANPD can be contacted at https://www.gov.br/anpd.
 
-To exercise these rights, contact us at privacy@arkynox.com. We will respond to your request within 15 days as required by the LGPD.`,
+To exercise these rights, contact us at support@arkynox.com. We will respond to your request within 15 days as required by the LGPD.`,
   },
   {
     title: '16. Your Rights — UAE (PDPL)',
@@ -476,7 +477,7 @@ For users in the Dubai International Financial Centre (DIFC), additional rights 
 
 For users in the Abu Dhabi Global Market (ADGM), additional protections apply under the ADGM Data Protection Regulations 2021, including complaint rights to the ADGM Office of Data Protection.
 
-To exercise these rights, contact us at privacy@arkynox.com. We will respond to your request within the timeframes specified by the PDPL and its implementing regulations.`,
+To exercise these rights, contact us at support@arkynox.com. We will respond to your request within the timeframes specified by the PDPL and its implementing regulations.`,
   },
   {
     title: '17. Your Rights — Saudi Arabia (PDPL)',
@@ -500,7 +501,7 @@ You have the right to request correction, completion, or updating of inaccurate,
 Right to Complain:
 You have the right to file a complaint with the National Data Management Office (NDMO) or SDAIA regarding our processing of your personal data. SDAIA can be contacted at https://www.sdaia.gov.sa.
 
-To exercise these rights, contact us at privacy@arkynox.com. We will respond to your request within 30 days as required by the PDPL.`,
+To exercise these rights, contact us at support@arkynox.com. We will respond to your request within 30 days as required by the PDPL.`,
   },
   {
     title: '18. Lawful Basis for Processing (GDPR)',
@@ -528,7 +529,7 @@ We do not rely on consent as a basis for processing your personal data under the
     content: `In compliance with the Information Technology Act, 2000, the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, and the Digital Personal Data Protection Act, 2023, our Grievance Officer for data protection and privacy matters is:
 
 Name: Arkynox Grievance Officer
-Email: hello@arkynox.com
+Email: support@arkynox.com
 Physical Address: Available upon request for verified legal requests
 Response Timeframe: All grievances are acknowledged within 24 hours and resolved within 15 calendar days from the date of receipt
 
@@ -540,7 +541,7 @@ Scope of the Grievance Officer:
 • Any other matter required under the IT Act, IT Rules 2021, or DPDP Act 2023
 
 Grievance Submission Process:
-1. Submit your grievance via email to hello@arkynox.com with the subject line "Privacy Grievance: [brief description]"
+1. Submit your grievance via email to support@arkynox.com with the subject line "Privacy Grievance: [brief description]"
 2. Include: your full name, the email address used for your Kaffeine account, a detailed description of the grievance, any supporting documents or evidence, and your preferred resolution
 3. You will receive an acknowledgment within 24 hours
 4. We will investigate and communicate the resolution within 15 calendar days
@@ -550,7 +551,7 @@ Grievance Submission Process:
     title: '20. Data Protection Officer (GDPR)',
     content: `For users in the European Union and European Economic Area, our Data Protection Officer (DPO) can be contacted at:
 
-Email: dpo@arkynox.com
+Email: support@arkynox.com
 
 The DPO is appointed in accordance with Article 37 of the GDPR and is responsible for:
 • Monitoring compliance with the GDPR, the ePrivacy Directive, and other applicable data protection laws
@@ -573,20 +574,23 @@ If you believe we have processed your personal data in violation of the GDPR, yo
     content: `Kaffeine is not intended for children under the age of 13 (or the applicable age of digital consent in your jurisdiction, as detailed below).
 
 Age of Digital Consent by Jurisdiction:
-• India: 18 years (under DPDP Act 2023, a child is defined as any person below 18)
-• European Union: 16 years (with member states permitted to set lower ages between 13-16)
-• United Kingdom: 13 years (under the Data Protection Act 2018; the Age-Appropriate Design Code applies to services likely accessed by children)
-• United States: 13 years (under COPPA — Children's Online Privacy Protection Act)
-• Australia: 15 years (under the Privacy Act 1988 and the Children's Online Privacy Code); users under 18 are encouraged to obtain parental or guardian consent
-• Japan: 18 years (under the Civil Code of Japan as amended effective April 1, 2022)
-• Brazil: 18 years (under the LGPD and the Estatuto da Criança e do Adolescente, Law No. 8,069/1990)
-• UAE: 21 years (under the UAE Civil Transactions Law and PDPL; users below 21 require consent from a legal guardian)
-• Saudi Arabia: 18 years (under the Saudi PDPL and Civil Transactions Law; users below 18 require consent from a legal guardian)
+
+| Jurisdiction | Age | Legal Framework |
+|---|---|---|
+| India | 18 | DPDP Act 2023 (child defined as any person below 18) |
+| European Union | 16 | GDPR (member states may set lower ages 13-16) |
+| United Kingdom | 13 | Data Protection Act 2018; Age-Appropriate Design Code applies |
+| United States | 13 | COPPA (Children's Online Privacy Protection Act) |
+| Australia | 15 | Privacy Act 1988, Children's Online Privacy Code; users under 18 encouraged to obtain parental consent |
+| Japan | 18 | Civil Code of Japan (as amended effective April 1, 2022) |
+| Brazil | 18 | LGPD, Estatuto da Criança e do Adolescente (Law No. 8,069/1990) |
+| UAE | 21 | Civil Transactions Law, PDPL; users below 21 require legal guardian consent |
+| Saudi Arabia | 18 | PDPL, Civil Transactions Law; users below 18 require legal guardian consent |
 
 Our Policy:
 • We do not knowingly collect, store, or process personal information from children below the applicable age of digital consent
 • We verify age during registration and reject registrations from users who do not meet the minimum age requirement
-• If you are a parent or guardian and believe your child has provided us with personal data without your consent, please contact us immediately at privacy@arkynox.com
+• If you are a parent or guardian and believe your child has provided us with personal data without your consent, please contact us immediately at support@arkynox.com
 • We will take immediate steps to delete such data and disable the associated account
 • We will conduct a thorough investigation and take corrective action to prevent recurrence
 
@@ -641,21 +645,24 @@ Minor changes (such as corrections, clarifications, or formatting improvements) 
     title: '24. Contact Information',
     content: `If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please reach out through the appropriate channel:
 
-Privacy-Specific Inquiries: privacy@arkynox.com
+Privacy-Specific Inquiries: support@arkynox.com
 General Inquiries: https://arkynox.com
 Public Issue Tracker: https://github.com/akkilmg/kaffeine/issues
 Security Vulnerabilities: https://github.com/akkilmg/kaffeine/blob/main/SECURITY.md
 
 Designated Contacts by Jurisdiction:
-• India (Grievance Officer — IT Act & DPDP Act): hello@arkynox.com
-• European Union (Data Protection Officer — GDPR): dpo@arkynox.com
-• United Kingdom (Data Protection Officer — UK GDPR): dpo@arkynox.com
-• United States (Privacy Requests — CCPA/State Laws): privacy@arkynox.com
-• Australia (Privacy Requests — Privacy Act 1988): privacy@arkynox.com
-• Japan (Privacy Requests — APPI): privacy@arkynox.com
-• Brazil (Privacy Requests — LGPD): privacy@arkynox.com
-• UAE (Privacy Requests — PDPL): privacy@arkynox.com
-• Saudi Arabia (Privacy Requests — PDPL): privacy@arkynox.com
+
+| Jurisdiction | Role | Contact |
+|---|---|---|
+| India | Grievance Officer (IT Act & DPDP Act) | support@arkynox.com |
+| European Union | Data Protection Officer (GDPR) | support@arkynox.com |
+| United Kingdom | Data Protection Officer (UK GDPR) | support@arkynox.com |
+| United States | Privacy Requests (CCPA/State Laws) | support@arkynox.com |
+| Australia | Privacy Requests (Privacy Act 1988) | support@arkynox.com |
+| Japan | Privacy Requests (APPI) | support@arkynox.com |
+| Brazil | Privacy Requests (LGPD) | support@arkynox.com |
+| UAE | Privacy Requests (PDPL) | support@arkynox.com |
+| Saudi Arabia | Privacy Requests (PDPL) | support@arkynox.com |
 
 We strive to respond to all inquiries within 48 hours. For grievance submissions, we acknowledge within 24 hours and resolve within 15 calendar days.
 
@@ -697,9 +704,7 @@ export default function PrivacyPage() {
           {sections.map((section) => (
             <motion.div key={section.title} variants={fadeIn}>
               <h2 className="text-xl font-semibold text-foreground mb-3">{section.title}</h2>
-              {section.content.split('\n\n').map((paragraph, i) => (
-                <p key={i} className="text-sm text-muted-foreground leading-relaxed mb-3 last:mb-0 whitespace-pre-line">{paragraph}</p>
-              ))}
+              <PolicyContent content={section.content} />
             </motion.div>
           ))}
         </div>

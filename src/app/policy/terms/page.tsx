@@ -3,6 +3,7 @@
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { PolicyContent } from '@/components/policy-content';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -48,15 +49,18 @@ Contributions to the project are welcomed. By contributing, you agree that your 
     content: `You must be at least 13 years of age to use the Service. If you are between 13 and 18 years of age, you confirm that you have obtained parental or guardian consent to use the Service under these Terms.
 
 Jurisdiction-Specific Age Requirements:
-• India: Minimum age of 18 for independent use; users between 13-18 require parental consent as per the Digital Personal Data Protection Act, 2023.
-• European Union / EEA: Minimum age of 16, or such lower age as the applicable member state law permits (ranging from 13 to 16). Users below this age require verifiable parental consent under Article 8 GDPR.
-• United Kingdom: Minimum age of 13 under the Data Protection Act 2018. Users under 18 are advised to obtain parental or guardian consent. The Age-Appropriate Design Code (Children's Code) applies to services likely to be accessed by children.
-• United States: Minimum age of 13 under COPPA (Children's Online Privacy Protection Act). Users between 13-18 require parental consent.
-• Australia: Minimum age of 15 under the Privacy Act 1988 (Cth) and the Children's Online Privacy Code. Users under 18 are encouraged to obtain parental or guardian consent.
-• Japan: Minimum age of 18 under the Civil Code of Japan (as amended effective April 1, 2022). Users between 13-17 require parental consent.
-• Brazil: Minimum age of 18 for independent consent under the LGPD and the Estatuto da Criança e do Adolescente (Law No. 8,069/1990). Users between 13-17 require parental consent.
-• UAE: Minimum age of 21 under the UAE Civil Transactions Law and Federal Decree-Law No. 45 of 2021 (PDPL). Users below 21 require consent from a legal guardian.
-• Saudi Arabia: Minimum age of 18 under the Saudi PDPL (Royal Decree M/19 of 2022) and the Civil Transactions Law. Users below 18 require consent from a legal guardian.
+
+| Jurisdiction | Minimum Age | Details |
+|---|---|---|
+| India | 18 | Users 13-18 require parental consent (DPDP Act 2023) |
+| European Union / EEA | 16 | Lower ages 13-16 per member state; verifiable parental consent required below minimum (Art. 8 GDPR) |
+| United Kingdom | 13 | Users under 18 advised to obtain parental consent; Age-Appropriate Design Code applies |
+| United States | 13 | Users 13-18 require parental consent (COPPA) |
+| Australia | 15 | Users under 18 encouraged to obtain parental consent (Privacy Act 1988, Children's Online Privacy Code) |
+| Japan | 18 | Users 13-17 require parental consent (Civil Code of Japan) |
+| Brazil | 18 | Users 13-17 require parental consent (LGPD, Estatuto da Criança e do Adolescente) |
+| UAE | 21 | Users below 21 require legal guardian consent (Civil Transactions Law, PDPL) |
+| Saudi Arabia | 18 | Users below 18 require legal guardian consent (PDPL, Civil Transactions Law) |
 
 You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You must provide accurate, current, and complete information during registration. Any account found to have provided false information may be suspended or terminated.
 
@@ -133,7 +137,7 @@ Termination Procedure:
 • You may delete your account at any time through your dashboard settings — all associated data will be permanently deleted within 30 days of deletion
 • We may retain anonymized, aggregated data that cannot be used to identify you personally
 
-Appeals: If you believe your account was terminated in error, please contact our Grievance Officer at hello@arkynox.com. We will review your appeal within 15 business days.`,
+Appeals: If you believe your account was terminated in error, please contact our Grievance Officer at support@arkynox.com. We will review your appeal within 15 business days.`,
   },
   {
     title: '9. Data, Privacy & Encryption',
@@ -242,7 +246,7 @@ Class Action Waiver: To the fullest extent permitted by applicable law, all clai
 ...the Grievance Officer for Kaffeine is:
 
 Name: Arkynox Grievance Officer
-Email: hello@arkynox.com
+Email: support@arkynox.com
 Address: Available upon request
 Response Timeframe: All grievances are acknowledged within 24 hours and resolved within 15 calendar days from the date of receipt, as required by the DPDP Act and IT Rules 2021.
 
@@ -255,7 +259,7 @@ The Grievance Officer addresses complaints related to:
 • Any other matter required under the IT Act, IT Rules 2021, or DPDP Act 2023
 
 Grievance Submission Process:
-1. Submit your grievance in writing to hello@arkynox.com with the subject line "Grievance: [brief description]"
+1. Submit your grievance in writing to support@arkynox.com with the subject line "Grievance: [brief description]"
 2. Include your full name, email address used for the Service, a detailed description of the grievance, and any supporting documents or evidence
 3. You will receive an acknowledgment within 24 hours
 4. We will investigate and provide a resolution within 15 calendar days
@@ -265,7 +269,7 @@ Grievance Submission Process:
     title: '15. Data Protection Officer (GDPR)',
     content: `For users in the European Union and European Economic Area, Arkynox has appointed a Data Protection Officer (DPO) in accordance with Article 37 of the General Data Protection Regulation (GDPR). The DPO can be contacted at:
 
-Email: dpo@arkynox.com
+Email: support@arkynox.com
 
 Responsibilities of the DPO (as per Article 39 GDPR):
 • Monitoring compliance with the GDPR and other applicable data protection laws
@@ -402,7 +406,7 @@ Contributions to the Kaffeine project are made under the Apache License 2.0. By 
 • You waive any moral rights in your contribution to the fullest extent permitted by applicable law
 
 Reporting Infringement:
-If you believe that any content or material on the Service infringes your copyright, please contact our Grievance Officer at hello@arkynox.com with a detailed description of the alleged infringement.`,
+If you believe that any content or material on the Service infringes your copyright, please contact our Grievance Officer at support@arkynox.com with a detailed description of the alleged infringement.`,
   },
   {
     title: '19. Changes to Terms',
@@ -455,7 +459,7 @@ These Terms do not create any third-party beneficiary rights in any person or en
     title: '22. Language & Translations',
     content: `These Terms are originally drafted in English. While we may provide translated versions for convenience, the English language version shall govern your use of the Service and any disputes arising from it.
 
-If you are a consumer in the European Union, you have the right to receive these Terms in the official language of your EU member state. Please contact us at hello@arkynox.com to request a translation.
+If you are a consumer in the European Union, you have the right to receive these Terms in the official language of your EU member state. Please contact us at support@arkynox.com to request a translation.
 
 In the event of any inconsistency or discrepancy between the English version and a translated version, the English version shall prevail.`,
   },
@@ -468,15 +472,18 @@ Public Issue Tracker: https://github.com/akkilmg/kaffeine/issues
 Security Vulnerabilities: https://github.com/akkilmg/kaffeine/blob/main/SECURITY.md
 
 Designated Contacts (by jurisdiction):
-• India (Grievance Officer - IT Act & DPDP Act): hello@arkynox.com
-• European Union (Data Protection Officer - GDPR): dpo@arkynox.com
-• United Kingdom (Data Protection Officer - UK GDPR): dpo@arkynox.com
-• United States (Privacy Inquiries): privacy@arkynox.com
-• Australia (Privacy Inquiries — Privacy Act 1988): privacy@arkynox.com
-• Japan (Privacy Inquiries): privacy@arkynox.com
-• Brazil (Privacy Inquiries - LGPD): privacy@arkynox.com
-• UAE (Privacy Inquiries — PDPL): privacy@arkynox.com
-• Saudi Arabia (Privacy Inquiries — PDPL): privacy@arkynox.com
+
+| Jurisdiction | Role | Contact |
+|---|---|---|
+| India | Grievance Officer (IT Act & DPDP Act) | support@arkynox.com |
+| European Union | Data Protection Officer (GDPR) | support@arkynox.com |
+| United Kingdom | Data Protection Officer (UK GDPR) | support@arkynox.com |
+| United States | Privacy Inquiries | support@arkynox.com |
+| Australia | Privacy Inquiries (Privacy Act 1988) | support@arkynox.com |
+| Japan | Privacy Inquiries | support@arkynox.com |
+| Brazil | Privacy Inquiries (LGPD) | support@arkynox.com |
+| UAE | Privacy Inquiries (PDPL) | support@arkynox.com |
+| Saudi Arabia | Privacy Inquiries (PDPL) | support@arkynox.com |
 
 We strive to respond to all inquiries within 48 hours. For grievance submissions, please allow up to 24 hours for acknowledgment and up to 15 calendar days for resolution as required by Indian law.`,
   },
@@ -516,9 +523,7 @@ export default function TermsPage() {
           {sections.map((section) => (
             <motion.div key={section.title} variants={fadeIn}>
               <h2 className="text-xl font-semibold text-foreground mb-3">{section.title}</h2>
-              {section.content.split('\n\n').map((paragraph, i) => (
-                <p key={i} className="text-sm text-muted-foreground leading-relaxed mb-3 last:mb-0 whitespace-pre-line">{paragraph}</p>
-              ))}
+              <PolicyContent content={section.content} />
             </motion.div>
           ))}
         </div>

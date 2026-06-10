@@ -3,6 +3,7 @@
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { PolicyContent } from '@/components/policy-content';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -314,13 +315,13 @@ If we ever propose to introduce non-essential cookies — for any purpose — we
     title: '11. Contact',
     content: `If you have any questions, concerns, or requests regarding our use of cookies, please reach out:
 
-Privacy & Cookie Inquiries: privacy@arkynox.com
-Grievance Officer (India — IT Act & DPDP Act): hello@arkynox.com
-Data Protection Officer (EU — GDPR): dpo@arkynox.com
-Data Protection Officer (UK — UK GDPR): dpo@arkynox.com
-Australia (Privacy Inquiries — Privacy Act 1988): privacy@arkynox.com
-UAE (Privacy Inquiries — PDPL): privacy@arkynox.com
-Saudi Arabia (Privacy Inquiries — PDPL): privacy@arkynox.com
+Privacy & Cookie Inquiries: support@arkynox.com
+Grievance Officer (India — IT Act & DPDP Act): support@arkynox.com
+Data Protection Officer (EU — GDPR): support@arkynox.com
+Data Protection Officer (UK — UK GDPR): support@arkynox.com
+Australia (Privacy Inquiries — Privacy Act 1988): support@arkynox.com
+UAE (Privacy Inquiries — PDPL): support@arkynox.com
+Saudi Arabia (Privacy Inquiries — PDPL): support@arkynox.com
 Public Issue Tracker: https://github.com/akkilmg/kaffeine/issues
 Security Vulnerabilities: https://github.com/akkilmg/kaffeine/blob/main/SECURITY.md
 
@@ -362,36 +363,7 @@ export default function CookiesPage() {
           {sections.map((section) => (
             <motion.div key={section.title} variants={fadeIn}>
               <h2 className="text-xl font-semibold text-foreground mb-3">{section.title}</h2>
-              {section.content.split('\n\n').map((paragraph, i) => {
-                if (paragraph.includes('|---|')) {
-                  const rows = paragraph.split('\n').filter((r: string) => r.trim() && !r.includes('|---|'));
-                  const headers = rows[0]?.split('|').filter((h: string) => h.trim()) || [];
-                  const dataRows = rows.slice(1).map((r: string) => r.split('|').filter((c: string) => c.trim()));
-                  return (
-                    <div key={i} className="overflow-x-auto mb-3">
-                      <table className="w-full text-sm text-muted-foreground border-collapse">
-                        <thead>
-                          <tr className="border-b border-border">
-                            {headers.map((h: string, hi: number) => (
-                              <th key={hi} className="text-left py-2 px-3 font-semibold text-foreground text-xs uppercase tracking-wider">{h}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {dataRows.map((row: string[], ri: number) => (
-                            <tr key={ri} className="border-b border-border/50">
-                              {row.map((cell: string, ci: number) => (
-                                <td key={ci} className="py-2 px-3 text-xs">{cell}</td>
-                              ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  );
-                }
-                return <p key={i} className="text-sm text-muted-foreground leading-relaxed mb-3 last:mb-0 whitespace-pre-line">{paragraph}</p>;
-              })}
+              <PolicyContent content={section.content} />
             </motion.div>
           ))}
         </div>
