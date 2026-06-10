@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useMotionValueEvent, useScroll } from 'motion/react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -30,24 +30,25 @@ const mobileMenuVariants = {
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const { theme, setTheme } = useTheme();
   const { user, loading } = useAuth();
   const [mounted, setMounted] = useState(false);
+  const lastScrollY = useRef(0);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    const direction = latest - lastScrollY.current;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    setScrolled(latest > 20);
+    setHidden(direction > 0 && latest > 100);
+    setScrollProgress(docHeight > 0 ? (latest / docHeight) * 100 : 0);
+    lastScrollY.current = latest;
+  });
 
   useEffect(() => { setTimeout(() => setMounted(true), 0); }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrolled(scrollTop > 20);
-      setScrollProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <>
@@ -63,7 +64,7 @@ export default function Navbar() {
           scrolled
             ? 'bg-background/70 backdrop-blur-2xl border-b border-border/40 shadow-lg shadow-foreground/2'
             : 'bg-transparent'
-        }`}
+        } ${hidden ? '-translate-y-full' : 'translate-y-0'}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-18">

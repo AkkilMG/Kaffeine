@@ -1,18 +1,19 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'motion/react';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'motion/react';
 import { Sparkles } from 'lucide-react';
 import SplitText from '@/components/landing/split-text';
 
 const steps = [
-  { number: '01', title: 'Create Account', desc: 'Sign up for free in under 30 seconds. No credit card.' },
-  { number: '02', title: 'Add Your Service', desc: 'Website URL or database connection string. We handle the rest.' },
-  { number: '03', title: 'Monitor & Relax', desc: 'Real-time alerts if anything goes down. Stay awake with Kaffeine.' },
+  { number: '01', title: 'Create Account', desc: 'Sign up for free in under 30 seconds. No credit card.', extraDesc: 'No email verification maze. Start monitoring immediately.' },
+  { number: '02', title: 'Add Your Service', desc: 'Website URL or database connection string. We handle the rest.', extraDesc: 'HTTP/HTTPS, TCP, MongoDB, PostgreSQL, MySQL, Redis — all supported.' },
+  { number: '03', title: 'Monitor & Relax', desc: 'Real-time alerts if anything goes down. Stay awake with Kaffeine.', extraDesc: 'Email, Slack, Discord, and webhook notifications — all included.' },
 ];
 
 export default function HowItWorksSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [hoveredStep, setHoveredStep] = useState<number | null>(null);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -37,17 +38,7 @@ export default function HowItWorksSection() {
   ];
 
   return (
-    <section id="how-it-works" ref={sectionRef} className="relative py-16 sm:py-24 md:py-32 bg-muted/20">
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--primary) 4%, transparent), transparent 60%)',
-            transform: `translateY(${bgParallax})`,
-          }}
-        />
-      </div>
+    <section id="how-it-works" ref={sectionRef} className="relative py-8 sm:py-12 md:py-16 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -56,9 +47,6 @@ export default function HowItWorksSection() {
           transition={{ duration: 0.5, ease: 'easeOut' }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 text-sm font-medium text-primary font-mono mb-4 px-3 py-1 rounded-full bg-primary/8 border border-primary/15">
-            /getting-started
-          </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
             <SplitText text="From zero to monitoring " mode="chars" />
             <SplitText text="in 2 minutes" mode="chars" gradient />
@@ -100,21 +88,43 @@ export default function HowItWorksSection() {
                 opacity: stepActive[i].opacity,
                 scale: stepActive[i].scale,
               }}
-              className="group relative"
+              className="relative"
+              onMouseEnter={() => setHoveredStep(i)}
+              onMouseLeave={() => setHoveredStep(null)}
             >
-              <div className="rounded-xl border border-border/60 bg-card p-5 sm:p-6 md:p-8 hover:border-primary/30 hover:shadow-lg hover:shadow-foreground/2 transition-all duration-500 h-full relative">
+              <motion.div
+                layout
+                className="rounded-xl border border-border/60 bg-card p-5 sm:p-6 md:p-8 hover:border-primary/30 hover:shadow-lg hover:shadow-foreground/2 transition-all duration-500 h-full relative overflow-hidden"
+              >
                 <div className="flex items-start gap-4 md:flex-col md:items-center md:text-center">
                   <div className="relative shrink-0">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                    <motion.div
+                      whileHover={{ scale: 1.15, rotate: 5 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 8, mass: 0.5 }}
+                      className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center"
+                    >
                       <span className="font-mono text-lg font-bold text-primary">{step.number}</span>
-                    </div>
+                    </motion.div>
                   </div>
                   <div className="md:mt-4">
                     <h3 className="font-semibold text-lg mb-2 text-foreground">{step.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+                    <AnimatePresence>
+                      {hoveredStep === i && (
+                        <motion.p
+                          initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                          animate={{ height: 'auto', opacity: 1, marginTop: 8 }}
+                          exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                          transition={{ duration: 0.3, ease: [0.25, 0.4, 0.25, 1] }}
+                          className="text-xs text-primary/70 font-mono overflow-hidden"
+                        >
+                          {step.extraDesc}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </div>

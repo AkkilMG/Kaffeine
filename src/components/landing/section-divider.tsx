@@ -10,17 +10,30 @@ export default function SectionDivider() {
     offset: ['start end', 'end start'],
   });
 
-  const scaleX = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-  const springScaleX = useSpring(scaleX, { stiffness: 60, damping: 20 });
+  const wipeProgress = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0]);
+  const springWipe = useSpring(wipeProgress, { stiffness: 40, damping: 15 });
+
+  const clipPath = useTransform(
+    springWipe,
+    [0, 0.5, 1],
+    ['inset(0% 100% 0% 0%)', 'inset(0% 0% 0% 0%)', 'inset(0% 0% 100% 0%)']
+  );
+
   const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
 
   return (
     <div ref={ref} className="relative h-24 md:h-32 overflow-hidden pointer-events-none">
       <motion.div
-        className="absolute top-1/2 left-[10%] right-[10%] h-px -translate-y-1/2"
-        style={{ scaleX: springScaleX, opacity, transformOrigin: 'left' }}
+        className="absolute inset-0 flex items-center justify-center"
+        style={{ clipPath, opacity, willChange: 'clip-path' }}
       >
-        <div className="h-full bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+        <div className="relative w-full max-w-3xl">
+          <div className="h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
+          <motion.div
+            className="absolute top-0 left-1/2 -translate-x-1/2 size-1 rounded-full bg-primary/40 blur-sm"
+            style={{ scale: springWipe }}
+          />
+        </div>
       </motion.div>
     </div>
   );

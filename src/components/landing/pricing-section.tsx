@@ -30,7 +30,7 @@ export default function PricingSection() {
   const bgTranslateY = useTransform(scrollYProgress, [0, 1], ['-20px', '20px']);
 
   return (
-    <section id="pricing" ref={sectionRef} className="relative py-16 sm:py-24 md:py-32 bg-muted/20">
+    <section id="pricing" ref={sectionRef} className="relative py-8 sm:py-12 md:py-16 bg-muted/20">
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{

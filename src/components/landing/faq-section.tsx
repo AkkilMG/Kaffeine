@@ -38,7 +38,7 @@ export default function FAQSection() {
     activeCategory === 'All' ? faqs : faqs.filter((f) => f.category === activeCategory);
 
   return (
-    <section id="faq" ref={sectionRef} className="relative py-16 sm:py-24 md:py-32 bg-background">
+    <section id="faq" ref={sectionRef} className="relative py-8 sm:py-12 md:py-16 bg-background">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
@@ -56,9 +56,6 @@ export default function FAQSection() {
           transition={{ duration: 0.5, ease: 'easeOut' }}
           className="text-center mb-10"
         >
-          <div className="inline-flex items-center gap-2 text-sm font-medium text-primary font-mono mb-4 px-3 py-1 rounded-full bg-primary/8 border border-primary/15">
-            /faq
-          </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
             <SplitText text="Got questions? " mode="chars" />
             <SplitText text="We&apos;ve got answers." mode="chars" gradient />

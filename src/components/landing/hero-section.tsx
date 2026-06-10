@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, GitBranch, Activity, Sparkles } from 'lucide-react';
+import ScrambleText from '@/components/landing/scramble-text';
+import NotificationsStack from '@/components/landing/notifications-stack';
 
 const DashboardPreview = dynamic(() => import('@/components/landing/dashboard-preview'), {
   ssr: false,
@@ -121,13 +123,20 @@ export default function HeroSection() {
   const s4x = useTransform(scrollYProgress, [0, 1], [0, 40]);
   const s4y = useTransform(scrollYProgress, [0, 1], [0, -160]);
   const s4r = useTransform(scrollYProgress, [0, 1], [0, 32]);
-  const shapeOffsets = [
-    { x: s0x, y: s0y, rotate: s0r },
-    { x: s1x, y: s1y, rotate: s1r },
-    { x: s2x, y: s2y, rotate: s2r },
-    { x: s3x, y: s3y, rotate: s3r },
-    { x: s4x, y: s4y, rotate: s4r },
+
+  const springShapes = [
+    { x: useSpring(s0x, { stiffness: 40, damping: 15 }), y: useSpring(s0y, { stiffness: 40, damping: 15 }), rotate: useSpring(s0r, { stiffness: 40, damping: 15 }) },
+    { x: useSpring(s1x, { stiffness: 40, damping: 15 }), y: useSpring(s1y, { stiffness: 40, damping: 15 }), rotate: useSpring(s1r, { stiffness: 40, damping: 15 }) },
+    { x: useSpring(s2x, { stiffness: 40, damping: 15 }), y: useSpring(s2y, { stiffness: 40, damping: 15 }), rotate: useSpring(s2r, { stiffness: 40, damping: 15 }) },
+    { x: useSpring(s3x, { stiffness: 40, damping: 15 }), y: useSpring(s3y, { stiffness: 40, damping: 15 }), rotate: useSpring(s3r, { stiffness: 40, damping: 15 }) },
+    { x: useSpring(s4x, { stiffness: 40, damping: 15 }), y: useSpring(s4y, { stiffness: 40, damping: 15 }), rotate: useSpring(s4r, { stiffness: 40, damping: 15 }) },
   ];
+
+  const revealClip = useTransform(
+    scrollYProgress,
+    [0, 0.25],
+    ['inset(0% 100% 0% 0%)', 'inset(0% 0% 0% 0%)']
+  );
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex items-center overflow-hidden pt-16 md:pt-14 bg-background">
@@ -143,7 +152,7 @@ export default function HeroSection() {
               className="inline-flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-medium text-primary font-mono mb-4 sm:mb-6 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-primary/8 border border-primary/15"
             >
               <Activity size={9} />
-              <span>Cloudflare-powered monitoring</span>
+              <ScrambleText text="Cloudflare-powered monitoring" trigger="hover" speed={30} />
             </motion.div>
 
             <h1 className="text-[1.6rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.15] sm:leading-[1] mb-4 sm:mb-6 text-foreground">
@@ -199,7 +208,7 @@ export default function HeroSection() {
                       className="gap-2 text-sm sm:text-base px-5 sm:px-8 h-11 sm:h-12 w-full sm:w-auto shadow-lg shadow-primary/25 group/btn relative overflow-hidden cursor-pointer"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-600" />
-                      Start Monitoring Free{' '}
+                      <ScrambleText text="Start Monitoring Free" trigger="hover" speed={30} />{' '}
                       <ArrowRight size={16} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
                     </Button>
                   </MagneticButton>
@@ -230,7 +239,9 @@ export default function HeroSection() {
             transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.4, 0.25, 1] }}
             className="flex justify-center lg:justify-end"
           >
-            <DashboardPreview />
+            <motion.div style={{ clipPath: revealClip, willChange: 'clip-path' }}>
+              <DashboardPreview />
+            </motion.div>
           </motion.div>
         </div>
       </div>
@@ -244,9 +255,9 @@ export default function HeroSection() {
             height: shape.size,
             left: shape.x,
             top: shape.y,
-            x: shapeOffsets[i].x,
-            y: shapeOffsets[i].y,
-            rotate: shapeOffsets[i].rotate,
+            x: springShapes[i].x,
+            y: springShapes[i].y,
+            rotate: springShapes[i].rotate,
           }}
           initial={{ opacity: 0, scale: 0 }}
           animate={{
@@ -262,6 +273,8 @@ export default function HeroSection() {
           }}
         />
       ))}
+
+      <NotificationsStack />
 
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
     </section>

@@ -151,15 +151,7 @@ export default function FeaturesSection() {
   const cardScrollY = [card1Y, card2Y, card3Y];
 
   return (
-    <section id="features" ref={sectionRef} className="relative py-16 sm:py-24 md:py-32 bg-background">
-      {/* Scroll progress bar */}
-      <div className="sticky top-0 left-0 right-0 h-0.5 z-40 bg-foreground/5">
-        <motion.div
-          className="h-full bg-gradient-to-r from-primary/40 via-primary to-primary/40"
-          style={{ width: progressBar }}
-        />
-      </div>
-
+    <section id="features" ref={sectionRef} className="relative py-8 sm:py-12 md:py-16 bg-background">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -177,10 +169,6 @@ export default function FeaturesSection() {
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         <motion.div variants={itemVariants} className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 text-sm font-medium text-primary font-mono mb-4 px-3 py-1 rounded-full bg-primary/8 border border-primary/15">
-            <Sparkles size={12} />
-            /features
-          </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
             <SplitText text="Everything you need to " mode="chars" />
             <SplitText text="monitor" mode="chars" gradient />
@@ -204,9 +192,13 @@ export default function FeaturesSection() {
                 >
                   <div className="flex-1 w-full">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                      <motion.div
+                        whileHover={{ scale: 1.15, rotate: 5 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 8, mass: 0.5 }}
+                        className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0"
+                      >
                         <feature.icon size={22} className="text-primary" />
-                      </div>
+                      </motion.div>
                       <h3 className="font-semibold text-xl text-foreground">
                         {feature.title}
                       </h3>
@@ -253,12 +245,16 @@ export default function FeaturesSection() {
         <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {gridFeatures.map((feature) => (
             <TiltCard key={feature.title}>
-              <div className="group relative overflow-hidden rounded-xl border border-border/60 bg-card hover:border-primary/30 transition-all duration-500">
+              <motion.div
+                whileHover={{ scale: 1.05, y: -8 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 8, mass: 0.6 }}
+                className="group relative overflow-hidden rounded-xl border border-border/60 bg-card hover:border-primary/30 transition-colors duration-500"
+              >
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${feature.color} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
                 />
                 <div className="relative p-6">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors duration-300">
                     <feature.icon size={18} className="text-primary" />
                   </div>
                   <h3 className="font-semibold text-lg mb-1.5 text-foreground">
@@ -268,7 +264,7 @@ export default function FeaturesSection() {
                     {feature.desc}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             </TiltCard>
           ))}
         </motion.div>

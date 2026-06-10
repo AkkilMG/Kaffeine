@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform, animate } from 'motion/react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, GitBranch, ArrowRight, Lock, FileCode, Heart, ExternalLink, Star, Activity, Globe, Shield } from 'lucide-react';
@@ -18,6 +18,7 @@ function AnimatedCounter({ value, suffix = '', decimals = 0 }: { value: number; 
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const [visible, setVisible] = useState(false);
+  const animRef = useRef<ReturnType<typeof animate> | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -35,20 +36,13 @@ function AnimatedCounter({ value, suffix = '', decimals = 0 }: { value: number; 
 
   useEffect(() => {
     if (!visible) return;
-    const duration = 1500;
-    const steps = 60;
-    const increment = value / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= value) {
-        setCount(value);
-        clearInterval(timer);
-      } else {
-        setCount(current);
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
+    animRef.current = animate(0, value, {
+      type: 'spring',
+      stiffness: 50,
+      damping: 15,
+      onUpdate: (v) => setCount(v),
+    });
+    return () => animRef.current?.stop();
   }, [visible, value]);
 
   return <span ref={ref} className="tabular-nums">{count.toFixed(decimals)}{suffix}</span>;
@@ -65,15 +59,7 @@ export default function TrustSection() {
   const bgTranslateY = useTransform(scrollYProgress, [0, 1], ['0px', '20px']);
 
   return (
-    <section ref={sectionRef} className="relative py-16 sm:py-24 md:py-32 bg-background">
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse at 70% 50%, color-mix(in srgb, var(--primary) 3%, transparent), transparent 60%)',
-          transform: bgTranslateY,
-        }}
-      />
+    <section ref={sectionRef} className="relative py-8 sm:py-12 md:py-16 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <motion.div
@@ -104,9 +90,6 @@ export default function TrustSection() {
             className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start"
           >
             <div className="lg:col-span-2">
-              <div className="inline-flex items-center gap-2 text-sm font-medium text-primary font-mono mb-4 px-3 py-1 rounded-full bg-primary/8 border border-primary/15">
-                /trust
-              </div>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-6 text-foreground">
                 <SplitText text="Open source. " mode="chars" />
                 <SplitText text="Always." mode="chars" gradient />

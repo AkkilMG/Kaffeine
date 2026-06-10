@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
+import { motion, useMotionValue, useSpring, useTransform, animate } from 'motion/react';
 import { Activity, Bell, Settings, BarChart3, Globe, LayoutDashboard, Server, ArrowUpRight, CheckCircle, Clock, Zap, RefreshCw } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
@@ -27,6 +27,7 @@ function AnimatedCounter({ value, suffix = '', decimals = 1 }: { value: number; 
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const [visible, setVisible] = useState(false);
+  const animRef = useRef<ReturnType<typeof animate> | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -44,20 +45,13 @@ function AnimatedCounter({ value, suffix = '', decimals = 1 }: { value: number; 
 
   useEffect(() => {
     if (!visible) return;
-    const duration = 1500;
-    const steps = 60;
-    const increment = value / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= value) {
-        setCount(value);
-        clearInterval(timer);
-      } else {
-        setCount(current);
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
+    animRef.current = animate(0, value, {
+      type: 'spring',
+      stiffness: 50,
+      damping: 15,
+      onUpdate: (v) => setCount(v),
+    });
+    return () => animRef.current?.stop();
   }, [visible, value]);
 
   return <span ref={ref} className="tabular-nums">{count.toFixed(decimals)}{suffix}</span>;
