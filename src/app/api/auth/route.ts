@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ObjectId } from 'mongodb';
 import { getDatabase } from '@/lib/db';
 import { hashPassword, verifyPassword } from '@/lib/encryption';
 import { User } from '@/lib/types';
@@ -67,6 +68,7 @@ async function handleRegister(email: string, password: string, name: string) {
     passwordHash,
     role: 'user',
     name,
+    banned: false,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -101,6 +103,10 @@ async function handleLogin(email: string, password: string) {
   const user = await usersCollection.findOne({ email });
   if (!user) {
     return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
+  }
+
+  if (user.banned) {
+    return NextResponse.json({ error: 'Your account has been banned. Contact an administrator.' }, { status: 403 });
   }
 
   const isValid = await verifyPassword(password, user.passwordHash);
@@ -153,6 +159,18 @@ export async function GET(request: NextRequest) {
 
     if (!sessionData) {
       return NextResponse.json({ authenticated: false }, { status: 401 });
+    }
+
+    const db = await getDatabase();
+    const user = await db.collection<User>('users').findOne(
+      { _id: new ObjectId(sessionData.userId) },
+      { projection: { banned: 1 } }
+    );
+
+    if (!user || user.banned) {
+      const response = NextResponse.json({ authenticated: false }, { status: 401 });
+      response.cookies.set('session', '', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', path: '/', maxAge: 0 });
+      return response;
     }
 
     return NextResponse.json({ authenticated: true, user: sessionData });

@@ -19,9 +19,9 @@ import Image from 'next/image';
 import { Coffee, LayoutDashboard, LogOut, UserCircle2 } from 'lucide-react';
 
 const adminNavItems = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/users', label: 'Users', icon: UserCircle2 },
-  { href: '/admin/kaffeiners', label: 'All Kaffeiners', icon: Coffee },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard/users', label: 'Users', icon: UserCircle2 },
+  { href: '/dashboard/kaffeiners', label: 'Kaffeiners', icon: Coffee },
 ];
 
 export function AdminSidebar() {

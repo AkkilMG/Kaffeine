@@ -19,7 +19,7 @@ export type KaffeinerChangeEvent = {
 
 export type UserChangeEvent = {
   type: 'user-change';
-  action: 'create' | 'delete' | 'role-change';
+  action: 'create' | 'delete' | 'role-change' | 'ban' | 'unban' | 'reset-password';
   userId?: string;
 };
 

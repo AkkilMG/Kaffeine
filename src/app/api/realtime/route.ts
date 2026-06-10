@@ -40,8 +40,14 @@ export async function GET(request: NextRequest) {
           }
 
           if (event.type === 'user-change') {
-            if (userRole !== 'admin') return;
-            sendEvent(event);
+            if (userRole === 'admin') {
+              sendEvent(event);
+              return;
+            }
+            if ((event.action === 'ban' || event.action === 'unban') && event.userId === userId) {
+              sendEvent(event);
+            }
+            return;
           }
         });
 

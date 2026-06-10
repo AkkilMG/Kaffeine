@@ -8,7 +8,7 @@ import { useAdminStats } from '@/hooks/use-data';
 import { useRealtime } from '@/hooks/use-realtime';
 import { Users, Coffee, Activity, ShieldCheck, Wifi } from 'lucide-react';
 
-export default function AdminDashboardPage() {
+export default function AdminDashboard() {
   const { adminStats, loading } = useAdminStats();
   const [isLive, setIsLive] = useState(false);
 
@@ -152,10 +152,10 @@ export default function AdminDashboardPage() {
           <div className="pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground mb-3">Quick Links</p>
             <div className="space-y-2">
-              <a href="/admin/users" className="block text-primary hover:underline text-sm">
+              <a href="/dashboard/users" className="block text-primary hover:underline text-sm">
                 → Manage Users
               </a>
-              <a href="/admin/kaffeiners" className="block text-primary hover:underline text-sm">
+              <a href="/dashboard/kaffeiners" className="block text-primary hover:underline text-sm">
                 → View All Kaffeiners
               </a>
             </div>

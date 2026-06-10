@@ -5,7 +5,7 @@
   return data.valid
 }
 
-export async function signIn(email: string, password: string): Promise<{ success: boolean; error?: string }> {
+export async function signIn(email: string, password: string): Promise<{ success: boolean; role?: string; error?: string }> {
   try {
     const response = await fetch('/api/auth', {
       method: 'POST',
@@ -20,7 +20,7 @@ export async function signIn(email: string, password: string): Promise<{ success
       return { success: false, error: data.error || 'Invalid email or password' }
     }
 
-    return { success: true }
+    return { success: true, role: data.role }
   } catch {
     return { success: false, error: 'An error occurred during sign in' }
   }

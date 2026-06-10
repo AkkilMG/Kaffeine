@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { DashboardSidebar } from '@/components/dashboard/sidebar';
+import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import ThemeToggle from '@/components/theme-toggle';
 
 export default function DashboardLayout({
@@ -36,7 +37,7 @@ export default function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <DashboardSidebar />
+      {user.role === 'admin' ? <AdminSidebar /> : <DashboardSidebar />}
       <SidebarInset>
         <header className="flex h-12 shrink-0 items-center gap-2 border-b border-border px-4">
           <SidebarTrigger />

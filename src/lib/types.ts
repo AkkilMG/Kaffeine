@@ -6,6 +6,7 @@ export interface User {
   passwordHash: string;
   role: 'admin' | 'user';
   name: string;
+  banned: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

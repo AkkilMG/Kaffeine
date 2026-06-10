@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 
 interface User {
   userId: string;
@@ -47,7 +47,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     checkAuth();
+    const interval = setInterval(checkAuth, 30000);
+    return () => clearInterval(interval);
   }, [checkAuth]);
+
+  const userIdRef = useRef(user?.userId);
+  useEffect(() => { userIdRef.current = user?.userId; }, [user?.userId]);
+
+  useEffect(() => {
+    if (!user?.userId) return;
+
+    const es = new EventSource('/api/realtime', { withCredentials: true });
+
+    es.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === 'user-change' && (data.action === 'ban' || data.action === 'unban')) {
+          if (data.userId === userIdRef.current && data.action === 'ban') {
+            checkAuth();
+          }
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    };
+
+    es.onerror = () => {
+      es.close();
+    };
+
+    return () => {
+      es.close();
+    };
+  }, [user?.userId, checkAuth]);
 
   const login = async (email: string, password: string) => {
     const response = await fetch('/api/auth', {

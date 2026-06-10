@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { motion } from 'motion/react';
+import { useAuth } from '@/lib/auth-context';
+import AdminDashboard from '@/components/dashboard/admin-dashboard';
 import { useDashboardMetrics, useKaffeiners } from '@/hooks/use-data';
 import { useRealtime } from '@/hooks/use-realtime';
 import { Button } from '@/components/ui/button';
@@ -63,6 +65,16 @@ function AnimatedCounter({ value, suffix = '', decimals = 0 }: { value: number; 
 }
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+
+  if (user?.role === 'admin') {
+    return <AdminDashboard />;
+  }
+
+  return <UserDashboard />;
+}
+
+function UserDashboard() {
   const { metrics, loading: metricsLoading } = useDashboardMetrics();
   const { kaffeiners, loading: kaffeinersLoading } = useKaffeiners();
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());

@@ -62,7 +62,7 @@ export default function SigninForm() {
     try {
       const result = await signIn(email, password)
       if (result.success) {
-        window.location.href = "/dashboard"
+        window.location.href = '/dashboard'
       } else {
         setError(result.error || "Invalid email or password")
       }
