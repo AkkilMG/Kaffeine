@@ -28,9 +28,14 @@ We do not use any:
 
 This Cookie Policy explains how and why we use cookies and similar technologies. It is designed to comply with applicable laws across all jurisdictions where our users are located, including:
 • EU: ePrivacy Directive (2002/58/EC) and General Data Protection Regulation (GDPR)
+• UK: Privacy and Electronic Communications Regulations (PECR) 2003 and UK General Data Protection Regulation (UK GDPR)
 • India: Information Technology Act, 2000 and Digital Personal Data Protection Act, 2023
 • US: California Consumer Privacy Act (CCPA/CPRA) and applicable state privacy laws
+• Australia: Privacy Act 1988 (Cth) and the 13 Australian Privacy Principles (APPs); the OAIC's guidelines on cookies and tracking technologies
 • Japan: Act on the Protection of Personal Information (APPI)
+• Brazil: Lei Geral de Proteção de Dados Pessoais (LGPD, Law No. 13,709/2018)
+• UAE: Federal Decree-Law No. 45 of 2021 on the Protection of Personal Data (PDPL); Telecommunications and Digital Government Regulatory Authority (TDRA) guidelines
+• Saudi Arabia: Personal Data Protection Law (PDPL, Royal Decree M/19 of 2022); implementing regulations from the Saudi Data and Artificial Intelligence Authority (SDAIA)
 
 Because we use only strictly necessary cookies, this policy serves our transparency obligations — not a consent requirement, as none is needed under applicable law.`,
   },
@@ -107,6 +112,11 @@ India (IT Act & DPDP Act):
 • Our cookie practices comply with the Information Technology Act, 2000 and the Digital Personal Data Protection Act, 2023
 • Since we process only essential data, no additional consent is required beyond the consent provided during account registration
 
+United Kingdom (PECR & UK GDPR):
+• Strictly necessary cookies are exempt from consent requirements under Regulation 6 of the Privacy and Electronic Communications Regulations (PECR) 2003
+• No cookie consent banner or opt-in is required for strictly necessary cookies
+• This Cookie Policy fulfills our transparency obligations under Article 5(1)(a) UK GDPR
+
 United States (CCPA & State Laws):
 • Our use of cookies does not constitute "sale" or "sharing" of personal information as defined under the CCPA/CPRA or other US state privacy laws
 • We do not engage in cross-context behavioral advertising
@@ -115,6 +125,24 @@ United States (CCPA & State Laws):
 Japan (APPI):
 • Our cookie practices comply with the Act on the Protection of Personal Information (APPI)
 • We handle personal information appropriately and have measures in place for disclosure, correction, and suspension of use requests as required
+
+Australia (Privacy Act 1988):
+• Our cookie practices comply with the Australian Privacy Principles (APPs) under the Privacy Act 1988 (Cth)
+• Since our session cookie collects only essential authentication data and no tracking occurs, our practices align with APP 3 (collection of solicited personal information) and APP 6 (use and disclosure)
+• The OAIC's guidelines on cookies confirm that strictly necessary cookies are generally exempt from additional consent requirements where no tracking or profiling occurs
+• Users retain the right to access and correct any personal information held through account settings
+
+UAE (PDPL):
+• Our cookie practices comply with Federal Decree-Law No. 45 of 2021 (PDPL) and the TDRA guidelines
+• The session cookie is used for the essential purpose of authentication, which falls within the lawful basis of contractual necessity (Article 4(2) PDPL)
+• Since we process only strictly necessary cookies with no tracking, profiling, or advertising purposes, no additional consent is required beyond what is provided during account registration
+• Users have the right to object to processing under Article 17 PDPL, though processing for authentication is necessary for the Service to function
+
+Saudi Arabia (PDPL):
+• Our cookie practices comply with the Personal Data Protection Law (Royal Decree M/19 of 2022) and SDAIA implementing regulations
+• The session cookie processes personal data only for the purpose of authentication, which is necessary for the performance of the Service under Article 6 PDPL
+• Since we do not use cookies for tracking, profiling, or advertising, no additional consent is required beyond the consent provided during registration
+• Users have the right to object to processing under Article 26 PDPL, subject to the requirements of the PDPL
 
 Consent Decision:
 If we ever need to introduce non-essential cookies (such as for optional features), we will:
@@ -208,6 +236,13 @@ India (IT Act, 2000 & DPDP Act, 2023):
 • Grievance redressal mechanism for data-related complaints
 • Transparency in data processing as required under the DPDP Act
 
+United Kingdom (PECR & UK GDPR):
+• Compliance with Regulation 6 of the Privacy and Electronic Communications Regulations (PECR) 2003 regarding storage of and access to information on terminal equipment
+• Transparency obligations under Article 5(1)(a) UK GDPR
+• Data protection by design and by default under Article 25 UK GDPR
+• Strictly necessary exemption is applied correctly
+• Complaints can be lodged with the Information Commissioner's Office (ICO)
+
 United States:
 • California: Full compliance with CCPA/CPRA — no sale or sharing of personal information through cookies
 • Virginia (CDPA), Colorado (CPA), Connecticut (CTDPA), Utah (UCPA), and other state laws: No use of cookies for targeted advertising, profiling, or other purposes that would trigger consumer rights under these laws
@@ -218,7 +253,41 @@ Japan (APPI):
 • Compliance with the Act on the Protection of Personal Information (Act No. 57 of 2003) as amended
 • Appropriate handling of personal information obtained through our session cookie
 • Transparency regarding purpose of use and retention period
-• Compliance with cross-border transfer provisions under Article 28 of the APPI`,
+• Compliance with cross-border transfer provisions under Article 28 of the APPI
+
+Brazil (LGPD):
+• Compliance with the Lei Geral de Proteção de Dados Pessoais (Law No. 13,709/2018)
+• Data minimization principles under Article 6 LGPD
+• Transparency regarding processing activities under Article 9 LGPD
+• Rights of data subjects under Articles 17-22 LGPD regarding personal data collected through cookies
+• Compliance with the National Data Protection Authority (ANPD) guidelines on cookies and tracking technologies
+
+Australia (Privacy Act 1988):
+• Compliance with the 13 Australian Privacy Principles under the Privacy Act 1988 (Cth)
+• APP 1 — Open and transparent management of personal information: this Cookie Policy serves as our transparency mechanism
+• APP 3 — Collection of solicited personal information: only essential authentication data is collected
+• APP 5 — Notification of collection: this Cookie Policy provides clear notice
+• APP 6 — Use and disclosure: limited solely to authentication
+• APP 11 — Security of personal information: the session cookie is transmitted via HTTPS with HTTP-only, Secure, and SameSite=Strict attributes
+• Compliance with the OAIC's guidelines on the use of cookies and tracking technologies (2023)
+• The Notifiable Data Breaches (NDB) scheme applies if a breach of session data occurs
+
+UAE (PDPL):
+• Compliance with Federal Decree-Law No. 45 of 2021 on the Protection of Personal Data (PDPL)
+• Lawful basis for processing: contractual necessity under Article 4(2) PDPL (authentication is essential for the Service)
+• Data minimization and purpose limitation principles observed
+• Transparency as required under Article 12 PDPL (right to knowledge)
+• Cross-border cookie data transfer protections under Article 20 PDPL
+• For DIFC users: compliance with DIFC Data Protection Law (DIFC Law No. 5 of 2020) — strictly necessary cookies are permitted
+• For ADGM users: compliance with ADGM Data Protection Regulations 2021 — processing necessary for performance of contract
+
+Saudi Arabia (PDPL):
+• Compliance with the Personal Data Protection Law (Royal Decree M/19 of 2022) and SDAIA implementing regulations
+• Lawful basis for processing: contractual necessity under Article 6 PDPL (authentication is essential for the Service)
+• Data minimization and purpose limitation principles observed as required
+• Transparency under Article 23 PDPL — this policy serves as notice of data collection via cookies
+• Data subject rights under Articles 24-27 PDPL apply to session data (access, correction, destruction, objection)
+• Cross-border transfer protections under Article 29 PDPL apply where cookie data may be transferred`,
   },
   {
     title: '10. Updates to This Policy',
@@ -248,6 +317,10 @@ If we ever propose to introduce non-essential cookies — for any purpose — we
 Privacy & Cookie Inquiries: privacy@arkynox.com
 Grievance Officer (India — IT Act & DPDP Act): hello@arkynox.com
 Data Protection Officer (EU — GDPR): dpo@arkynox.com
+Data Protection Officer (UK — UK GDPR): dpo@arkynox.com
+Australia (Privacy Inquiries — Privacy Act 1988): privacy@arkynox.com
+UAE (Privacy Inquiries — PDPL): privacy@arkynox.com
+Saudi Arabia (Privacy Inquiries — PDPL): privacy@arkynox.com
 Public Issue Tracker: https://github.com/akkilmg/kaffeine/issues
 Security Vulnerabilities: https://github.com/akkilmg/kaffeine/blob/main/SECURITY.md
 
@@ -274,15 +347,14 @@ export default function CookiesPage() {
         animate="show"
         variants={stagger}>
         <motion.div variants={fadeIn} className="mb-12">
-          <div className="text-sm font-medium text-primary font-mono mb-4">/policy</div>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 text-foreground">
             Cookie <span className="text-primary">Policy</span>
           </h1>
           <p className="text-base text-muted-foreground">
-            Last updated: June 6, 2026
+            Last updated: June 11, 2026
           </p>
           <p className="text-sm text-muted-foreground/60 mt-2">
-            Compliant with EU ePrivacy Directive & GDPR, India IT Act & DPDP Act, US CCPA & state laws, Japan APPI.
+            Compliant with EU ePrivacy Directive & GDPR, UK PECR & UK GDPR, India IT Act & DPDP Act, US CCPA & state laws, Australia Privacy Act 1988, Japan APPI, Brazil LGPD, UAE PDPL, Saudi Arabia PDPL.
           </p>
         </motion.div>
 

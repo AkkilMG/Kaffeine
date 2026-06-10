@@ -50,8 +50,13 @@ Contributions to the project are welcomed. By contributing, you agree that your 
 Jurisdiction-Specific Age Requirements:
 • India: Minimum age of 18 for independent use; users between 13-18 require parental consent as per the Digital Personal Data Protection Act, 2023.
 • European Union / EEA: Minimum age of 16, or such lower age as the applicable member state law permits (ranging from 13 to 16). Users below this age require verifiable parental consent under Article 8 GDPR.
+• United Kingdom: Minimum age of 13 under the Data Protection Act 2018. Users under 18 are advised to obtain parental or guardian consent. The Age-Appropriate Design Code (Children's Code) applies to services likely to be accessed by children.
 • United States: Minimum age of 13 under COPPA (Children's Online Privacy Protection Act). Users between 13-18 require parental consent.
-• Japan: Minimum age of 20 under the Civil Code of Japan. Users between 13-19 require parental consent.
+• Australia: Minimum age of 15 under the Privacy Act 1988 (Cth) and the Children's Online Privacy Code. Users under 18 are encouraged to obtain parental or guardian consent.
+• Japan: Minimum age of 18 under the Civil Code of Japan (as amended effective April 1, 2022). Users between 13-17 require parental consent.
+• Brazil: Minimum age of 18 for independent consent under the LGPD and the Estatuto da Criança e do Adolescente (Law No. 8,069/1990). Users between 13-17 require parental consent.
+• UAE: Minimum age of 21 under the UAE Civil Transactions Law and Federal Decree-Law No. 45 of 2021 (PDPL). Users below 21 require consent from a legal guardian.
+• Saudi Arabia: Minimum age of 18 under the Saudi PDPL (Royal Decree M/19 of 2022) and the Civil Transactions Law. Users below 18 require consent from a legal guardian.
 
 You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You must provide accurate, current, and complete information during registration. Any account found to have provided false information may be suspended or terminated.
 
@@ -79,7 +84,7 @@ Prohibited Monitoring Targets:
 • Any system that you are prohibited from monitoring under a contract or agreement
 
 Prohibited Conduct:
-• Using the Service to violate any applicable law, including the Indian IT Act 2000 (Sections 43, 66), the US Computer Fraud and Abuse Act (CFAA, 18 U.S.C. § 1030), the EU Cybercrime Directive (Directive 2013/40/EU), the UK Computer Misuse Act 1990, or Japan's Unauthorized Computer Access Law (Act No. 128 of 1999)
+• Using the Service to violate any applicable law, including the Indian IT Act 2000 (Sections 43, 66), the US Computer Fraud and Abuse Act (CFAA, 18 U.S.C. § 1030), the EU Cybercrime Directive (Directive 2013/40/EU), the UK Computer Misuse Act 1990, Australia's Criminal Code Act 1995 (Cth) — Part 10.7 (Computer Offences), Japan's Unauthorized Computer Access Law (Act No. 128 of 1999), Brazil's Cybercrime Law (Law No. 12,737/2012 — "Carolina Dieckmann Law"), the UAE Cybercrime Law (Federal Decree-Law No. 34 of 2021), or Saudi Arabia's Anti-Cyber Crime Law (Royal Decree M/17 of 2007)
 • Attempting to disrupt, degrade, impair, or gain unauthorized access to the Service, its infrastructure, or other users' accounts
 • Automated scraping, data mining, or extraction of data from the Service beyond what is reasonably necessary for personal use
 • Sending unsolicited or unauthorized communications through the Service
@@ -150,8 +155,13 @@ What We Do Not Do:
 Data processing is governed by:
 • India: Information Technology Act, 2000; IT (Reasonable Security Practices) Rules, 2011; Digital Personal Data Protection Act, 2023
 • EU: General Data Protection Regulation (GDPR) (Regulation (EU) 2016/679)
+• UK: UK General Data Protection Regulation (UK GDPR) and Data Protection Act 2018
 • US: California Consumer Privacy Act (CCPA) as amended by CPRA, and applicable state privacy laws
+• Australia: Privacy Act 1988 (Cth) and the 13 Australian Privacy Principles (APPs); Notifiable Data Breaches (NDB) scheme
 • Japan: Act on the Protection of Personal Information (APPI, Act No. 57 of 2003)
+• Brazil: Lei Geral de Proteção de Dados Pessoais (LGPD, Law No. 13,709/2018)
+• UAE: Federal Decree-Law No. 45 of 2021 on the Protection of Personal Data (PDPL)
+• Saudi Arabia: Personal Data Protection Law (PDPL, Royal Decree M/19 of 2022)
 
 For complete details on how we handle your data, please read our Privacy Policy and Cookie Policy. As an open-source project, every aspect of our data handling can be independently verified by reviewing our source code.`,
   },
@@ -181,14 +191,19 @@ This limitation applies whether the alleged liability is based on contract, tort
 Jurisdiction-Specific Limitations:
 • India: Liability is limited as permitted under the Information Technology Act, 2000 and Indian contract law. Under Section 79 of the IT Act, we are an intermediary and are not liable for third-party content or actions.
 • European Union / EEA: Nothing in these Terms excludes or limits liability for (a) death or personal injury caused by negligence, (b) fraud or fraudulent misrepresentation, (c) gross negligence or willful misconduct, or (d) any liability that cannot be excluded or limited under applicable law. Our liability shall be limited to the amount you have paid for the Service in the 12 months preceding the claim. Since the Service is free, this amount is zero.
+• United Kingdom: Nothing in these Terms excludes or limits liability for death or personal injury caused by negligence, fraud or fraudulent misrepresentation, or any liability that cannot be excluded or limited under the UK Consumer Rights Act 2015 or other applicable law. Our liability shall be limited to the amount you have paid for the Service in the 12 months preceding the claim. Since the Service is free, this amount is zero.
 • United States: Some states do not allow the exclusion or limitation of incidental or consequential damages, so the above limitations may not fully apply to you. In such cases, our liability shall be limited to the fullest extent permitted by applicable law.
-• Japan: Liability limitations are subject to the provisions of the Japanese Civil Code (Act No. 89 of 1896) and the Specified Commercial Transactions Act. We shall not be liable for damages arising from force majeure or from events beyond our reasonable control.`,
+• Australia: Nothing in these Terms excludes, restricts, or modifies guarantees, rights, or remedies conferred under the Australian Consumer Law (Schedule 2 of the Competition and Consumer Act 2010) that cannot be excluded. Liability for non-excludable guarantees is limited, at our option, to the re-supply of the Service or the cost of re-supply. We shall not be liable for any indirect or consequential loss under the Privacy Act 1988 or otherwise.
+• Japan: Liability limitations are subject to the provisions of the Japanese Civil Code (Act No. 89 of 1896) and the Specified Commercial Transactions Act. We shall not be liable for damages arising from force majeure or from events beyond our reasonable control.
+• Brazil: Nothing in these Terms excludes or limits liability for (a) death or personal injury, (b) fraud, (c) willful misconduct or gross negligence, (d) consumer damages under the Brazilian Consumer Protection Code (Law No. 8,078/1990), or (e) liability that cannot be excluded under the LGPD or applicable law. For free services, liability is limited as permitted under Brazilian law.
+• UAE: Liability limitations are subject to the UAE Civil Transactions Law (Federal Law No. 5 of 1985, as amended) and the UAE PDPL. We shall not be liable for damages arising from force majeure, acts of government authority, or events beyond our reasonable control. Nothing in these Terms excludes liability for fraud, willful misconduct, or death or personal injury caused by negligence.
+• Saudi Arabia: Liability limitations are subject to the Saudi Civil Transactions Law (Royal Decree M/191 of 2023) and the Saudi PDPL. We shall not be liable for damages arising from force majeure or events beyond our reasonable control. Liability for personal injury or wrongful death cannot be excluded.`,
   },
   {
     title: '12. Indemnification',
     content: `You agree to indemnify, defend, and hold harmless Arkynox, its contributors, officers, directors, employees, and affiliates from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees and legal costs) arising out of or related to:
 (a) your use of the Service in violation of these Terms
-(b) your violation of any applicable law, including but not limited to the Indian IT Act 2000, the US Computer Fraud and Abuse Act, the EU Cybercrime Directive, or Japan's Unauthorized Computer Access Law
+(b) your violation of any applicable law, including but not limited to the Indian IT Act 2000, the US Computer Fraud and Abuse Act, the EU Cybercrime Directive, the UK Computer Misuse Act 1990, Australia's Criminal Code Act 1995 (Part 10.7), Japan's Unauthorized Computer Access Law, Brazil's Cybercrime Law, the UAE Cybercrime Law, or Saudi Arabia's Anti-Cyber Crime Law
 (c) your unauthorized monitoring of third-party systems
 (d) any content, data, or configuration you submit to or through the Service
 (e) your violation of any third-party rights, including but not limited to intellectual property rights, privacy rights, or contractual rights
@@ -208,8 +223,13 @@ Dispute Resolution Process:
 Jurisdiction-Specific Provisions:
 • India: The courts of New Delhi shall have exclusive jurisdiction over any matters arising under these Terms, subject to the arbitration clause above.
 • European Union / EEA: Nothing in this clause deprives you of the protection of mandatory consumer protection laws of your country of residence. EU users may also bring claims before the courts of their country of residence in accordance with applicable EU regulations (such as the Brussels I Regulation (EU) No 1215/2012).
+• United Kingdom: Nothing in this clause deprives you of the protection of mandatory consumer protections under the UK Consumer Rights Act 2015. You may also bring claims before the courts of England and Wales.
 • United States: You may also have rights under state or federal law that cannot be contractually waived. Nothing in this clause requires you to resolve disputes in India if such requirement would be unenforceable under applicable US law.
+• Australia: Nothing in this clause deprives you of protections under the Australian Consumer Law (Schedule 2 of the Competition and Consumer Act 2010). You may also bring claims before the courts of your state or territory in Australia.
 • Japan: Disputes may also be brought before the Japanese courts in accordance with Japanese law. The Tokyo District Court shall have exclusive jurisdiction as the court of first instance for users resident in Japan, if applicable under Japanese law.
+• Brazil: Nothing in this clause deprives you of the protection of mandatory consumer protections under the Brazilian Consumer Protection Code (Law No. 8,078/1990). You may also bring claims before the courts of Brazil in accordance with the Brazilian Code of Civil Procedure.
+• UAE: Disputes may also be brought before the competent courts of the UAE in accordance with UAE law. Users in the Dubai International Financial Centre (DIFC) or Abu Dhabi Global Market (ADGM) may also have recourse to the respective free zone courts.
+• Saudi Arabia: Disputes may also be brought before the competent courts of Saudi Arabia in accordance with Saudi law, subject to the Law of Procedure before Sharia Courts.
 
 Class Action Waiver: To the fullest extent permitted by applicable law, all claims must be brought in an individual capacity and not as a plaintiff or class member in any purported class, collective, or representative proceeding. This waiver does not apply to users in jurisdictions where class action waivers are unenforceable.`,
   },
@@ -279,6 +299,15 @@ For users in the EU/EEA, these Terms incorporate protections required by the Gen
 • Data protection by design and by default under Article 25 GDPR
 • Data breach notification under Articles 33-34 GDPR
 
+UNITED KINGDOM:
+For users in the United Kingdom, these Terms incorporate protections required by the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018. This includes:
+• Lawful basis for processing as set out in Article 6 UK GDPR (contractual necessity, legitimate interests, legal obligation)
+• Data subject rights under Articles 15-22 UK GDPR (access, rectification, erasure, restriction, portability, objection, automated decision-making)
+• Appropriate safeguards for international data transfers under Articles 44-49 UK GDPR, including the UK International Data Transfer Agreement (IDTA) or UK Addendum to the EU SCCs
+• Data protection by design and by default under Article 25 UK GDPR
+• Data breach notification under Articles 33-34 UK GDPR
+• Complaints can be lodged with the Information Commissioner's Office (ICO)
+
 UNITED STATES:
 For users in the United States, the following state-specific protections apply:
 • California: California Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act (CPRA) (Cal. Civ. Code §§ 1798.100-1798.199). We do not "sell" or "share" personal information as defined under the CCPA.
@@ -296,7 +325,52 @@ For users in Japan, these Terms comply with the Act on the Protection of Persona
 • Designation of a person responsible for the management of personal information
 • Measures for disclosure, correction, suspension of use, and deletion of retained personal data under Articles 28-33 of the APPI
 • Complaint handling procedures as required by Article 35 of the APPI
-• Compliance with cross-border transfer provisions under Article 28 of the APPI`,
+• Compliance with cross-border transfer provisions under Article 28 of the APPI
+
+BRAZIL:
+For users in Brazil, these Terms comply with the Lei Geral de Proteção de Dados Pessoais (LGPD, Law No. 13,709/2018). Key measures include:
+• Lawful bases for processing as set out in Article 7 LGPD (legal basis includes consent, legal obligation, public administration, research, contract execution, exercise of rights, health protection, credit protection, and legitimate interests)
+• Data subject rights under Articles 17-22 LGPD (confirmation of existence, access, correction, anonymization, blocking, erasure, portability, information about sharing, non-consent consequences, review of automated decisions)
+• The National Data Protection Authority (ANPD — Autoridade Nacional de Proteção de Dados) as the supervisory authority
+• Appropriate technical and organizational measures for data protection under Article 46 LGPD
+• Data breach notification obligations to the ANPD and affected data subjects under Article 48 LGPD
+
+AUSTRALIA:
+For users in Australia, these Terms comply with the Privacy Act 1988 (Cth) and the 13 Australian Privacy Principles (APPs). Key measures include:
+• Open and transparent management of personal information, including a clearly expressed and up-to-date privacy policy (APP 1)
+• Anonymity and pseudonymity where practicable (APP 2)
+• Collection of solicited personal information only where reasonably necessary for the Service, with notice of collection (APPs 3-5)
+• Use and disclosure of personal information only for the primary purpose of collection or a related secondary purpose (APP 6)
+• Direct marketing only in compliance with APP 7 (we do not engage in direct marketing)
+• Cross-border data disclosure protections under APP 8, ensuring recipients have substantially similar data protection standards
+• Adoption, use, and disclosure of government-related identifiers restricted under APP 9
+• Quality and security obligations for personal information under APPs 10-11
+• Access to and correction of personal information under APPs 12-13
+• Compliance with the Notifiable Data Breaches (NDB) scheme under Part IIIC of the Privacy Act
+• The Office of the Australian Information Commissioner (OAIC) as the supervisory authority
+
+UAE:
+For users in the United Arab Emirates, these Terms comply with the Federal Decree-Law No. 45 of 2021 on the Protection of Personal Data (PDPL) and its implementing regulations. Key measures include:
+• Lawful bases for processing as set out in Article 4 of the PDPL (consent, contractual necessity, legal obligation, vital interests, legitimate interests)
+• Data subject rights including the right to knowledge, access, correction, deletion, and objection (Articles 12-18 PDPL)
+• Data protection impact assessments and privacy-by-design obligations
+• Cross-border data transfer restrictions under Article 20 PDPL, requiring adequacy decisions or appropriate safeguards
+• Appointment of a Data Protection Officer where required under Article 25 PDPL
+• Data breach notification obligations to the UAE Data Office (formerly UAE Data Protection Office)
+• The Telecommunications and Digital Government Regulatory Authority (TDRA) and the UAE Data Office as regulatory bodies
+• For users in the Dubai International Financial Centre (DIFC), the DIFC Data Protection Law (DIFC Law No. 5 of 2020) and DIFC Commissioner of Data Protection apply
+• For users in the Abu Dhabi Global Market (ADGM), the ADGM Data Protection Regulations 2021 apply
+
+SAUDI ARABIA:
+For users in the Kingdom of Saudi Arabia, these Terms comply with the Personal Data Protection Law (PDPL, Royal Decree M/19 of 2022, as amended) and its implementing regulations issued by the Saudi Data and Artificial Intelligence Authority (SDAIA). Key measures include:
+• Lawful bases for processing including consent, contractual necessity, legal obligation, and legitimate interests under Article 6 PDPL
+• Data subject rights including the right to knowledge, access, correction, destruction, and objection (Articles 23-27 PDPL)
+• Data minimization and purpose limitation principles
+• Cross-border data transfer restrictions under Article 29 PDPL, permitting transfers only where the recipient ensures adequate data protection or where an exception applies
+• Data breach notification obligations to SDAIA and affected data subjects
+• Appointment of a Data Protection Officer responsible for compliance
+• Processing of sensitive data subject to stricter requirements under Article 9 PDPL
+• The National Data Management Office (NDMO) and SDAIA as regulatory bodies overseeing data protection`,
   },
   {
     title: '17. Third-Party Links & Services',
@@ -396,8 +470,13 @@ Security Vulnerabilities: https://github.com/akkilmg/kaffeine/blob/main/SECURITY
 Designated Contacts (by jurisdiction):
 • India (Grievance Officer - IT Act & DPDP Act): hello@arkynox.com
 • European Union (Data Protection Officer - GDPR): dpo@arkynox.com
+• United Kingdom (Data Protection Officer - UK GDPR): dpo@arkynox.com
 • United States (Privacy Inquiries): privacy@arkynox.com
+• Australia (Privacy Inquiries — Privacy Act 1988): privacy@arkynox.com
 • Japan (Privacy Inquiries): privacy@arkynox.com
+• Brazil (Privacy Inquiries - LGPD): privacy@arkynox.com
+• UAE (Privacy Inquiries — PDPL): privacy@arkynox.com
+• Saudi Arabia (Privacy Inquiries — PDPL): privacy@arkynox.com
 
 We strive to respond to all inquiries within 48 hours. For grievance submissions, please allow up to 24 hours for acknowledgment and up to 15 calendar days for resolution as required by Indian law.`,
   },
@@ -422,15 +501,14 @@ export default function TermsPage() {
         animate="show"
         variants={stagger}>
         <motion.div variants={fadeIn} className="mb-12">
-          <div className="text-sm font-medium text-primary font-mono mb-4">/policy</div>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 text-foreground">
             Terms of <span className="text-primary">Service</span>
           </h1>
           <p className="text-base text-muted-foreground">
-            Last updated: June 6, 2026
+            Last updated: June 11, 2026
           </p>
           <p className="text-sm text-muted-foreground/60 mt-2">
-            Governed by the laws of India. Covers India (IT Act 2000, DPDP Act 2023), EU (GDPR), US (CCPA/CPRA, state laws), Japan (APPI).
+            Governed by the laws of India. Covers India (IT Act 2000, DPDP Act 2023), EU (GDPR), UK (UK GDPR), US (CCPA/CPRA, state laws), Australia (Privacy Act 1988), Japan (APPI), Brazil (LGPD), UAE (PDPL), Saudi Arabia (PDPL).
           </p>
         </motion.div>
 
