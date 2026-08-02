@@ -284,12 +284,12 @@ function UserKaffeinersView() {
                 LIVE
               </span>
             )}
-            <Link href="/dashboard/kaffeiner">
-              <Button className="gap-2 w-full sm:w-auto">
+            <Button asChild className="gap-2 w-full sm:w-auto">
+              <Link href="/dashboard/kaffeiner">
                 <PlusCircle size={16} />
                 New Kaffeiner
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </motion.div>
@@ -374,12 +374,12 @@ function UserKaffeinersView() {
                     Create your first kaffeiner to start monitoring websites or databases.
                     We&apos;ll check their health regularly and keep you informed.
                   </p>
-                  <Link href="/dashboard/kaffeiner">
-                    <Button className="gap-2 mt-6">
+                  <Button asChild className="gap-2 mt-6">
+                    <Link href="/dashboard/kaffeiner">
                       <PlusCircle size={16} />
                       Create First Kaffeiner
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </motion.div>
               </CardContent>
             </Card>

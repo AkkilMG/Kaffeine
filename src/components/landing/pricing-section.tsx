@@ -103,19 +103,20 @@ export default function PricingSection() {
                   </li>
                 ))}
               </ul>
-              <Link href="/register">
-                <Button
-                  size="lg"
-                  className="w-full gap-2 text-base h-12 shadow-lg shadow-primary/25 group/btn relative overflow-hidden"
-                >
+              <Button
+                asChild
+                size="lg"
+                className="w-full gap-2 text-base h-12 shadow-lg shadow-primary/25 group/btn relative overflow-hidden"
+              >
+                <Link href="/register">
                   <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-600" />
                   Get Started Free{' '}
                   <ArrowRight
                     size={16}
                     className="transition-transform duration-300 group-hover/btn:translate-x-1"
                   />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </motion.div>

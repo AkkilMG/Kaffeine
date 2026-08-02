@@ -1,6 +1,6 @@
 'use client';
 
-import React, { use, useMemo, useState } from 'react';
+import React, { use, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { useKaffeinerStats } from '@/hooks/use-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -72,8 +72,7 @@ function StatCard({ title, value, subtitle, icon: Icon, color, gradient, delay =
 
 export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { stats, loading } = useKaffeinerStats(id);
-  const [isLive, setIsLive] = useState(false);
+  const { stats, loading, isLive } = useKaffeinerStats(id);
 
   const chartData = useMemo(() => {
     if (!stats?.records) return [];

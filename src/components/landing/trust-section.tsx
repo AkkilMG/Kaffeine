@@ -108,27 +108,27 @@ export default function TrustSection() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 mt-8">
-                <Link href="https://github.com/akkilmg/kaffeine" target="_blank">
-                  <Button className="gap-2 group/btn">
+                <Button asChild className="gap-2 group/btn">
+                  <Link href="https://github.com/akkilmg/kaffeine" target="_blank">
                     <GitBranch size={16} />
                     View Source
-                  </Button>
-                </Link>
-                <Link href="https://github.com/akkilmg/kaffeine/issues" target="_blank">
-                  <Button variant="outline" className="gap-2 group/btn border-primary/30 hover:border-primary/50">
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="gap-2 group/btn border-primary/30 hover:border-primary/50">
+                  <Link href="https://github.com/akkilmg/kaffeine/issues" target="_blank">
                     <Heart size={16} />
                     Contribute
-                  </Button>
-                </Link>
-                <Link href="/register">
-                  <Button variant="outline" className="gap-2 group/btn">
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="gap-2 group/btn">
+                  <Link href="/register">
                     Start Monitoring{' '}
                     <ArrowRight
                       size={14}
                       className="transition-transform duration-300 group-hover/btn:translate-x-0.5"
                     />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
 

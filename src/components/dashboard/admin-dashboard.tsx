@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ShimmerCard } from '@/components/ui/shimmer';
 import { useAdminStats } from '@/hooks/use-data';
 import { useRealtime } from '@/hooks/use-realtime';
+import Link from 'next/link';
 import { Users, Coffee, Activity, ShieldCheck, Wifi } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -152,12 +153,12 @@ export default function AdminDashboard() {
           <div className="pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground mb-3">Quick Links</p>
             <div className="space-y-2">
-              <a href="/dashboard/users" className="block text-primary hover:underline text-sm">
+              <Link href="/dashboard/users" className="block text-primary hover:underline text-sm">
                 → Manage Users
-              </a>
-              <a href="/dashboard/kaffeiners" className="block text-primary hover:underline text-sm">
+              </Link>
+              <Link href="/dashboard/kaffeiners" className="block text-primary hover:underline text-sm">
                 → View All Kaffeiners
-              </a>
+              </Link>
             </div>
           </div>
         </CardContent>

@@ -48,6 +48,11 @@ export default function SignupForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (step === "email") {
+      await handleEmailVerification()
+      return
+    }
+
     if (!email || !password || !name) {
       setError("Please fill in all fields")
       return

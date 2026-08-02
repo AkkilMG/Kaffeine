@@ -1,5 +1,8 @@
 ﻿"use client";
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import emailAniData from "@/assets/lottie/email.json";
@@ -10,6 +13,29 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && user) router.replace("/dashboard");
+  }, [loading, user, router]);
+
+  if (loading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <div className="relative mx-auto size-10">
+            <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
+            <div className="absolute inset-0 rounded-full border-t-2 border-primary animate-spin" />
+          </div>
+          <p className="text-muted-foreground text-sm">Loading...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (user) return null;
+
   return (
     <main className="flex min-h-screen">
       <div className="flex flex-1">

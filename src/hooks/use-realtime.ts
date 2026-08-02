@@ -88,7 +88,6 @@ export function useRealtime(options: UseRealtimeOptions) {
       es.onmessage = (event) => {
         try {
           const data: RealtimeEvent = JSON.parse(event.data);
-          if (data.type === 'heartbeat' || data.type === 'connected') return;
 
           onEventRef.current?.(data);
 

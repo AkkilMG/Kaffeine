@@ -9,6 +9,13 @@ import { Label } from "@/components/ui/label"
 import { verifyEmail, signIn } from "@/lib/auth"
 import { CheckCircle, Loader2, Mail } from "lucide-react"
 
+function safeRedirect(raw: string | null): string | null {
+  if (!raw) return null
+  if (!raw.startsWith("/")) return null
+  if (raw.startsWith("//") || raw.includes("\\") || raw.includes(":")) return null
+  return raw
+}
+
 export default function SigninForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -62,7 +69,8 @@ export default function SigninForm() {
     try {
       const result = await signIn(email, password)
       if (result.success) {
-        window.location.href = '/dashboard'
+        const redirect = safeRedirect(new URLSearchParams(window.location.search).get('redirect'))
+        window.location.href = redirect || '/dashboard'
       } else {
         setError(result.error || "Invalid email or password")
       }

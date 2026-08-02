@@ -1,3 +1,4 @@
+import { memo, useMemo } from 'react';
 import { Area, AreaChart, ResponsiveContainer, XAxis, Tooltip } from 'recharts';
 
 function generateChartData(uptime: number) {
@@ -28,8 +29,8 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
   );
 }
 
-export default function UptimeChart({ uptimeValue }: { uptimeValue: number }) {
-  const chartData = generateChartData(uptimeValue);
+export default memo(function UptimeChart({ uptimeValue }: { uptimeValue: number }) {
+  const chartData = useMemo(() => generateChartData(uptimeValue), [uptimeValue]);
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -61,4 +62,4 @@ export default function UptimeChart({ uptimeValue }: { uptimeValue: number }) {
       </AreaChart>
     </ResponsiveContainer>
   );
-}
+});

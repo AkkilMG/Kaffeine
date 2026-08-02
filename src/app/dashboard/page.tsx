@@ -178,26 +178,26 @@ function UserDashboard() {
       {/* Quick Actions */}
       <motion.div variants={item} className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none -mx-1 px-1">
         <span className="text-[10px] text-muted-foreground/50 font-medium uppercase tracking-wider mr-1 shrink-0">Quick</span>
-        <Link href="/dashboard/kaffeiner">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-medium hover:bg-primary/15 transition-colors shrink-0"
-          >
+        <Button
+          asChild
+          size="sm"
+          className="gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-medium border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-colors shrink-0"
+        >
+          <Link href="/dashboard/kaffeiner">
             <PlusCircle size={12} />
             New
-          </motion.button>
-        </Link>
-        <Link href="/dashboard/kaffeiners">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/40 text-muted-foreground text-xs font-medium hover:bg-muted/60 transition-colors shrink-0"
-          >
+          </Link>
+        </Button>
+        <Button
+          asChild
+          size="sm"
+          className="gap-1.5 px-3 py-1.5 rounded-lg bg-muted/40 border border-border/40 text-muted-foreground text-xs font-medium hover:bg-muted/60 transition-colors shrink-0"
+        >
+          <Link href="/dashboard/kaffeiners">
             <List size={12} />
             View All
-          </motion.button>
-        </Link>
+          </Link>
+        </Button>
       </motion.div>
 
       {/* Stats Cards */}
@@ -280,16 +280,16 @@ function UserDashboard() {
                   </div>
                   <span className="text-xs font-semibold text-foreground">Services</span>
                 </div>
-                <Link href="/dashboard/kaffeiner">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-medium hover:bg-primary/15 transition-colors"
-                  >
+                <Button
+                  asChild
+                  size="sm"
+                  className="gap-1 px-2 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-medium border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-colors"
+                >
+                  <Link href="/dashboard/kaffeiner">
                     <PlusCircle size={10} />
                     Add
-                  </motion.button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
 
               {activeKaffeiners.length === 0 ? (
@@ -305,12 +305,12 @@ function UserDashboard() {
                     <p className="text-xs text-muted-foreground font-medium">No active services</p>
                     <p className="text-[10px] text-muted-foreground/50 mt-0.5">Create your first kaffeiner</p>
                   </div>
-                  <Link href="/dashboard/kaffeiner">
-                    <Button size="sm" className="gap-1.5 text-xs h-7">
+                  <Button asChild size="sm" className="gap-1.5 text-xs h-7">
+                    <Link href="/dashboard/kaffeiner">
                       <PlusCircle size={12} />
                       Add Kaffeiner
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </motion.div>
               ) : (
                 <div className="space-y-0.5">
@@ -401,15 +401,15 @@ function UserDashboard() {
                 Add your first kaffeiner to start monitoring websites or databases in real-time.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
-                <Link href="/dashboard/kaffeiner">
-                  <Button className="gap-2">
+                <Button asChild className="gap-2">
+                  <Link href="/dashboard/kaffeiner">
                     <PlusCircle size={16} />
                     Create Kaffeiner
-                  </Button>
-                </Link>
-                <Link href="/dashboard/kaffeiners">
-                  <Button variant="outline">View Existing</Button>
-                </Link>
+                  </Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href="/dashboard/kaffeiners">View Existing</Link>
+                </Button>
               </div>
             </div>
           </div>

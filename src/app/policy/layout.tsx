@@ -8,7 +8,7 @@ import { Sun, Moon } from 'lucide-react';
 
 export default function PolicyLayout({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => { setTimeout(() => setMounted(true), 0); }, []);
 
@@ -24,9 +24,9 @@ export default function PolicyLayout({ children }: { children: React.ReactNode }
 
           <div className="flex items-center gap-3">
             {mounted && (
-              <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              <button onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
                 className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all">
-                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                {resolvedTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
               </button>
             )}
             <Link href="/"

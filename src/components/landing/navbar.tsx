@@ -33,7 +33,7 @@ export default function Navbar() {
   const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const { user, loading } = useAuth();
   const [mounted, setMounted] = useState(false);
   const lastScrollY = useRef(0);
@@ -106,16 +106,16 @@ export default function Navbar() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
                   className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-all"
                 >
-                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                  {resolvedTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                 </motion.button>
               )}
               <div className="hidden md:flex items-center gap-3">
                 {!loading && user ? (
-                  <Link href="/dashboard">
-                    <Button size="sm" className="gap-2 group/btn relative overflow-hidden">
+                  <Button asChild size="sm" className="gap-2 group/btn relative overflow-hidden">
+                    <Link href="/dashboard">
                       <motion.span
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
                         initial={{ x: '-100%' }}
@@ -127,24 +127,29 @@ export default function Navbar() {
                         size={14}
                         className="transition-transform duration-300 group-hover/btn:translate-x-0.5"
                       />
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 ) : (
-                  <Link href="/register">
-                    <Button size="sm" className="gap-2 group/btn shadow-lg shadow-primary/15 relative overflow-hidden">
-                      <motion.span
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                        initial={{ x: '-100%' }}
-                        whileHover={{ x: '100%' }}
-                        transition={{ duration: 0.6 }}
-                      />
-                      Get Started{' '}
-                      <ChevronRight
-                        size={14}
-                        className="transition-transform duration-300 group-hover/btn:translate-x-0.5"
-                      />
+                  <>
+                    <Button asChild variant="outline" size="sm">
+                      <Link href="/login">Sign In</Link>
                     </Button>
-                  </Link>
+                    <Button asChild size="sm" className="gap-2 group/btn shadow-lg shadow-primary/15 relative overflow-hidden">
+                      <Link href="/register">
+                        <motion.span
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                          initial={{ x: '-100%' }}
+                          whileHover={{ x: '100%' }}
+                          transition={{ duration: 0.6 }}
+                        />
+                        Get Started{' '}
+                        <ChevronRight
+                          size={14}
+                          className="transition-transform duration-300 group-hover/btn:translate-x-0.5"
+                        />
+                      </Link>
+                    </Button>
+                  </>
                 )}
               </div>
               <motion.button
@@ -181,23 +186,23 @@ export default function Navbar() {
                 ))}
                 <div className="pt-4 mt-2 border-t border-border/40 flex flex-col gap-2.5">
                   {!loading && user ? (
-                    <Link href="/dashboard" onClick={() => setMobileOpen(false)}>
-                      <Button className="w-full gap-2 py-2.5">
+                    <Button asChild className="w-full gap-2 py-2.5">
+                      <Link href="/dashboard" onClick={() => setMobileOpen(false)}>
                         Dashboard <ChevronRight size={14} />
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   ) : (
                     <>
-                      <Link href="/register" onClick={() => setMobileOpen(false)}>
-                        <Button className="w-full gap-2 py-2.5 shadow-lg shadow-primary/15">
+                      <Button asChild className="w-full gap-2 py-2.5 shadow-lg shadow-primary/15">
+                        <Link href="/register" onClick={() => setMobileOpen(false)}>
                           Get Started <ChevronRight size={14} />
-                        </Button>
-                      </Link>
-                      <Link href="/login" onClick={() => setMobileOpen(false)}>
-                        <Button variant="outline" className="w-full py-2.5">
+                        </Link>
+                      </Button>
+                      <Button asChild variant="outline" className="w-full py-2.5">
+                        <Link href="/login" onClick={() => setMobileOpen(false)}>
                           Sign In
-                        </Button>
-                      </Link>
+                        </Link>
+                      </Button>
                     </>
                   )}
                 </div>

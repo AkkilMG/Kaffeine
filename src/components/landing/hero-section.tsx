@@ -27,7 +27,7 @@ const floatingShapes = [
   { size: 25, x: '50%', y: '15%', delay: 1.5, duration: 9 },
 ];
 
-function MagneticButton({ href, children, ...props }: { href: string; children: React.ReactNode } & Omit<React.ComponentProps<typeof Link>, 'href'>) {
+function MagneticButton({ href, className, children, ...props }: { href: string; className?: string; children: React.ReactNode } & Omit<React.ComponentProps<typeof Link>, 'href'>) {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -59,9 +59,11 @@ function MagneticButton({ href, children, ...props }: { href: string; children: 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <Link href={href} {...props}>
-        {children}
-      </Link>
+      <Button asChild size="lg" className={className}>
+        <Link href={href} {...props}>
+          {children}
+        </Link>
+      </Button>
     </motion.div>
   );
 }
@@ -190,33 +192,31 @@ export default function HeroSection() {
               className="flex flex-row items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8"
             >
               {!loading && user ? (
-                <MagneticButton href="/dashboard">
-                  <Button
-                    size="lg"
-                    className="gap-2 text-sm sm:text-base px-5 sm:px-8 h-11 sm:h-12 w-full sm:w-auto shadow-lg shadow-primary/25 group/btn relative overflow-hidden cursor-pointer"
-                  >
-                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-600" />
-                    Go to Dashboard{' '}
-                    <ArrowRight size={16} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
-                  </Button>
+                <MagneticButton
+                  href="/dashboard"
+                  className="gap-2 text-sm sm:text-base px-5 sm:px-8 h-11 sm:h-12 w-full sm:w-auto shadow-lg shadow-primary/25 group/btn relative overflow-hidden cursor-pointer"
+                >
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-600" />
+                  Go to Dashboard{' '}
+                  <ArrowRight size={16} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
                 </MagneticButton>
               ) : (
                 <>
-                  <MagneticButton href="/register">
-                    <Button
-                      size="lg"
-                      className="gap-2 text-sm sm:text-base px-5 sm:px-8 h-11 sm:h-12 w-full sm:w-auto shadow-lg shadow-primary/25 group/btn relative overflow-hidden cursor-pointer"
-                    >
-                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-600" />
-                      <ScrambleText text="Start Monitoring Free" trigger="hover" speed={30} />{' '}
-                      <ArrowRight size={16} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
-                    </Button>
+                  <MagneticButton
+                    href="/register"
+                    className="gap-2 text-sm sm:text-base px-5 sm:px-8 h-11 sm:h-12 w-full sm:w-auto shadow-lg shadow-primary/25 group/btn relative overflow-hidden cursor-pointer"
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-600" />
+                    <ScrambleText text="Start Monitoring Free" trigger="hover" speed={30} />{' '}
+                    <ArrowRight size={16} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
                   </MagneticButton>
-                  <MagneticButton href="https://github.com/akkilmg/kaffeine" target="_blank">
-                    <Button size="lg" className="gap-2 text-sm sm:text-base px-5 sm:px-8 h-11 sm:h-12 w-full sm:w-auto group/btn cursor-pointer bg-transparent dark:bg-transparent border border-foreground/30 dark:border-foreground/30 text-foreground/85 hover:bg-foreground/[0.06] dark:hover:bg-foreground/[0.1] hover:text-foreground transition-all">
-                      <GitBranch size={16} />
-                      View on GitHub
-                    </Button>
+                  <MagneticButton
+                    href="https://github.com/akkilmg/kaffeine"
+                    target="_blank"
+                    className="gap-2 text-sm sm:text-base px-5 sm:px-8 h-11 sm:h-12 w-full sm:w-auto group/btn cursor-pointer bg-transparent dark:bg-transparent border border-foreground/30 dark:border-foreground/30 text-foreground/85 hover:bg-foreground/[0.06] dark:hover:bg-foreground/[0.1] hover:text-foreground transition-all"
+                  >
+                    <GitBranch size={16} />
+                    View on GitHub
                   </MagneticButton>
                 </>
               )}

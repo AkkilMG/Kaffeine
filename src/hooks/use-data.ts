@@ -1,8 +1,8 @@
 'use client';
 
 import useSWR from 'swr';
-import { useRealtime, type StatusUpdateEvent } from './use-realtime';
-import { useCallback, useRef, useEffect } from 'react';
+import { useRealtime, type StatusUpdateEvent, type RealtimeEvent } from './use-realtime';
+import { useCallback, useRef, useEffect, useState } from 'react';
 
 const fetcher = (url: string) => fetch(url, { credentials: 'include' }).then(res => res.json());
 
@@ -53,6 +53,7 @@ export function useKaffeinerStats(kaffeinerId: string) {
     fetcher,
     { revalidateOnFocus: false, refreshInterval: 60000 }
   );
+  const [isLive, setIsLive] = useState(false);
 
   const mutateRef = useRef(mutate);
   useEffect(() => { mutateRef.current = mutate; }, [mutate]);
@@ -64,9 +65,12 @@ export function useKaffeinerStats(kaffeinerId: string) {
         mutateRef.current();
       }
     }, [kaffeinerId]),
+    onEvent: useCallback((event: RealtimeEvent) => {
+      if (event.type === 'connected') setIsLive(true);
+    }, []),
   });
 
-  return { stats: data, loading: isLoading, error, mutate };
+  return { stats: data, loading: isLoading, error, mutate, isLive };
 }
 
 export function useAdminUsers() {
