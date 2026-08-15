@@ -157,7 +157,7 @@ export default function HeroSection() {
               <ScrambleText text="Cloudflare-powered monitoring" trigger="hover" speed={30} />
             </motion.div>
 
-            <h1 className="text-[1.6rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.15] sm:leading-[1] mb-4 sm:mb-6 text-foreground">
+            <h1 className="text-[1.6rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.15] sm:leading-[1] mb-4 sm:mb-6 text-foreground text-left">
               {titleWords.map((word, i) => (
                 <motion.span
                   key={word}
@@ -179,7 +179,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.6, delay: 0.9, ease: [0.25, 0.4, 0.25, 1] }}
-              className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2 sm:px-0"
+              className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2 sm:px-0 text-left"
             >
               Free, open-source uptime monitoring.{' '}
               <span className="text-foreground/70">Powered by Cloudflare, secured with AES-256 encryption.</span>
@@ -189,7 +189,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 1.0, ease: 'easeOut' }}
-              className="flex flex-row items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8"
+              className="flex flex-row items-left justify-left gap-3 sm:gap-4 mb-6 sm:mb-8"
             >
               {!loading && user ? (
                 <MagneticButton
@@ -226,7 +226,7 @@ export default function HeroSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.3 }}
-              className="flex items-center justify-center gap-1.5 text-[10px] sm:text-xs text-muted-foreground/50"
+              className="flex items-left justify-left gap-1.5 text-[10px] sm:text-xs text-muted-foreground/50"
             >
               <Sparkles size={9} />
               <span>No credit card. No hidden limits. Just monitoring.</span>

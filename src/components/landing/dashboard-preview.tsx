@@ -235,11 +235,11 @@ export default function DashboardPreview() {
                   <span className="flex-1 text-xs font-medium text-foreground truncate flex items-center gap-1.5 min-w-0">
                     <Server size={10} className="text-muted-foreground shrink-0" />
                     {svc.name}
-                    {hoveredService === svc.name && (
+                    {/* {hoveredService === svc.name && (
                       <span className="text-[8px] text-muted-foreground font-mono hidden sm:inline">
                         {svc.checks} checks
                       </span>
-                    )}
+                    )} */}
                   </span>
                   <span className="w-14 sm:w-12 text-right text-xs font-mono text-foreground shrink-0">{svc.uptime}</span>
                   <span className="w-14 text-right shrink-0">
