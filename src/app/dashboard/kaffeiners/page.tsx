@@ -20,10 +20,18 @@ import {
 } from '@/components/ui/alert-dialog';
 import {
   Coffee, Globe, Database, PlusCircle, Trash2, ExternalLink, Clock,
-  Wifi, Search, X, Filter,
+  Wifi, Search, X, Filter, Timer,
 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+
+function formatInterval(minutes: number | undefined): string {
+  if (!minutes) return '1h';
+  if (minutes < 60) return `${minutes}m`;
+  if (minutes === 60) return '1h';
+  if (minutes % 60 === 0) return `${minutes / 60}h`;
+  return `${minutes}m`;
+}
 
 const container = {
   hidden: { opacity: 0 },
@@ -125,6 +133,7 @@ function AdminKaffeinersView() {
                     <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm">Title</th>
                     <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm hidden sm:table-cell">Type</th>
                     <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm">Status</th>
+                    <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm hidden lg:table-cell">Interval</th>
                     <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm hidden md:table-cell">Recent Check</th>
                     <th className="text-left py-3 px-2 sm:px-4 font-medium text-foreground text-xs sm:text-sm hidden md:table-cell">Created</th>
                   </tr>
@@ -132,7 +141,7 @@ function AdminKaffeinersView() {
               <tbody>
                 {kaffeiners.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-12 text-muted-foreground">
+                    <td colSpan={6} className="text-center py-12 text-muted-foreground">
                       <Coffee size={32} className="mx-auto mb-2 opacity-40" />
                       No kaffeiners on the platform yet
                     </td>
@@ -167,6 +176,12 @@ function AdminKaffeinersView() {
                             {k.active ? 'Active' : k.banned ? 'Banned' : 'Inactive'}
                           </span>
                         </div>
+                      </td>
+                      <td className="py-3 px-2 sm:px-4 text-muted-foreground text-[10px] sm:text-xs hidden lg:table-cell">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-muted/40 border border-border/40 text-[10px] font-mono">
+                          <Timer size={9} />
+                          {formatInterval(k.check_interval)}
+                        </span>
                       </td>
                       <td className="py-3 px-2 sm:px-4 text-muted-foreground text-[10px] sm:text-xs hidden md:table-cell">
                         {k.recentKaffeiner ? new Date(k.recentKaffeiner).toLocaleString() : 'Never'}
@@ -458,6 +473,11 @@ function UserKaffeinersView() {
                               ? new Date(k.recentKaffeiner).toLocaleString()
                               : 'Never checked'}
                           </span>
+                        </span>
+                        <span className="text-[10px] text-muted-foreground/30">·</span>
+                        <span className="inline-flex items-center gap-0.5 text-[10px] sm:text-xs text-muted-foreground/60">
+                          <Timer size={9} />
+                          Every {formatInterval(k.check_interval)}
                         </span>
                       </div>
                     </Link>

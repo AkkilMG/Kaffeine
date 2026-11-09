@@ -45,6 +45,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       records,
       uptime,
       totalChecks: totalCount,
+      check_interval: kaffeiner.check_interval ?? 60,
+      type: kaffeiner.type,
+      db_type: kaffeiner.db_type,
+      title: kaffeiner.title,
     });
   } catch (error) {
     return handleApiError(error);

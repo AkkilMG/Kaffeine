@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import {
   Globe, Database, ArrowLeft, Coffee, Check, ChevronRight,
-  Link as LinkIcon, Terminal, Server, Shield,
+  Link as LinkIcon, Terminal, Server, Shield, Clock,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useKaffeiners } from '@/hooks/use-data';
@@ -43,6 +43,16 @@ const steps = [
   { id: 'review', label: 'Review' },
 ];
 
+const intervalOptions = [
+  { value: 5, label: '5 minutes', short: '5m' },
+  { value: 30, label: '30 minutes', short: '30m' },
+  { value: 60, label: '1 hour', short: '1h' },
+  { value: 180, label: '3 hours', short: '3h' },
+  { value: 360, label: '6 hours', short: '6h' },
+  { value: 720, label: '12 hours', short: '12h' },
+  { value: 1440, label: '24 hours', short: '24h' },
+];
+
 export default function CreateKaffeinerPage() {
   const router = useRouter();
   const { mutate } = useKaffeiners();
@@ -52,6 +62,7 @@ export default function CreateKaffeinerPage() {
   const [title, setTitle] = useState('');
   const [uri, setUri] = useState('');
   const [collectionOrTable, setCollectionOrTable] = useState('');
+  const [checkInterval, setCheckInterval] = useState<number>(60);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -76,7 +87,7 @@ export default function CreateKaffeinerPage() {
     setSubmitting(true);
 
     try {
-      const body: Record<string, string> = { title, type: type! };
+      const body: Record<string, string | number> = { title, type: type!, check_interval: checkInterval };
       if (type === 'database') {
         body.db_type = dbType!;
         body.collection_or_table = collectionOrTable;
@@ -355,6 +366,40 @@ export default function CreateKaffeinerPage() {
                   </div>
                 )}
 
+                <Separator className="bg-border/40" />
+
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                    <Clock size={12} className="text-muted-foreground" />
+                    Check Interval
+                  </label>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    {intervalOptions.map((opt) => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setCheckInterval(opt.value)}
+                        className={`relative p-2.5 rounded-lg border-2 text-center transition-all ${
+                          checkInterval === opt.value
+                            ? 'border-primary bg-primary/5 shadow-sm shadow-primary/10'
+                            : 'border-border/60 hover:border-muted-foreground/30 bg-card'
+                        }`}
+                      >
+                        {checkInterval === opt.value && (
+                          <div className="absolute top-1 right-1 size-4 rounded-full bg-primary flex items-center justify-center">
+                            <Check size={8} className="text-primary-foreground" />
+                          </div>
+                        )}
+                        <p className={`text-sm font-semibold ${checkInterval === opt.value ? 'text-primary' : 'text-foreground'}`}>
+                          {opt.short}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground/60 mt-0.5">{opt.label}</p>
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground/50">How often this service should be health-checked</p>
+                </div>
+
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
                   <Button type="submit" disabled={type === 'database' && !dbType} className="w-full sm:w-auto gap-1.5">
                     Continue to Review
@@ -424,6 +469,13 @@ export default function CreateKaffeinerPage() {
                     </p>
                     <p className="text-sm font-mono text-foreground bg-background/50 px-2.5 py-1.5 rounded-md border border-border/30 truncate">
                       {uri}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider font-medium">Check Interval</p>
+                    <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                      <Clock size={13} className="text-muted-foreground/50" />
+                      {intervalOptions.find(o => o.value === checkInterval)?.label || `${checkInterval} min`}
                     </p>
                   </div>
                 </div>

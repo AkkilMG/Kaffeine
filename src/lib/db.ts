@@ -41,13 +41,38 @@ export async function connectToDatabase(): Promise<{ client: MongoClient; db: Db
   cachedConnection.client = client;
   cachedConnection.db = db;
 
-  // Ensure indexes on startup (non-blocking)
+  // Ensure indexes on startup (non-blocking).
   Promise.all([
     db.collection('kaffeiners').createIndex({ userId: 1, active: 1 }, { background: true }),
     db.collection('status').createIndex({ kaffeiner_id: 1, time: -1 }, { background: true }),
     db.collection('status').createIndex({ time: 1 }, { expireAfterSeconds: 2592000, background: true }), // TTL: 30 days
-    db.collection('users').createIndex({ email: 1 }, { unique: true, background: true }),
   ]).catch(() => {});
+
+  // Users: the email index must allow multiple email-less (username-only)
+  // accounts. Migrate the old non-partial unique index if present.
+  (async () => {
+    try {
+      const existing = await db.collection('users').indexes();
+      const emailIdx = existing.find((idx) => idx.name === 'email_1');
+      const isPartial = emailIdx?.partialFilterExpression?.email?.$gt === '';
+
+      if (emailIdx && !isPartial) {
+        await db.collection('users').dropIndex('email_1');
+      }
+      if (!isPartial) {
+        await db.collection('users').createIndex(
+          { email: 1 },
+          {
+            unique: true,
+            partialFilterExpression: { email: { $gt: '' } },
+            name: 'email_1',
+          },
+        );
+      }
+    } catch (err) {
+      console.error('[Kaffeine] Could not ensure users email index:', err);
+    }
+  })();
 
   return { client, db };
 }

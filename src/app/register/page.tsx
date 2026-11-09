@@ -1,102 +1,30 @@
 ﻿"use client";
-import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
-import emailAniData from "@/assets/lottie/email.json";
-import SignupForm from "@/components/signup-form";
-import ThemeToggle from "@/components/theme-toggle";
-import Link from "next/link";
-import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
-
+/**
+ * Register page — redirects to auth.arkynox.com for registration.
+ */
 export default function RegisterPage() {
-  const router = useRouter();
-  const { user, loading } = useAuth();
+    const router = useRouter();
+    const { user, loading, register } = useAuth();
 
-  useEffect(() => {
-    if (!loading && user) router.replace("/dashboard");
-  }, [loading, user, router]);
+    useEffect(() => {
+        if (!loading && user) {
+            router.push('/dashboard');
+        }
+    }, [user, loading, router]);
 
-  if (loading) {
+    useEffect(() => {
+        if (!loading && !user) {
+            register('/dashboard');
+        }
+    }, [loading, user, register]);
+
     return (
-      <main className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-center space-y-4">
-          <div className="relative mx-auto size-10">
-            <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
-            <div className="absolute inset-0 rounded-full border-t-2 border-primary animate-spin" />
-          </div>
-          <p className="text-muted-foreground text-sm">Loading...</p>
+        <div className="min-h-screen flex items-center justify-center bg-background">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
-      </main>
     );
-  }
-
-  if (user) return null;
-
-  return (
-    <main className="flex min-h-screen">
-      <div className="flex flex-1">
-        <div className="flex-1 flex items-center justify-center p-4 sm:p-8 relative">
-          <div className="absolute top-4 sm:top-6 left-4 sm:left-6 right-4 sm:right-6 flex items-center justify-between">
-            <Link href="/">
-              <div className="flex flex-col group">
-                <div className="flex items-center gap-2.5">
-                  <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={32} height={32} className="size-8 sm:size-9" />
-                  <span className="text-lg sm:text-xl font-bold">Kaffeine</span>
-                </div>
-                <span className="text-[10px] text-muted-foreground/50 mt-0.5 ml-0.5 flex items-center gap-0.5">
-                  by Arkynox <ArrowUpRight size={8} />
-                </span>
-              </div>
-            </Link>
-            <ThemeToggle />
-          </div>
-
-          <div className="w-full max-w-md pt-16 sm:pt-0">
-            <div className="space-y-5 sm:space-y-6">
-              <div className="text-left">
-                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Create Account</h1>
-                <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Start monitoring your services in under 30 seconds</p>
-              </div>
-
-              <SignupForm />
-
-              <div className="text-center text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <Link href="/login" className="text-primary hover:text-primary/80 font-medium transition-colors">
-                  Sign in
-                </Link>
-              </div>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Free & Open Source — by Arkynox</span>
-                </div>
-              </div>
-
-              <p className="text-center text-xs text-muted-foreground leading-relaxed">
-                Join thousands of users who trust Kaffeine for free, encrypted, 
-                open-source uptime monitoring.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="hidden lg:flex lg:flex-1 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 items-center justify-center p-8">
-          <div className="relative w-120 h-120">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full blur-3xl" />
-            <div className="w-120 h-120 relative" draggable={false}>
-              <Lottie animationData={emailAniData} loop autoplay />
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  )
 }

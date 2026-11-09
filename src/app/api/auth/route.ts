@@ -1,180 +1,72 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 import { getDatabase } from '@/lib/db';
-import { hashPassword, verifyPassword } from '@/lib/encryption';
 import { User } from '@/lib/types';
-import { createSessionToken, handleApiError, ApiError, normalizeEmail, rateLimit } from '@/lib/api-utils';
+import { verifySessionToken, clearSessionCookie } from '@/lib/api-utils';
 
-function getClientIp(request: NextRequest): string {
-  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-}
+const AUTH_SERVER_URL = process.env.AUTH_SERVER_URL || 'https://auth.arkynox.com';
+const AUTH_CLIENT_ID = process.env.AUTH_CLIENT_ID || 'kaffeine';
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { action, email, password, name } = body as Record<string, string | undefined>;
-
-    if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
-    }
-
-    const normalizedEmail = normalizeEmail(email);
-
-    if (action === 'register') {
-      return handleRegister(normalizedEmail, password, name || '');
-    } else if (action === 'login') {
-      const ip = getClientIp(request);
-      const rateKey = `login:${normalizedEmail}:${ip}`;
-      const check = rateLimit(rateKey, 5, 60000);
-      if (!check.allowed) {
-        return NextResponse.json(
-          { error: 'Too many login attempts. Please try again later.' },
-          { status: 429 }
-        );
-      }
-      return handleLogin(normalizedEmail, password);
-    } else {
-      return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
-    }
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
-
-async function handleRegister(email: string, password: string, name: string) {
-  if (password.length < 8) {
-    throw new ApiError(400, 'Password must be at least 8 characters');
-  }
-
-  if (password.length > 128) {
-    throw new ApiError(400, 'Password must not exceed 128 characters');
-  }
-
-  if (!name || name.length < 1 || name.length > 100) {
-    throw new ApiError(400, 'Name is required and must not exceed 100 characters');
-  }
-
-  const db = await getDatabase();
-  const usersCollection = db.collection<User>('users');
-
-  const existingUser = await usersCollection.findOne({ email });
-  if (existingUser) {
-    return NextResponse.json({ error: 'An account with this email already exists' }, { status: 409 });
-  }
-
-  const passwordHash = await hashPassword(password);
-  const newUser: User = {
-    email,
-    passwordHash,
-    role: 'user',
-    name,
-    banned: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-
-  const result = await usersCollection.insertOne(newUser);
-
-  const token = createSessionToken({
-    userId: result.insertedId.toString(),
-    email,
-    role: 'user',
-  });
-
-  const response = NextResponse.json(
-    {
-      userId: result.insertedId.toString(),
-      email,
-      name,
-      role: 'user',
-    },
-    { status: 201 }
-  );
-
-  setSessionCookie(response, token);
-
-  return response;
-}
-
-async function handleLogin(email: string, password: string) {
-  const db = await getDatabase();
-  const usersCollection = db.collection<User>('users');
-
-  const user = await usersCollection.findOne({ email });
-  if (!user) {
-    return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
-  }
-
-  if (user.banned) {
-    return NextResponse.json({ error: 'Your account has been banned. Contact an administrator.' }, { status: 403 });
-  }
-
-  const isValid = await verifyPassword(password, user.passwordHash);
-  if (!isValid) {
-    return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
-  }
-
-  const token = createSessionToken({
-    userId: user._id!.toString(),
-    email: user.email,
-    role: user.role,
-  });
-
-  const response = NextResponse.json({
-    userId: user._id!.toString(),
-    email: user.email,
-    name: user.name,
-    role: user.role,
-  });
-
-  setSessionCookie(response, token);
-
-  await db.collection<User>('users').updateOne(
-    { _id: user._id },
-    { $set: { updatedAt: new Date() } }
-  );
-
-  return response;
-}
-
-function setSessionCookie(response: NextResponse, token: string) {
-  response.cookies.set('session', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-  });
-}
-
+/**
+ * GET /api/auth — Check current session.
+ * Returns user info if a valid session cookie exists.
+ */
 export async function GET(request: NextRequest) {
-  try {
-    const session = request.cookies.get('session')?.value;
-    if (!session) {
-      return NextResponse.json({ authenticated: false }, { status: 401 });
+    try {
+        const session = request.cookies.get('session')?.value;
+        if (!session) {
+            return NextResponse.json({ authenticated: false }, { status: 401 });
+        }
+
+        const sessionData = verifySessionToken(session);
+        if (!sessionData) {
+            return NextResponse.json({ authenticated: false }, { status: 401 });
+        }
+
+        // Verify the user still exists and isn't banned.
+        const db = await getDatabase();
+        const user = await db.collection<User>('users').findOne(
+            { _id: new ObjectId(sessionData.userId) },
+            { projection: { banned: 1, name: 1, email: 1, role: 1 } },
+        );
+
+        if (!user || user.banned) {
+            const response = NextResponse.json({ authenticated: false }, { status: 401 });
+            clearSessionCookie(response);
+            return response;
+        }
+
+        return NextResponse.json({
+            authenticated: true,
+            user: {
+                userId: sessionData.userId,
+                email: user.email || sessionData.email,
+                name: user.name || sessionData.name,
+                role: user.role || sessionData.role,
+            },
+        });
+    } catch {
+        return NextResponse.json({ authenticated: false }, { status: 401 });
     }
+}
 
-    const { verifySessionToken } = await import('@/lib/api-utils');
-    const sessionData = verifySessionToken(session);
+/**
+ * POST /api/auth — Deprecated. Auth is now handled by auth.arkynox.com.
+ * This endpoint is kept for backward compatibility but returns a redirect hint.
+ */
+export async function POST(request: NextRequest) {
+    // Redirect clients to the auth server.
+    const origin = request.nextUrl.origin;
+    const callbackUrl = `${origin}/api/auth/callback`;
 
-    if (!sessionData) {
-      return NextResponse.json({ authenticated: false }, { status: 401 });
-    }
+    const authUrl = new URL('/signin', AUTH_SERVER_URL);
+    authUrl.searchParams.set('client_id', AUTH_CLIENT_ID);
+    authUrl.searchParams.set('redirect_uri', callbackUrl);
+    authUrl.searchParams.set('response_type', 'code');
+    authUrl.searchParams.set('scope', 'openid profile email');
 
-    const db = await getDatabase();
-    const user = await db.collection<User>('users').findOne(
-      { _id: new ObjectId(sessionData.userId) },
-      { projection: { banned: 1 } }
-    );
-
-    if (!user || user.banned) {
-      const response = NextResponse.json({ authenticated: false }, { status: 401 });
-      response.cookies.set('session', '', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', path: '/', maxAge: 0 });
-      return response;
-    }
-
-    return NextResponse.json({ authenticated: true, user: sessionData });
-  } catch {
-    return NextResponse.json({ authenticated: false }, { status: 401 });
-  }
+    return NextResponse.json({
+        redirectTo: authUrl.toString(),
+        message: 'Authentication is now handled by Arkynox Auth. Please sign in there.',
+    });
 }

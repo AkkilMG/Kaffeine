@@ -13,7 +13,7 @@ import {
 import Link from 'next/link';
 import {
   ArrowLeft, Activity, CheckCircle2, XCircle, Clock, TrendingUp, Wifi,
-  BarChart3, ChevronRight,
+  BarChart3, ChevronRight, Timer,
 } from 'lucide-react';
 
 const container = {
@@ -133,7 +133,16 @@ export default function KaffeinerDetailPage({ params }: { params: Promise<{ id: 
             </div>
             <div className="min-w-0">
               <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground truncate tracking-tight">Kaffeiner Details</h1>
-              <p className="text-xs text-muted-foreground/70 truncate">24-hour monitoring record</p>
+              <p className="text-xs text-muted-foreground/70 truncate flex items-center gap-1.5">
+                <Timer size={11} />
+                Checking every {
+                  stats?.check_interval
+                    ? stats.check_interval < 60 ? `${stats.check_interval} min`
+                      : stats.check_interval === 60 ? '1 hour'
+                      : `${stats.check_interval / 60} hours`
+                    : '1 hour'
+                }
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-3 shrink-0">

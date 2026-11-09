@@ -6,97 +6,87 @@ import { useAuth } from "@/lib/auth-context";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import emailAniData from "@/assets/lottie/email.json";
-import SigninForm from "@/components/signin-form";
 import ThemeToggle from "@/components/theme-toggle";
-import Link from "next/link";
-import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
 
+/**
+ * Login page — redirects to auth.arkynox.com for authentication.
+ * No local form needed since auth is centralized.
+ */
 export default function LoginPage() {
-  const router = useRouter();
-  const { user, loading } = useAuth();
+    const router = useRouter();
+    const { user, loading, login, register } = useAuth();
 
-  useEffect(() => {
-    if (!loading && user) router.replace("/dashboard");
-  }, [loading, user, router]);
+    useEffect(() => {
+        if (!loading && user) {
+            router.push('/dashboard');
+        }
+    }, [user, loading, router]);
 
-  if (loading) {
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-background">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
+
+    if (user) return null;
+
+    // Redirect to auth.arkynox.com.
+    const handleLogin = () => {
+        login('/dashboard');
+    };
+
     return (
-      <main className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-center space-y-4">
-          <div className="relative mx-auto size-10">
-            <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
-            <div className="absolute inset-0 rounded-full border-t-2 border-primary animate-spin" />
-          </div>
-          <p className="text-muted-foreground text-sm">Loading...</p>
+        <div className="min-h-screen flex flex-col lg:flex-row bg-background">
+            {/* Left panel — form */}
+            <div className="flex-1 flex flex-col">
+                <div className="p-6 flex justify-between items-center">
+                    <h1 className="text-2xl font-bold text-primary">Kaffeine</h1>
+                    <ThemeToggle />
+                </div>
+
+                <div className="flex-1 flex items-center justify-center px-6 py-12">
+                    <div className="w-full max-w-md space-y-8">
+                        <div className="text-center">
+                            <h2 className="text-3xl font-bold text-foreground">Welcome back</h2>
+                            <p className="mt-2 text-muted-foreground">
+                                Sign in with your Arkynox account to access Kaffeine.
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={handleLogin}
+                            className="w-full py-3 px-4 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
+                        >
+                            Sign in with Arkynox
+                        </button>
+
+                        <p className="text-center text-sm text-muted-foreground">
+                            Don&apos;t have an account?{' '}
+                            <button
+                                onClick={() => register('/dashboard')}
+                                className="text-primary font-semibold hover:underline"
+                            >
+                                Sign up
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Right panel — animation */}
+            <div className="hidden lg:flex flex-1 items-center justify-center bg-primary/5 p-12">
+                <div className="w-full max-w-lg">
+                    <div className="bg-background rounded-2xl shadow-lg p-8">
+                        <Lottie animationData={emailAniData} loop autoplay />
+                    </div>
+                    <div className="mt-6 text-center">
+                        <p className="text-lg font-semibold text-foreground">One account, all your apps</p>
+                        <p className="text-sm text-muted-foreground mt-1">Sign in once, access PikDB, ArkyDesk, Kaffeine & more.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </main>
     );
-  }
-
-  if (user) return null;
-
-  return (
-    <main className="flex min-h-screen">
-      <div className="flex flex-1">
-        <div className="flex-1 flex items-center justify-center p-4 sm:p-8 relative">
-          <div className="absolute top-4 sm:top-6 left-4 sm:left-6 right-4 sm:right-6 flex items-center justify-between">
-            <Link href="/">
-              <div className="flex flex-col group">
-                <div className="flex items-center gap-2.5">
-                  <Image src="/assets/logo/logo-nbg.png" alt="Kaffeine" width={32} height={32} className="size-8 sm:size-9" />
-                  <span className="text-lg sm:text-xl font-bold">Kaffeine</span>
-                </div>
-                <span className="text-[10px] text-muted-foreground/50 mt-0.5 ml-0.5 flex items-center gap-0.5">
-                  by Arkynox <ArrowUpRight size={8} />
-                </span>
-              </div>
-            </Link>
-            <ThemeToggle />
-          </div>
-
-          <div className="w-full max-w-md pt-16 sm:pt-0">
-            <div className="space-y-5 sm:space-y-6">
-              <div className="text-left">
-                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Welcome Back</h1>
-                <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Sign in to continue monitoring your services</p>
-              </div>
-
-              <SigninForm />
-
-              <div className="text-center text-sm text-muted-foreground">
-                Don&apos;t have an account?{" "}
-                <Link href="/register" className="text-primary hover:text-primary/80 font-medium transition-colors">
-                  Create one
-                </Link>
-              </div>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Free & Open Source — by Arkynox</span>
-                </div>
-              </div>
-
-              <p className="text-center text-xs text-muted-foreground leading-relaxed">
-                Monitor your websites and databases with real-time health checks. 
-                End-to-end encrypted. 100% free.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="hidden lg:flex lg:flex-1 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 items-center justify-center p-8">
-          <div className="relative w-120 h-120">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full blur-3xl" />
-            <div className="w-120 h-120 relative" draggable={false}>
-              <Lottie animationData={emailAniData} loop autoplay />
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  )
 }

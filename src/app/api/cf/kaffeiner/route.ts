@@ -10,82 +10,7 @@ import {
   handleApiError,
   ApiError,
 } from '@/lib/api-utils';
-
-async function pingWebsite(uri: string): Promise<boolean> {
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-    const response = await fetch(uri, {
-      method: 'GET',
-      signal: controller.signal,
-      headers: { 'User-Agent': 'Kaffeine/1.0' },
-    });
-    clearTimeout(timeout);
-    return response.ok;
-  } catch {
-    return false;
-  }
-}
-
-async function pingMongoDB(uri: string, _collection?: string): Promise<boolean> {
-  try {
-    const { MongoClient } = await import('mongodb');
-    const client = new MongoClient(uri, {
-      serverSelectionTimeoutMS: 10000,
-      connectTimeoutMS: 10000,
-    });
-    await client.connect();
-    const db = client.db();
-    await db.command({ ping: 1 });
-    await client.close();
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function pingSQL(uri: string, _table?: string): Promise<boolean> {
-  try {
-    const url = new URL(uri);
-    const { connect } = await import('net');
-    return new Promise((resolve) => {
-      const socket = connect(
-        parseInt(url.port || '5432'),
-        url.hostname,
-        () => {
-          socket.destroy();
-          resolve(true);
-        }
-      );
-      socket.on('error', () => resolve(false));
-      socket.setTimeout(10000, () => {
-        socket.destroy();
-        resolve(false);
-      });
-    });
-  } catch {
-    return false;
-  }
-}
-
-async function pingKaffeiner(kaffeiner: Kaffeiner): Promise<boolean> {
-  const uri = decryptData(kaffeiner.uri);
-
-  if (kaffeiner.type === 'website') {
-    return pingWebsite(uri);
-  }
-
-  if (kaffeiner.type === 'database') {
-    if (kaffeiner.db_type === 'mongodb') {
-      return pingMongoDB(uri, kaffeiner.collection_or_table);
-    }
-    if (kaffeiner.db_type === 'sql') {
-      return pingSQL(uri, kaffeiner.collection_or_table);
-    }
-  }
-
-  return false;
-}
+import { pingKaffeiner } from '@/lib/ping';
 
 export async function POST(request: NextRequest) {
   try {
@@ -116,7 +41,8 @@ export async function POST(request: NextRequest) {
       throw new ApiError(404, 'Kaffeiner not found or inactive', 'NOT_FOUND');
     }
 
-    const isUp = await pingKaffeiner(kaffeiner);
+    const uri = decryptData(kaffeiner.uri);
+    const isUp = await pingKaffeiner(kaffeiner.type, kaffeiner.db_type, uri, kaffeiner.collection_or_table);
     const now = new Date();
 
     const statusCollection = db.collection<Status>('status');
@@ -140,21 +66,12 @@ export async function POST(request: NextRequest) {
       time: now.toISOString(),
     });
 
-    const recordCount = await statusCollection.countDocuments({
+    // Prune records older than 30 days (time-based, interval-agnostic)
+    const retentionCutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    await statusCollection.deleteMany({
       kaffeiner_id: new ObjectId(kaffeiner_id),
+      time: { $lt: retentionCutoff },
     });
-    if (recordCount > 1440) {
-      const oldRecords = await statusCollection
-        .find({ kaffeiner_id: new ObjectId(kaffeiner_id) })
-        .sort({ time: 1 })
-        .limit(recordCount - 1440)
-        .toArray();
-      if (oldRecords.length > 0) {
-        await statusCollection.deleteMany({
-          _id: { $in: oldRecords.map(r => r._id!) },
-        });
-      }
-    }
 
     return NextResponse.json({
       success: true,

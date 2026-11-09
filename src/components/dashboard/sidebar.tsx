@@ -30,8 +30,12 @@ export function DashboardSidebar() {
   const { user, logout } = useAuth();
 
   const handleLogout = async () => {
-    await logout();
-    router.push('/login');
+    // logout() handles the global redirect to auth server when successful.
+    // We only navigate to /login if logout() didn't trigger a global redirect.
+    const didRedirect = await logout();
+    if (!didRedirect) {
+      router.push('/login');
+    }
   };
 
   return (

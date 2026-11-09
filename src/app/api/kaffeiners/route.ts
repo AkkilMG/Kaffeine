@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/db';
 import { encryptData, decryptData } from '@/lib/encryption';
-import { Kaffeiner } from '@/lib/types';
+import { Kaffeiner, ALLOWED_CHECK_INTERVALS, CheckInterval } from '@/lib/types';
 import { eventBus } from '@/lib/event-bus';
 import { getSessionUser, verifyJWT, handleApiError, ApiError, requireValidObjectId, rateLimit } from '@/lib/api-utils';
+import { pingMongoDB, pingSQL } from '@/lib/ping';
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,7 +19,9 @@ export async function GET(request: NextRequest) {
       if ((decoded.type as string) === 'cf-worker') {
         const kaffeiners = await kaffeinersCollection
           .find({ active: true, banned: false })
-          .project<Pick<Kaffeiner, '_id' | 'type' | 'db_type'>>({ _id: 1, type: 1, db_type: 1 })
+          .project<Pick<Kaffeiner, '_id' | 'type' | 'db_type' | 'check_interval' | 'recentKaffeiner'>>({
+            _id: 1, type: 1, db_type: 1, check_interval: 1, recentKaffeiner: 1,
+          })
           .sort({ createdKaffeiner: -1 })
           .toArray();
 
@@ -26,6 +29,8 @@ export async function GET(request: NextRequest) {
           _id: k._id?.toString(),
           type: k.type,
           db_type: k.db_type,
+          check_interval: k.check_interval ?? 60,
+          recentKaffeiner: k.recentKaffeiner?.toISOString() ?? null,
         }));
 
         return NextResponse.json(result);
@@ -77,7 +82,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, type, db_type, uri, collection_or_table } = body as Record<string, string | undefined>;
+    const { title, type, db_type, uri, collection_or_table, check_interval } = body as Record<string, string | number | undefined>;
 
     if (!title || typeof title !== 'string' || title.length > 200) {
       throw new ApiError(400, 'Title is required and must not exceed 200 characters');
@@ -99,6 +104,38 @@ export async function POST(request: NextRequest) {
       throw new ApiError(400, 'Collection or table name is required');
     }
 
+    // Validate and default check_interval
+    let interval: CheckInterval = 60; // default: 1 hour
+    if (check_interval !== undefined) {
+      const numInterval = typeof check_interval === 'string' ? parseInt(check_interval, 10) : check_interval;
+      if (!ALLOWED_CHECK_INTERVALS.includes(numInterval as CheckInterval)) {
+        throw new ApiError(400, `check_interval must be one of: ${ALLOWED_CHECK_INTERVALS.join(', ')} minutes`);
+      }
+      interval = numInterval as CheckInterval;
+    }
+
+    // For databases, validate connectivity BEFORE saving
+    if (type === 'database') {
+      let isConnected = false;
+      if (db_type === 'mongodb') {
+        isConnected = await pingMongoDB(uri, collection_or_table as string);
+      } else if (db_type === 'sql') {
+        isConnected = await pingSQL(uri, collection_or_table as string);
+      }
+
+      if (!isConnected) {
+        throw new ApiError(
+          400,
+          'Cannot connect to the database. Please verify the connection URI, credentials, and ensure the database is accessible from the internet.',
+          'DB_CONNECTION_FAILED',
+        );
+      }
+    }
+
+    // Website connectivity is not pre-checked during creation —
+    // a website may be temporarily down but come back up later.
+    // The monitoring interval will track its status regardless.
+
     const now = new Date();
     const db = await getDatabase();
     const kaffeinersCollection = db.collection<Kaffeiner>('kaffeiners');
@@ -109,7 +146,8 @@ export async function POST(request: NextRequest) {
       type: type as 'website' | 'database',
       db_type: type === 'database' ? db_type as 'sql' | 'mongodb' : undefined,
       uri: encryptData(uri),
-      collection_or_table: type === 'database' ? collection_or_table : undefined,
+      collection_or_table: type === 'database' ? collection_or_table as string : undefined,
+      check_interval: interval,
       recentUpdated: now,
       recentKaffeiner: now,
       createdKaffeiner: now,
@@ -143,7 +181,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { id, title, type, db_type, uri, collection_or_table, active } = body as Record<string, unknown>;
+    const { id, title, type, db_type, uri, collection_or_table, active, check_interval } = body as Record<string, unknown>;
 
     if (!id || typeof id !== 'string') {
       throw new ApiError(400, 'Missing kaffeiner ID');
@@ -171,6 +209,37 @@ export async function PATCH(request: NextRequest) {
     if (uri && typeof uri === 'string') updateData.uri = encryptData(uri);
     if (collection_or_table && typeof collection_or_table === 'string') updateData.collection_or_table = collection_or_table;
     if (typeof active === 'boolean') updateData.active = active;
+    if (check_interval !== undefined) {
+      const numInterval = typeof check_interval === 'string' ? parseInt(check_interval, 10) : (check_interval as number);
+      if (!ALLOWED_CHECK_INTERVALS.includes(numInterval as CheckInterval)) {
+        throw new ApiError(400, `check_interval must be one of: ${ALLOWED_CHECK_INTERVALS.join(', ')} minutes`);
+      }
+      updateData.check_interval = numInterval;
+    }
+
+    // If a database URI is being updated, re-validate connectivity
+    if (uri && typeof uri === 'string') {
+      const effectiveDbType = (db_type && typeof db_type === 'string' ? db_type : kaffeiner.db_type) as 'sql' | 'mongodb' | undefined;
+      const effectiveCollectionOrTable = (collection_or_table && typeof collection_or_table === 'string' ? collection_or_table : kaffeiner.collection_or_table) as string | undefined;
+      const effectiveType = (type && typeof type === 'string' ? type : kaffeiner.type) as 'website' | 'database';
+
+      if (effectiveType === 'database') {
+        let isConnected = false;
+        if (effectiveDbType === 'mongodb') {
+          isConnected = await pingMongoDB(uri, effectiveCollectionOrTable);
+        } else if (effectiveDbType === 'sql') {
+          isConnected = await pingSQL(uri, effectiveCollectionOrTable);
+        }
+
+        if (!isConnected) {
+          throw new ApiError(
+            400,
+            'Cannot connect to the database. Please verify the connection URI, credentials, and ensure the database is accessible from the internet.',
+            'DB_CONNECTION_FAILED',
+          );
+        }
+      }
+    }
 
     await kaffeinersCollection.updateOne(
       { _id: kaffeinerId },

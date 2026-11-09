@@ -6,14 +6,21 @@
  * 1. Create a Cloudflare Worker
  * 2. Deploy this script
  * 3. Set environment variables (see wrangler.toml)
- * 4. Configure cron trigger (e.g., "0 * * * *" for hourly)
- */
+ */ // 4. Configure cron trigger: "*/5 * * * *" (every 5 minutes)
+ /*   This supports the minimum 5-minute check interval.
+ *    The worker filters kaffeiners by their individual check_interval
+ *    and only triggers checks for those whose interval has elapsed.
+ * 
+ * Supported check intervals per kaffeiner:
+ *   5 min, 30 min, 1 hr (60), 3 hr (180), 6 hr (360), 12 hr (720), 24 hr (1440)
+ **/
 
-// interface HealthCheckResult {
-//   kaffeinerId: string;
-//   status: 'up' | 'down';
-//   responseTime: number;
-//   errorMessage?: string;
+// interface KaffeinerFromAPI {
+//   _id: string;
+//   type: 'website' | 'database';
+//   db_type?: 'sql' | 'mongodb';
+//   check_interval: number; // minutes
+//   recentKaffeiner: string | null; // ISO date string
 // }
 
 const KAFFEINE_API_URL = 'https://kaffeine.arkynox.com';
@@ -36,6 +43,25 @@ async function generateToken(env) {
 
   const data = await response.json();
   return data.token;
+}
+
+/**
+ * Determine whether a kaffeiner's check interval has elapsed
+ * and it should be checked now.
+ * 
+ * @param {number} intervalMinutes - The kaffeiner's check interval in minutes
+ * @param {string|null} recentKaffeiner - ISO date string of last check, or null
+ * @returns {boolean} true if enough time has passed to warrant a new check
+ */
+function shouldCheckNow(intervalMinutes, recentKaffeiner) {
+  // If never checked, always check
+  if (!recentKaffeiner) return true;
+
+  const lastCheck = new Date(recentKaffeiner).getTime();
+  const now = Date.now();
+  const intervalMs = intervalMinutes * 60 * 1000;
+
+  return (now - lastCheck) >= intervalMs;
 }
 
 async function performHealthCheck(
@@ -79,7 +105,7 @@ export default {
       const token = await generateToken(env);
       console.log('[Worker] Generated token');
 
-      // Fetch kaffeiners from API
+      // Fetch kaffeiners from API (includes check_interval and recentKaffeiner)
       const response = await fetch(`${KAFFEINE_API_URL}/api/kaffeiners`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -91,19 +117,32 @@ export default {
         throw new Error(`Failed to fetch kaffeiners: ${response.status}`);
       }
 
-      const kaffeiners = await response.json();
-      console.log(`[Worker] Found ${kaffeiners.length} kaffeiners to check`);
+      const allKaffeiners = await response.json();
+      console.log(`[Worker] Found ${allKaffeiners.length} total kaffeiners`);
+
+      // Filter to only those whose check interval has elapsed
+      const kaffeinersToCheck = allKaffeiners.filter((k) =>
+        shouldCheckNow(k.check_interval || 60, k.recentKaffeiner)
+      );
+
+      console.log(`[Worker] ${kaffeinersToCheck.length} kaffeiners due for check`);
+
+      if (kaffeinersToCheck.length === 0) {
+        console.log('[Worker] No kaffeiners due for check. Exiting.');
+        return;
+      }
 
       // Perform health checks in parallel with max concurrency
       const maxConcurrency = 5;
       const chunks = [];
 
-      for (let i = 0; i < kaffeiners.length; i += maxConcurrency) {
-        chunks.push(kaffeiners.slice(i, i + maxConcurrency));
+      for (let i = 0; i < kaffeinersToCheck.length; i += maxConcurrency) {
+        chunks.push(kaffeinersToCheck.slice(i, i + maxConcurrency));
       }
 
       let submitted = 0;
       let failed = 0;
+      let skipped = 0;
 
       for (const chunk of chunks) {
         const checks = await Promise.all(
@@ -120,7 +159,10 @@ export default {
         }
       }
 
-      console.log(`[Worker] Completed: ${submitted} submitted, ${failed} failed`);
+      skipped = allKaffeiners.length - kaffeinersToCheck.length;
+      console.log(
+        `[Worker] Completed: ${submitted} submitted, ${failed} failed, ${skipped} skipped (interval not elapsed)`
+      );
     } catch (error) {
       console.error('[Worker] Error during health checks:', error);
     }
